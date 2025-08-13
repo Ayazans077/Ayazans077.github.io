@@ -5,6 +5,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1" />
 <title>A-1 Halal Meat — Online Pickup</title>
 <meta name="description" content="Order halal poultry, meat, and fish for pickup. Simple cart with multiple items." />
+
 <style>
   :root{
     --bg:#ffffff;            /* white background */
@@ -28,8 +29,8 @@
     font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
     color:var(--text);
     background:
-      radial-gradient(900px 520px at 10% -10%, #1b2433 0%, var(--bg) 60%),
-      radial-gradient(800px 460px at 120% -10%, #18202b 0%, var(--bg) 60%),
+      radial-gradient(900px 520px at 10% -10%, #eaf6ea 0%, var(--bg) 60%),
+      radial-gradient(800px 460px at 120% -10%, #edf8ed 0%, var(--bg) 60%),
       var(--bg);
     line-height:1.35;
   }
@@ -42,6 +43,15 @@
   }
   .brand{font-weight:800; letter-spacing:.3px}
   .status{font-size:12px; color:#1b5e20}
+
+  /* Info ribbon under header */
+  .notice{
+    margin:12px 0 0; padding:10px 14px; background:#e9f6e9; border:1px solid var(--line);
+    border-radius:12px; display:flex; gap:14px; flex-wrap:wrap; align-items:center;
+    box-shadow:var(--shadow);
+    font-size:14px;
+  }
+  .badge{background:#cfeecd; color:#0f3f12; padding:4px 10px; border-radius:999px; font-weight:700}
 
   /* Tabs */
   .tabs{
@@ -85,13 +95,13 @@
   .price{color:var(--muted)}
   .controls{margin-top:auto; display:flex; gap:10px; align-items:center}
 
-  /* Quantity input (was black) -> white */
+  /* Quantity input -> white */
   .qty{
     width:92px; height:var(--input-h); padding:10px; border-radius:12px; border:1px solid var(--line);
     background:#ffffff; color:#000000;
   }
 
-  /* Add button gradient updated to green */
+  /* Add button -> green */
   .add{
     height:var(--input-h); padding:0 18px; border-radius:12px; border:0;
     background:linear-gradient(180deg, var(--accent), #1b5e20);
@@ -112,18 +122,16 @@
     display:grid; grid-template-columns: 1fr 100px 90px auto; gap:10px; align-items:center;
     background:var(--panel-soft); border:1px solid var(--line); border-radius:14px; padding:10px;
   }
-
-  /* Inputs inside cart rows (was black) -> white */
+  /* Inputs in cart rows -> white */
   .row input{
     width:100%; height:var(--input-h); border-radius:12px; border:1px solid var(--line);
     background:#ffffff; color:#000000; padding:10px;
   }
-
   .rmv{border:0; background:transparent; color:#c62828; font-weight:900; cursor:pointer}
   .meta{font-size:12px; color:var(--muted)}
   .totals{display:flex; justify-content:space-between; margin-top:12px; font-weight:900}
 
-  /* Checkout button gradient updated to green */
+  /* Checkout button -> green */
   .checkout{
     width:100%; height:var(--input-h); margin-top:10px; border-radius:14px; border:0;
     background:linear-gradient(180deg, var(--accent), #1b5e20); color:#ffffff; font-weight:900; cursor:pointer;
@@ -133,12 +141,16 @@
 
   .f-label{margin-top:12px; font-size:14px}
 
-  /* Cart form fields (was black) -> white */
+  /* Cart form fields -> white */
   .input{
     width:100%; height:var(--input-h); padding:10px; border-radius:12px; border:1px solid var(--line);
     background:#ffffff; color:#000000;
   }
   textarea.input{height:auto; min-height:90px}
+
+  /* Small helper text */
+  .helper{font-size:12px; color:#355b35; margin-top:6px}
+  .disclaimer{font-size:12px; color:#4c4c4c; margin-top:10px}
 </style>
 </head>
 <body>
@@ -150,6 +162,12 @@
       </div>
       <div class="status">Secure checkout</div>
     </header>
+
+    <!-- Hours & policy ribbon -->
+    <div class="notice">
+      <span class="badge">Meat Dept: 11:00 AM – 8:00 PM</span>
+      <span><strong>Store closes 9:00 PM.</strong> Meat orders placed after <strong>8:00 PM</strong> are held for the next day.</span>
+    </div>
 
     <!-- Category tabs -->
     <nav class="tabs" role="tablist" aria-label="Categories">
@@ -195,6 +213,10 @@
           <textarea class="input" rows="3" name="instructions" placeholder="e.g., cut small pieces, extra clean"></textarea>
 
           <button id="checkoutBtn" class="checkout" type="submit" disabled>Go to checkout →</button>
+
+          <p class="disclaimer">
+            *Prices shown are estimates and may vary slightly at pickup based on exact product weight.
+          </p>
         </form>
       </aside>
     </div>
@@ -255,6 +277,11 @@
   let currentCat = 'All';
   const cart = new Map(); // sku -> {name, price, unit, qty}
 
+  function isAfter8PM(){
+    const now = new Date();
+    return now.getHours() >= 20; // 20:00 = 8 PM local time
+  }
+
   function renderCards(){
     const list = currentCat==='All' ? INVENTORY : INVENTORY.filter(i=>i.cat===currentCat);
     sectionTitle.textContent = currentCat==='All' ? 'All items' : currentCat;
@@ -267,7 +294,7 @@
         <div class="price">${money(it.price)}${it.unit}</div>
         <div class="controls">
           <input class="qty" type="number" min="0.1" step="0.1" value="1" aria-label="Quantity for ${it.name}">
-          <button class="add" data-sku="${it.sku}">Order now</button>
+          <button class="add" data-sku="${it.sku}" data-cat="${it.cat}">Order now</button>
         </div>
       `;
       cardsEl.appendChild(card);
@@ -277,8 +304,16 @@
     cardsEl.querySelectorAll('.add').forEach(btn=>{
       btn.addEventListener('click', e=>{
         const sku = e.currentTarget.dataset.sku;
+        const cat = e.currentTarget.dataset.cat;
         const it = INVENTORY.find(i=>i.sku===sku);
         const qty = parseQty(e.currentTarget.previousElementSibling.value);
+
+        // Block meat orders after 8 PM
+        if(cat === 'Meat' && isAfter8PM()){
+          alert('Meat Department is closed for today (after 8:00 PM). You can still browse items or place an order tomorrow after 11:00 AM.');
+          return;
+        }
+
         if(!qty) return;
         if(cart.has(sku)) cart.get(sku).qty = +(cart.get(sku).qty + qty).toFixed(2);
         else cart.set(sku, {name:it.name, price:it.price, unit:it.unit, qty});
