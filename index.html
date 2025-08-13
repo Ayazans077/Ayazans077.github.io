@@ -42,9 +42,13 @@
     padding:12px 16px; background:var(--panel); border:1px solid var(--line);
     border-radius:20px; box-shadow:var(--shadow);
   }
-  .brand-wrap{display:flex; align-items:center; gap:12px}
-  .logo{height:44px; width:auto; border-radius:10px}
-  .brand{font-weight:800; letter-spacing:.3px}
+  .brand-wrap{display:flex; align-items:center; gap:14px}
+  /* BIGGER LOGO */
+  .logo{
+    height:72px; width:auto; border-radius:12px;
+    background:#fff; padding:4px; box-shadow:0 2px 6px rgba(0,0,0,.06);
+  }
+  .brand{font-weight:800; letter-spacing:.3px; font-size:24px; line-height:1}
   .status{font-size:12px; color:#1b5e20}
 
   /* Info ribbon under header */
@@ -280,7 +284,7 @@
 
   function isAfter8PM(){
     const now = new Date();
-    return now.getHours() >= 20; // 20:00 = 8 PM local time
+    return now.getHours() >= 20;
   }
 
   function renderCards(){
@@ -301,7 +305,6 @@
       cardsEl.appendChild(card);
     });
 
-    // wire add buttons
     cardsEl.querySelectorAll('.add').forEach(btn=>{
       btn.addEventListener('click', e=>{
         const sku = e.currentTarget.dataset.sku;
@@ -309,7 +312,6 @@
         const it = INVENTORY.find(i=>i.sku===sku);
         const qty = parseQty(e.currentTarget.previousElementSibling.value);
 
-        // Block meat orders after 8 PM
         if(cat === 'Meat' && isAfter8PM()){
           alert('Meat Department is closed for today (after 8:00 PM). You can still browse items or place an order tomorrow after 11:00 AM.');
           return;
@@ -324,7 +326,6 @@
     });
   }
 
-  // Tabs behavior
   tabs.forEach(t=>{
     t.addEventListener('click', ()=>{
       tabs.forEach(b=>b.setAttribute('aria-selected','false'));
@@ -334,7 +335,6 @@
     });
   });
 
-  // Cart render/submit
   const cartEl = document.getElementById('cart');
   const emptyEl = document.getElementById('empty');
   const totalEl = document.getElementById('total');
@@ -384,7 +384,6 @@
     checkoutBtn.disabled = !has;
   }
 
-  // Submit payload to Formspree
   const form = document.getElementById('checkoutForm');
   form.addEventListener('submit', e=>{
     if(cart.size===0){ e.preventDefault(); alert('Your cart is empty.'); return; }
@@ -399,7 +398,6 @@
     document.getElementById('order_total').value = money(total);
   });
 
-  // initial render
   renderCards();
 })();
 </script>
