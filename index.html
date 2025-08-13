@@ -1,123 +1,379 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>A-1 Grocery & Halal Meat</title>
-  <style>
-    body {
-      font-family: Arial, sans-serif;
-      background: #f9f9f9;
-      margin: 0;
-      padding: 0;
-    }
-    header img {
-      max-width: 100%;
-      height: auto;
-      display: block;
-      margin: auto;
-    }
-    h2 {
-      background: #2d8659;
-      color: white;
-      padding: 15px;
-      text-align: center;
-      margin: 0;
-    }
-    .menu {
-      max-width: 700px;
-      margin: 20px auto;
-      background: white;
-      border-radius: 10px;
-      padding: 20px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    .item {
-      border-bottom: 1px solid #ccc;
-      padding: 10px 0;
-      font-size: 18px;
-    }
-    .price {
-      float: right;
-      font-weight: bold;
-    }
-    form {
-      max-width: 500px;
-      margin: 30px auto;
-      background: white;
-      padding: 20px;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    label {
-      display: block;
-      margin-top: 10px;
-      font-weight: bold;
-    }
-    input, select, textarea {
-      width: 100%;
-      padding: 8px;
-      margin-top: 5px;
-      box-sizing: border-box;
-    }
-    button {
-      background: #2d8659;
-      color: white;
-      padding: 10px;
-      border: none;
-      cursor: pointer;
-      margin-top: 15px;
-      width: 100%;
-      font-size: 16px;
-    }
-    button:hover {
-      background: #226644;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>A-1 Grocery & Halal Meat — Online Orders</title>
+<meta name="description" content="Order fresh halal meat, poultry, and fish for pickup. Multiple items cart with live total." />
+<style>
+  :root{
+    --bg: #0f1220;
+    --panel: rgba(255,255,255,.12);
+    --glass: rgba(255,255,255,.18);
+    --stroke: rgba(255,255,255,.25);
+    --accent: #25b082;
+    --accent2: #7be8c6;
+    --text: #eef3f0;
+    --muted: #b9c5bf;
+    --shadow: 0 18px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
+  }
+  *{ box-sizing:border-box }
+  body{
+    margin:0; color:var(--text); font-family: system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
+    background: radial-gradient(1200px 600px at 20% -10%, #1d2344 0%, #0f1220 60%) fixed,
+                radial-gradient(900px 500px at 120% 10%, #1b2a3a 0%, #0f1220 60%) fixed;
+    min-height:100dvh;
+  }
+  .wrap{ max-width:1200px; margin:0 auto; padding:16px; }
+  .hero{
+    margin:18px auto 10px; padding:16px; border-radius:20px;
+    backdrop-filter: blur(10px);
+    background: linear-gradient(180deg, var(--glass), rgba(255,255,255,.08));
+    border:1px solid var(--stroke);
+    box-shadow: var(--shadow);
+  }
+  .hero img{ width:100%; height:auto; border-radius:14px; display:block; }
+
+  h2{
+    margin:24px 6px 12px; font-size: clamp(22px, 3.4vw, 30px);
+    display:flex; align-items:center; gap:10px; letter-spacing:.3px;
+  }
+  h2 .bar{ flex:1; height:2px; background: linear-gradient(90deg, var(--accent), transparent); border-radius:2px; }
+
+  .grid{
+    display:grid; gap:16px;
+    grid-template-columns: 1fr 360px; /* catalog + cart sidebar */
+  }
+  @media (max-width: 980px){ .grid{ grid-template-columns: 1fr; } }
+
+  .card{
+    background: linear-gradient(180deg, var(--panel), rgba(255,255,255,.06));
+    border:1px solid var(--stroke);
+    border-radius:18px; padding:16px; box-shadow: var(--shadow);
+  }
+  .menu-img{ width:100%; border-radius:14px; display:block; }
+
+  /* Catalog */
+  .catalog{ display:grid; grid-template-columns: repeat(3, minmax(0,1fr)); gap:14px; }
+  @media (max-width:1100px){ .catalog{ grid-template-columns: repeat(2, minmax(0,1fr)); } }
+  @media (max-width:640px){ .catalog{ grid-template-columns: 1fr; } }
+
+  .group{ padding:14px; border-radius:14px; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.18); }
+  .group h3{ margin:4px 0 10px; font-size:18px; color:var(--accent2); }
+  .item{
+    display:grid; grid-template-columns: 1fr auto 90px auto; align-items:center; gap:10px;
+    padding:8px 0; border-bottom:1px dashed rgba(255,255,255,.12);
+  }
+  .item:last-child{ border-bottom:none; }
+  .price{ color:var(--muted); font-variant-numeric: tabular-nums; }
+  .qty{ width:90px; padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,.25); background: rgba(255,255,255,.06); color:var(--text); }
+  .addbtn{
+    padding:8px 12px; border-radius:12px; border:1px solid rgba(255,255,255,.35);
+    background: linear-gradient(180deg, #cffff0, #95f2d7);
+    color:#052a1e; cursor:pointer; box-shadow: 0 10px 18px rgba(121,240,203,.22);
+  }
+  .addbtn:hover{ filter:brightness(.98) }
+
+  /* Cart */
+  .cart{ position:sticky; top:12px; }
+  .cart h3{ margin:0 0 10px; }
+  .cart-empty{ color:var(--muted); font-size:14px; text-align:center; padding:10px 0; }
+  .cart-list{ display:grid; gap:10px; max-height:420px; overflow:auto; padding-right:6px; }
+  .cart-row{
+    display:grid; grid-template-columns: 1fr 78px 78px auto; gap:8px; align-items:center;
+    padding:10px; border-radius:12px; background: rgba(255,255,255,.06); border:1px solid rgba(255,255,255,.18);
+  }
+  .cart-row input{
+    width:100%; padding:8px; border-radius:10px; border:1px solid rgba(255,255,255,.25);
+    background: rgba(255,255,255,.06); color:var(--text);
+  }
+  .rmv{
+    border:0; background:transparent; color:#ffb4b4; cursor:pointer; font-weight:700;
+  }
+  .totals{ display:flex; justify-content:space-between; align-items:center; margin-top:12px; font-weight:700; }
+  .checkout{
+    width:100%; margin-top:10px; padding:12px 16px; border:0; border-radius:14px;
+    font-size:16px; color:#052a1e; background: linear-gradient(180deg, var(--accent2), var(--accent));
+    box-shadow: 0 10px 24px rgba(37,176,130,.35), inset 0 1px 0 rgba(255,255,255,.35);
+    cursor:pointer;
+  }
+  .checkout:disabled{ opacity:.5; cursor:not-allowed; }
+
+  /* Customer form */
+  .cust label{ display:block; font-weight:600; margin:10px 0 6px; }
+  .cust input, .cust textarea{
+    width:100%; padding:12px; border-radius:12px; border:1px solid rgba(255,255,255,.22);
+    background: rgba(255,255,255,.06); color:var(--text);
+  }
+  .small{ font-size:12px; color:var(--muted); margin-top:6px; }
+</style>
 </head>
 <body>
 
-  <!-- Logo -->
-  <header>
-    <img src="logo.png" alt="A-1 Grocery & Halal Meat">
-  </header>
+<div class="wrap">
+  <!-- Banner -->
+  <div class="hero"><img src="logo.png" alt="A-1 Grocery & Halal Meat" /></div>
 
-  <!-- Menu -->
-  <h2>Our Menu</h2>
-  <div class="menu">
-    <div class="item">Fresh Lamb <span class="price">$7.99/lb</span></div>
-    <div class="item">Fresh Chicken <span class="price">$3.49/lb</span></div>
-    <div class="item">Shan Masala <span class="price">$1.99</span></div>
-    <div class="item">Basmati Rice (10lb) <span class="price">$15.99</span></div>
-    <div class="item">Halal Beef <span class="price">$6.99/lb</span></div>
+  <!-- Optional promotional menu image -->
+  <h2>Our Menu <span class="bar"></span></h2>
+  <div class="card"><img src="menu.png" class="menu-img" alt="Menu board (optional)"></div>
+
+  <!-- Catalog + Cart -->
+  <h2>Shop & Add to Cart <span class="bar"></span></h2>
+  <div class="grid">
+    <!-- Catalog -->
+    <div class="card">
+      <div class="catalog" id="catalog">
+        <!-- Poultry -->
+        <div class="group">
+          <h3>Poultry</h3>
+
+          <div class="item" data-sku="whole-chicken" data-name="Whole chicken" data-price="2.95" data-unit="/lb">
+            <div>Whole chicken</div>
+            <div class="price">$2.95/lb</div>
+            <input class="qty" type="number" min="0.1" step="0.1" value="1">
+            <button class="addbtn">Add</button>
+          </div>
+
+          <div class="item" data-sku="hard-chicken" data-name="Hard chicken" data-price="3.49" data-unit="/lb">
+            <div>Hard chicken</div><div class="price">$3.49/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="small-chicken" data-name="Small chicken" data-price="3.29" data-unit="/lb">
+            <div>Small chicken</div><div class="price">$3.29/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="chicken-legs" data-name="Chicken legs" data-price="1.99" data-unit="/lb">
+            <div>Chicken legs</div><div class="price">$1.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="chicken-wings" data-name="Chicken wings" data-price="4.79" data-unit="/lb">
+            <div>Chicken wings</div><div class="price">$4.79/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="chicken-breast" data-name="Chicken breast" data-price="4.99" data-unit="/lb">
+            <div>Chicken breast</div><div class="price">$4.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="chicken-thighs" data-name="Chicken thighs" data-price="4.49" data-unit="/lb">
+            <div>Chicken thighs</div><div class="price">$4.49/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="ground-chicken" data-name="Ground chicken" data-price="3.99" data-unit="/lb">
+            <div>Ground chicken</div><div class="price">$3.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+        </div>
+
+        <!-- Meat -->
+        <div class="group">
+          <h3>Meat</h3>
+          <div class="item" data-sku="baby-goat-leg" data-name="Baby Goat Leg" data-price="13.99" data-unit="/lb">
+            <div>Baby Goat Leg</div><div class="price">$13.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="goat-shoulder" data-name="Goat shoulder" data-price="13.99" data-unit="/lb">
+            <div>Goat shoulder</div><div class="price">$13.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="goat-chest" data-name="Goat chest" data-price="11.99" data-unit="/lb">
+            <div>Goat chest</div><div class="price">$11.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="goat-feet" data-name="Goat feet" data-price="6.99" data-unit="/lb">
+            <div>Goat feet</div><div class="price">$6.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="lamb-leg" data-name="Lamb Leg" data-price="10.99" data-unit="/lb">
+            <div>Lamb Leg</div><div class="price">$10.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="lamb-shoulder" data-name="Lamb shoulder" data-price="10.99" data-unit="/lb">
+            <div>Lamb shoulder</div><div class="price">$10.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="lamb-chop" data-name="Lamb chop" data-price="12.99" data-unit="/lb">
+            <div>Lamb chop</div><div class="price">$12.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="beef-with-bone" data-name="Beef with Bone" data-price="5.99" data-unit="/lb">
+            <div>Beef with Bone</div><div class="price">$5.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="beef-boneless" data-name="Beef Boneless" data-price="7.99" data-unit="/lb">
+            <div>Beef Boneless</div><div class="price">$7.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="beef-liver" data-name="Beef Liver" data-price="3.99" data-unit="/lb">
+            <div>Beef Liver</div><div class="price">$3.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="ground-beef" data-name="Ground Beef" data-price="6.99" data-unit="/lb">
+            <div>Ground Beef</div><div class="price">$6.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="shank-nihari" data-name="Shank (Nihari)" data-price="5.99" data-unit="/lb">
+            <div>Shank (Nihari)</div><div class="price">$5.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="steak-tbone" data-name="Steak (T-Bone)" data-price="8.99" data-unit="/lb">
+            <div>Steak (T-Bone)</div><div class="price">$8.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="ribeye" data-name="Ribeye" data-price="8.99" data-unit="/lb">
+            <div>Ribeye</div><div class="price">$8.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="beef-ribs" data-name="Beef Ribs" data-price="5.99" data-unit="/lb">
+            <div>Beef Ribs</div><div class="price">$5.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="oxtail" data-name="Ox-tail" data-price="11.99" data-unit="/lb">
+            <div>Ox-tail</div><div class="price">$11.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="cow-feet" data-name="Cow feet" data-price="4.99" data-unit="/lb">
+            <div>Cow feet</div><div class="price">$4.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+        </div>
+
+        <!-- Fish -->
+        <div class="group">
+          <h3>Fish</h3>
+          <div class="item" data-sku="hilsha" data-name="Hilsha" data-price="9.99" data-unit="/lb">
+            <div>Hilsha</div><div class="price">$9.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="rohu" data-name="Rohu" data-price="3.99" data-unit="/lb">
+            <div>Rohu</div><div class="price">$3.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="snapper" data-name="Snapper" data-price="9.99" data-unit="/lb">
+            <div>Snapper</div><div class="price">$9.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="pompano" data-name="Pompano" data-price="6.99" data-unit="/lb">
+            <div>Pompano</div><div class="price">$6.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+          <div class="item" data-sku="kingfish" data-name="Kingfish" data-price="8.99" data-unit="/lb">
+            <div>Kingfish</div><div class="price">$8.99/lb</div><input class="qty" type="number" min="0.1" step="0.1" value="1"><button class="addbtn">Add</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Cart sidebar -->
+    <aside class="card cart" id="cartCard">
+      <h3>Your Cart</h3>
+      <div id="cartEmpty" class="cart-empty">No items yet. Add from the list →</div>
+      <div id="cartList" class="cart-list" hidden></div>
+
+      <div class="totals">
+        <div>Estimated total</div>
+        <div id="cartTotal">$0.00</div>
+      </div>
+
+      <!-- Customer details + submit via Formspree -->
+      <form id="checkoutForm" class="cust" action="https://formspree.io/f/meozdjqy" method="POST">
+        <input type="hidden" name="order_json" id="orderJson">
+        <input type="hidden" name="order_readable" id="orderReadable">
+        <input type="hidden" name="order_total" id="orderTotal">
+
+        <label for="name">Name</label>
+        <input id="name" name="name" required>
+
+        <label for="phone">Phone</label>
+        <input id="phone" name="phone" type="tel" required>
+
+        <label for="pickup">Pickup Time (optional)</label>
+        <input id="pickup" name="pickup_time" placeholder="e.g., Today 5:30 PM">
+
+        <label for="notes">Cutting / special instructions</label>
+        <textarea id="notes" name="instructions" rows="3" placeholder="e.g., cut into small pieces, extra clean"></textarea>
+
+        <button id="checkoutBtn" class="checkout" type="submit" disabled>Place Order</button>
+        <div class="small">You’ll see a confirmation after submitting. Prices are estimates based on listed $/lb.</div>
+      </form>
+    </aside>
   </div>
+</div>
 
-  <!-- Order Form -->
-  <h2>Place Your Pickup Order</h2>
-  <form action="https://formspree.io/f/meozdjqy" method="POST">
-    <label>Name:</label>
-    <input type="text" name="name" required>
+<script>
+(() => {
+  const cart = new Map(); // key: sku, value: {name, price, unit, qty}
+  const money = v => '$' + (Math.round(v * 100) / 100).toFixed(2);
 
-    <label>Phone Number:</label>
-    <input type="tel" name="phone" required>
+  const cartEmptyEl = document.getElementById('cartEmpty');
+  const cartListEl  = document.getElementById('cartList');
+  const cartTotalEl = document.getElementById('cartTotal');
+  const checkoutBtn = document.getElementById('checkoutBtn');
 
-    <label>Select Item:</label>
-    <select name="item" required>
-      <option value="Fresh Lamb">Fresh Lamb - $7.99/lb</option>
-      <option value="Fresh Chicken">Fresh Chicken - $3.49/lb</option>
-      <option value="Shan Masala">Shan Masala - $1.99</option>
-      <option value="Basmati Rice">Basmati Rice (10lb) - $15.99</option>
-      <option value="Halal Beef">Halal Beef - $6.99/lb</option>
-    </select>
+  // Add-to-cart
+  document.querySelectorAll('.item .addbtn').forEach(btn => {
+    btn.addEventListener('click', e => {
+      e.preventDefault();
+      const row = e.target.closest('.item');
+      const sku = row.dataset.sku;
+      const name = row.dataset.name;
+      const price = parseFloat(row.dataset.price);
+      const unit = row.dataset.unit || '';
+      const qtyInput = row.querySelector('.qty');
+      const qty = parseFloat(qtyInput.value || '0');
 
-    <label>Quantity (lbs or pcs):</label>
-    <input type="number" name="quantity" required>
+      if (!qty || qty <= 0) return;
 
-    <label>Special Instructions:</label>
-    <textarea name="instructions"></textarea>
+      if (cart.has(sku)) {
+        cart.get(sku).qty += qty;
+      } else {
+        cart.set(sku, { name, price, unit, qty });
+      }
+      qtyInput.value = 1;
+      renderCart();
+    });
+  });
 
-    <button type="submit">Submit Order</button>
-  </form>
+  function renderCart(){
+    const items = Array.from(cart.entries());
+    const hasItems = items.length > 0;
+    cartEmptyEl.hidden = hasItems;
+    cartListEl.hidden  = !hasItems;
+    cartListEl.innerHTML = '';
+
+    let total = 0;
+
+    items.forEach(([sku, it]) => {
+      const line = it.price * it.qty;
+      total += line;
+
+      const row = document.createElement('div');
+      row.className = 'cart-row';
+      row.innerHTML = `
+        <div><strong>${it.name}</strong><div class="small">${money(it.price)}${it.unit}</div></div>
+        <input type="number" min="0" step="0.1" value="${it.qty}" data-sku="${sku}" class="cart-qty">
+        <div>${money(line)}</div>
+        <button class="rmv" data-sku="${sku}" title="Remove">✕</button>
+      `;
+      cartListEl.appendChild(row);
+    });
+
+    cartTotalEl.textContent = money(total);
+    checkoutBtn.disabled = !hasItems;
+
+    // Wire qty changes & removes
+    cartListEl.querySelectorAll('.cart-qty').forEach(inp => {
+      inp.addEventListener('input', e => {
+        const sku = e.target.dataset.sku;
+        let q = parseFloat(e.target.value || '0');
+        if (q <= 0 || isNaN(q)) { cart.delete(sku); }
+        else { cart.get(sku).qty = q; }
+        renderCart();
+      });
+    });
+    cartListEl.querySelectorAll('.rmv').forEach(btn => {
+      btn.addEventListener('click', e => {
+        e.preventDefault();
+        const sku = e.target.dataset.sku;
+        cart.delete(sku);
+        renderCart();
+      });
+    });
+  }
+
+  // Prepare payload for Formspree on submit
+  const form = document.getElementById('checkoutForm');
+  form.addEventListener('submit', e => {
+    if (cart.size === 0) {
+      e.preventDefault();
+      alert('Your cart is empty. Please add items first.');
+      return;
+    }
+    const items = Array.from(cart.values()).map(it => ({
+      item: it.name, price_per_unit: it.price, unit: it.unit, quantity: it.qty, line_total: +(it.price * it.qty).toFixed(2)
+    }));
+    const total = items.reduce((s, it) => s + it.line_total, 0);
+
+    // Hidden fields for Formspree
+    document.getElementById('orderJson').value = JSON.stringify({ items, total }, null, 2);
+    const readable = items.map(i => `• ${i.item} — ${i.quantity}${i.unit} @ ${money(i.price_per_unit)} = ${money(i.line_total)}`).join('\n');
+    document.getElementById('orderReadable').value = readable;
+    document.getElementById('orderTotal').value = money(total);
+  });
+})();
+</script>
 
 </body>
 </html>
