@@ -36,11 +36,14 @@
   }
 
   .wrap{max-width:var(--max); margin:0 auto; padding:18px}
+
   header{
-    display:flex; align-items:center; justify-content:space-between;
+    display:flex; align-items:center; justify-content:space-between; gap:16px;
     padding:12px 16px; background:var(--panel); border:1px solid var(--line);
     border-radius:20px; box-shadow:var(--shadow);
   }
+  .brand-wrap{display:flex; align-items:center; gap:12px}
+  .logo{height:44px; width:auto; border-radius:10px}
   .brand{font-weight:800; letter-spacing:.3px}
   .status{font-size:12px; color:#1b5e20}
 
@@ -128,7 +131,7 @@
     background:#ffffff; color:#000000; padding:10px;
   }
   .rmv{border:0; background:transparent; color:#c62828; font-weight:900; cursor:pointer}
-  .meta{font-size:12px; color:var(--muted)}
+  .meta{font-size:12px; color:#4c6b4c}
   .totals{display:flex; justify-content:space-between; margin-top:12px; font-weight:900}
 
   /* Checkout button -> green */
@@ -148,17 +151,15 @@
   }
   textarea.input{height:auto; min-height:90px}
 
-  /* Small helper text */
-  .helper{font-size:12px; color:#355b35; margin-top:6px}
   .disclaimer{font-size:12px; color:#4c4c4c; margin-top:10px}
 </style>
 </head>
 <body>
   <div class="wrap">
     <header>
-      <div>
+      <div class="brand-wrap">
+        <img src="logo.png" alt="A-1 Grocery & Halal Meat logo" class="logo" />
         <div class="brand">A-1 Grocery & Halal Meat</div>
-        <div class="status">● Open for pickup</div>
       </div>
       <div class="status">Secure checkout</div>
     </header>
@@ -215,7 +216,7 @@
           <button id="checkoutBtn" class="checkout" type="submit" disabled>Go to checkout →</button>
 
           <p class="disclaimer">
-            *Prices shown are estimates and may vary slightly at pickup based on exact product weight.
+            *Prices shown are estimates and may vary slightly at pickup based on exact product weight and market conditions. Thank you for understanding.
           </p>
         </form>
       </aside>
