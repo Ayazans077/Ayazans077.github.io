@@ -3,22 +3,18 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>A‑1 Halal Meat — Online Orders</title>
-<meta name="description" content="Order halal poultry, meat, and fish for pickup. Cart supports multiple items." />
+<title>A-1 Halal Meat — Online Orders</title>
+<meta name="description" content="Order halal poultry, meat, and fish for pickup. Multi-item cart with live total." />
 <style>
   :root{
     --bg:#0f1220; --panel:rgba(255,255,255,.12); --glass:rgba(255,255,255,.18);
     --stroke:rgba(255,255,255,.25); --accent:#25b082; --accent2:#7be8c6;
     --text:#eef3f0; --muted:#b9c5bf; --shadow:0 18px 40px rgba(0,0,0,.35), inset 0 1px 0 rgba(255,255,255,.04);
-    --fs:16px;              /* base font size (bumped up) */
-    --gap:16px;             /* base spacing */
-    --radius:18px;
-    --input-h:48px;         /* taller inputs/buttons */
-    --qty-w:110px;          /* wider quantity box */
+    --fs:16px; --gap:16px; --radius:18px; --input-h:50px; --qty-w:120px;
   }
   *{box-sizing:border-box}
   body{
-    margin:0;color:var(--text);font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    margin:0;color:var(--text);font-family:system-ui,-apple-system,"Segoe UI",Roboto,Arial,sans-serif;
     background: radial-gradient(1200px 600px at 20% -10%, #1d2344 0%, #0f1220 60%) fixed,
                 radial-gradient(900px 500px at 120% 10%, #1b2a3a 0%, #0f1220 60%) fixed;
     font-size:var(--fs);
@@ -26,54 +22,55 @@
   .wrap{max-width:1280px;margin:0 auto;padding:20px}
   .hero{margin:18px 0 14px;padding:16px;border-radius:var(--radius);backdrop-filter:blur(10px);
         background:linear-gradient(180deg,var(--glass),rgba(255,255,255,.08));
-        border:1px solid var(--stroke);box-shadow:var(--shadow)}
+        border:1px solid var(--stroke);box-shadow:var(--shadow);position:relative;overflow:hidden}
   .hero img{width:100%;height:auto;display:block;border-radius:14px}
 
   h1{margin:0 6px 6px;font-size:clamp(24px,3.8vw,36px)}
   h2{margin:22px 6px 10px;font-size:clamp(20px,3.2vw,28px)}
   .bar{height:2px;background:linear-gradient(90deg,var(--accent),transparent);border-radius:2px;margin:8px 6px 16px}
 
-  .grid{display:grid;gap:var(--gap);grid-template-columns:2fr 1fr}
+  /* Layout */
+  .grid{display:grid;gap:var(--gap);grid-template-columns:2fr 1fr;position:relative}
   @media (max-width:1024px){.grid{grid-template-columns:1fr}}
   .card{background:linear-gradient(180deg,var(--panel),rgba(255,255,255,.06));border:1px solid var(--stroke);
-        border-radius:var(--radius);padding:16px;box-shadow:var(--shadow)}
+        border-radius:var(--radius);padding:16px;box-shadow:var(--shadow);position:relative;overflow:hidden;z-index:0}
 
-  /* CATALOG */
+  /* Catalog */
   .catalog{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:var(--gap)}
   @media (max-width:1180px){.catalog{grid-template-columns:repeat(2,minmax(0,1fr))}}
   @media (max-width:680px){.catalog{grid-template-columns:1fr}}
-  .group{padding:14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18)}
+  .group{padding:14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18);position:relative;overflow:hidden;z-index:0}
   .group h3{margin:2px 0 12px;font-size:20px;color:var(--accent2)}
-  /* Row = name | price | qty | add button (far right) */
+  /* Row: name | price | qty | add (far right) */
   .item{
-    display:grid;grid-template-columns: 1fr auto var(--qty-w) 120px;
-    gap:12px;align-items:center;padding:10px 0;border-bottom:1px dashed rgba(255,255,255,.12)
+    display:grid;grid-template-columns: 1fr auto var(--qty-w) 130px;
+    gap:12px;align-items:center;padding:12px 0;border-bottom:1px dashed rgba(255,255,255,.12);
+    position:relative;overflow:hidden;z-index:0;
   }
   .item:last-child{border-bottom:none}
   .price{color:var(--muted);font-variant-numeric:tabular-nums}
   .qty{
-    width:var(--qty-w);height:var(--input-h);padding:10px;border-radius:12px;
-    border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:var(--text);
-    font-size:1rem;
+    width:var(--qty-w);height:var(--input-h);padding:12px;border-radius:12px;
+    border:1px solid rgba(255,255,255,.25);background:rgba(255,255,255,.06);color:var(--text);font-size:1rem;
   }
   .addbtn{
-    justify-self:end;height:var(--input-h);padding:0 18px;border-radius:12px;border:1px solid rgba(255,255,255,.35);
+    justify-self:end;height:var(--input-h);padding:0 20px;border-radius:12px;border:1px solid rgba(255,255,255,.35);
     background:linear-gradient(180deg,#cffff0,#95f2d7);color:#052a1e;cursor:pointer;
-    box-shadow:0 10px 18px rgba(121,240,203,.22);font-weight:700;
+    box-shadow:0 10px 18px rgba(121,240,203,.22);font-weight:700;position:relative;z-index:0;
   }
   .addbtn:hover{filter:brightness(.98)}
 
-  /* CART */
-  .cart{position:sticky;top:12px}
+  /* Cart column always on top (fix overlap) */
+  .cart{position:sticky;top:12px;z-index:10;isolation:isolate}
   .cart h3{margin:0 0 10px}
   .cart-empty{color:var(--muted);font-size:14px;text-align:center;padding:10px 0}
-  .cart-list{display:grid;gap:10px;max-height:520px;overflow:auto;padding-right:6px}
+  .cart-list{display:grid;gap:10px;max-height:540px;overflow:auto;padding-right:6px}
   .cart-row{
-    display:grid;grid-template-columns:1fr 110px 110px auto;gap:10px;align-items:center;
+    display:grid;grid-template-columns:1fr 120px 110px auto;gap:10px;align-items:center;
     padding:12px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.18)
   }
   .cart-row input{
-    width:100%;height:var(--input-h);padding:10px;border-radius:12px;border:1px solid rgba(255,255,255,.25);
+    width:100%;height:var(--input-h);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.25);
     background:rgba(255,255,255,.06);color:var(--text)
   }
   .rmv{border:0;background:transparent;color:#ffb4b4;cursor:pointer;font-weight:700;font-size:18px}
@@ -85,7 +82,7 @@
   }
   .checkout:disabled{opacity:.5;cursor:not-allowed}
 
-  /* CUSTOMER INFO */
+  /* Customer info */
   .cust label{display:block;font-weight:600;margin:12px 0 6px}
   .cust input,.cust textarea{
     width:100%;height:var(--input-h);padding:12px;border-radius:12px;border:1px solid rgba(255,255,255,.22);
@@ -97,7 +94,8 @@
 </head>
 <body>
 <div class="wrap">
-  <div class="hero"><img src="logo.png" alt="A‑1 Halal Meat"></div>
+  <!-- Optional banner -->
+  <div class="hero"><img src="logo.png" alt="A-1 Halal Meat"></div>
 
   <h1>Order Halal Meat, Poultry & Fish for Pickup</h1>
   <div class="bar"></div>
@@ -255,7 +253,6 @@
         <div>Estimated total</div><div id="cartTotal">$0.00</div>
       </div>
 
-      <!-- Customer details + Formspree submit -->
       <form id="checkoutForm" class="cust" action="https://formspree.io/f/meozdjqy" method="POST">
         <input type="hidden" name="order_json" id="orderJson">
         <input type="hidden" name="order_readable" id="orderReadable">
@@ -290,7 +287,7 @@
   const cartTotal = document.getElementById('cartTotal');
   const checkoutBtn = document.getElementById('checkoutBtn');
 
-  // Add buttons
+  // Add to cart
   document.querySelectorAll('.item .addbtn').forEach(btn=>{
     btn.addEventListener('click', e=>{
       e.preventDefault();
@@ -351,7 +348,7 @@
     checkoutBtn.disabled = !has;
   }
 
-  // Submit to Formspree with readable + JSON payload
+  // Submit payload to Formspree
   const form = document.getElementById('checkoutForm');
   form.addEventListener('submit', e=>{
     if(cart.size===0){ e.preventDefault(); alert('Your cart is empty.'); return; }
