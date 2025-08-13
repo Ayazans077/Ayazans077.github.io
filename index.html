@@ -3,488 +3,354 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>A-1 Halal Meat — Online Orders</title>
-<meta name="description" content="Order halal poultry, meat, and fish for pickup. Add multiple items to cart." />
+<title>A-1 Halal Meat — Online Pickup</title>
+<meta name="description" content="Order halal poultry, meat, and fish for pickup. Simple cart with multiple items." />
 <style>
-  :root {
-    --bg: #0f1220;
-    --panel: #1b2233;
-    --panel2: #21293d;
-    --text: #eef3f0;
-    --muted: #b7c2c0;
-    --accent: #22c48b;
-    --accent2: #7be8c6;
-    --stroke: rgba(255, 255, 255, 0.15);
-    --radius: 16px;
-    --gap: 16px;
-    --input-h: 46px;
+  :root{
+    --bg:#0e1116;            /* dark background */
+    --panel:#161b22;         /* cards */
+    --panel-soft:#1a2030;
+    --text:#eef2f5;
+    --muted:#a7b0ba;
+    --accent:#ff6a2a;        /* orange buttons */
+    --accent-2:#ffd3c0;
+    --line:#263040;
+    --radius:16px;
+    --shadow:0 10px 26px rgba(0,0,0,.35);
+    --input-h:46px;
+    --max:1260px;
   }
-  
-  * {
-    box-sizing: border-box;
-    margin: 0;
-    padding: 0;
-  }
-  
-  html, body {
-    height: 100%;
-  }
-  
-  body {
-    color: var(--text);
-    font-family: system-ui, -apple-system, "Segoe UI", Roboto, Arial, sans-serif;
+
+  *{box-sizing:border-box}
+  html,body{height:100%}
+  body{
+    margin:0;
+    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
+    color:var(--text);
     background:
-      radial-gradient(1100px 600px at 20% -10%, #1e2740 0%, #0f1220 60%),
-      radial-gradient(900px 500px at 120% 10%, #182332 0%, #0f1220 60%);
-    line-height: 1.35;
-    padding: 0;
+      radial-gradient(900px 520px at 10% -10%, #1b2433 0%, var(--bg) 60%),
+      radial-gradient(800px 460px at 120% -10%, #18202b 0%, var(--bg) 60%),
+      var(--bg);
+    line-height:1.35;
   }
-  
-  .wrap {
-    max-width: 1200px;
-    margin: 0 auto;
-    padding: 20px;
+
+  .wrap{max-width:var(--max); margin:0 auto; padding:18px}
+  header{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:12px 16px; background:var(--panel); border:1px solid var(--line);
+    border-radius:20px; box-shadow:var(--shadow);
   }
-  
-  .hero {
-    background: var(--panel);
-    border: 1px solid var(--stroke);
-    border-radius: 20px;
-    padding: 14px;
-    margin-bottom: 20px;
+  .brand{font-weight:800; letter-spacing:.3px}
+  .status{font-size:12px; color:#9ee6b8}
+  /* Tabs */
+  .tabs{
+    display:flex; gap:12px; margin:18px 0 14px; flex-wrap:wrap;
+    background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:8px;
+    box-shadow:var(--shadow);
   }
-  
-  .hero img {
-    width: 100%;
-    height: auto;
-    display: block;
-    border-radius: 12px;
+  .tab{
+    padding:10px 18px; border-radius:999px; background:transparent; color:var(--text);
+    border:1px solid transparent; cursor:pointer; font-weight:700; letter-spacing:.2px;
   }
-  
-  h1 {
-    margin: 16px 4px 6px;
-    font-size: clamp(22px, 3.2vw, 34px);
+  .tab[aria-selected="true"]{
+    background:#20283a; border-color:#2a3548; box-shadow: inset 0 1px 0 rgba(255,255,255,.06);
   }
-  
-  .grid {
-    display: grid;
-    gap: 20px;
-    grid-template-columns: 1.7fr 1fr;
+
+  /* Layout */
+  .grid{
+    display:grid; gap:18px; grid-template-columns: 1.7fr 1fr;
   }
-  
-  @media (max-width: 1024px) {
-    .grid {
-      grid-template-columns: 1fr;
-    }
+  @media (max-width:1024px){ .grid{grid-template-columns:1fr} }
+
+  /* Left: product area */
+  .catalog{
+    background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:18px;
+    box-shadow:var(--shadow);
   }
-  
-  .card {
-    background: linear-gradient(180deg, var(--panel), var(--panel2));
-    border: 1px solid var(--stroke);
-    border-radius: 18px;
-    padding: 16px;
-    box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+  .section-title{margin:0 2px 12px; font-size:20px; font-weight:800}
+  .cards{
+    display:grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap:16px;
   }
-  
-  /* ------- Catalog ------- */
-  .catalog {
-    display: grid;
-    gap: 16px;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
+  @media (max-width:1150px){ .cards{grid-template-columns: repeat(2,minmax(0,1fr))} }
+  @media (max-width:620px){  .cards{grid-template-columns: 1fr} }
+
+  .card{
+    display:flex; flex-direction:column; gap:10px;
+    background:var(--panel-soft); border:1px solid var(--line); border-radius:18px; padding:14px;
+    min-height:148px; box-shadow:var(--shadow);
   }
-  
-  @media (max-width: 1100px) {
-    .catalog {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
+  .name{font-weight:800}
+  .price{color:var(--muted)}
+  .controls{margin-top:auto; display:flex; gap:10px; align-items:center}
+  .qty{
+    width:92px; height:var(--input-h); padding:10px; border-radius:12px; border:1px solid var(--line);
+    background:#0f1420; color:var(--text);
   }
-  
-  @media (max-width: 680px) {
-    .catalog {
-      grid-template-columns: 1fr;
-    }
+  .add{
+    height:var(--input-h); padding:0 18px; border-radius:12px; border:0;
+    background:linear-gradient(180deg, var(--accent), #ff7d44);
+    color:#1a0a03; font-weight:900; cursor:pointer; box-shadow:0 8px 16px rgba(255,106,42,.35);
   }
-  
-  .group {
-    border: 1px dashed var(--stroke);
-    border-radius: 14px;
-    padding: 12px;
-    background: rgba(255, 255, 255, 0.03);
+  .add:active{transform:translateY(1px)}
+
+  /* Right: cart */
+  .cart{
+    position:sticky; top:12px; align-self:start;
+    background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:16px;
+    box-shadow:var(--shadow);
   }
-  
-  .group h3 {
-    margin: 6px 4px 10px;
-    color: var(--accent2);
-    font-size: 18px;
+  .cart h3{margin:2px 0 10px}
+  .empty{color:var(--muted); text-align:center; padding:8px 0}
+  .items{display:grid; gap:10px; max-height:520px; overflow:auto}
+  .row{
+    display:grid; grid-template-columns: 1fr 100px 90px auto; gap:10px; align-items:center;
+    background:var(--panel-soft); border:1px solid var(--line); border-radius:14px; padding:10px;
   }
-  
-  /* row = name | price | qty | ADD */
-  .item {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    padding: 10px 0;
-    border-top: 1px dashed rgba(255, 255, 255, 0.08);
+  .row input{
+    width:100%; height:var(--input-h); border-radius:12px; border:1px solid var(--line);
+    background:#0f1420; color:var(--text); padding:10px;
   }
-  
-  .item:first-of-type {
-    border-top: none;
+  .rmv{border:0; background:transparent; color:#ffb4b4; font-weight:900; cursor:pointer}
+  .meta{font-size:12px; color:var(--muted)}
+  .totals{display:flex; justify-content:space-between; margin-top:12px; font-weight:900}
+  .checkout{
+    width:100%; height:var(--input-h); margin-top:10px; border-radius:14px; border:0;
+    background:linear-gradient(180deg, var(--accent), #ff7d44); color:#1a0a03; font-weight:900; cursor:pointer;
+    box-shadow:0 10px 24px rgba(255,106,42,.35);
   }
-  
-  .name {
-    flex: 1;
-    min-width: 0;
-    font-weight: 600;
+  .checkout:disabled{opacity:.55; cursor:not-allowed}
+  .f-label{margin-top:12px; font-size:14px}
+  .input{
+    width:100%; height:var(--input-h); padding:10px; border-radius:12px; border:1px solid var(--line);
+    background:#0f1420; color:var(--text);
   }
-  
-  .price {
-    width: 92px;
-    text-align: right;
-    color: var(--muted);
-    font-variant-numeric: tabular-nums;
-  }
-  
-  .qty {
-    width: 90px;
-    height: var(--input-h);
-    padding: 10px;
-    border-radius: 12px;
-    border: 1px solid var(--stroke);
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text);
-    font-size: 16px;
-  }
-  
-  .add {
-    height: var(--input-h);
-    padding: 0 16px;
-    border-radius: 12px;
-    border: 1px solid rgba(0, 0, 0, 0.2);
-    background: linear-gradient(180deg, #ccffe9, #8ef3d0);
-    color: #093a2c;
-    font-weight: 800;
-    cursor: pointer;
-    white-space: nowrap;
-    box-shadow: 0 8px 16px rgba(34, 196, 139, 0.28);
-  }
-  
-  .add:active {
-    transform: translateY(1px);
-  }
-  
-  /* Make long names wrap nicely without colliding */
-  .name, .price {
-    line-height: 1.35;
-    word-break: break-word;
-  }
-  
-  /* ------- Cart ------- */
-  .cart {
-    position: sticky;
-    top: 12px;
-  }
-  
-  .cart h3 {
-    margin: 0 0 10px;
-  }
-  
-  .empty {
-    color: var(--muted);
-    text-align: center;
-    padding: 8px 0;
-  }
-  
-  .rows {
-    display: grid;
-    gap: 10px;
-    max-height: 520px;
-    overflow: auto;
-  }
-  
-  .row {
-    display: grid;
-    grid-template-columns: 1fr 110px 100px auto;
-    gap: 10px;
-    align-items: center;
-    padding: 10px;
-    border-radius: 12px;
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid var(--stroke);
-  }
-  
-  .row input {
-    width: 100%;
-    height: var(--input-h);
-    padding: 10px;
-    border-radius: 12px;
-    border: 1px solid var(--stroke);
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text);
-  }
-  
-  .rmv {
-    border: 0;
-    background: transparent;
-    color: #ffb4b4;
-    font-weight: 800;
-    cursor: pointer;
-  }
-  
-  .totals {
-    display: flex;
-    justify-content: space-between;
-    margin-top: 12px;
-    font-weight: 800;
-  }
-  
-  .btn {
-    width: 100%;
-    height: var(--input-h);
-    margin-top: 10px;
-    border-radius: 14px;
-    border: 0;
-    background: linear-gradient(180deg, var(--accent2), var(--accent));
-    color: #073226;
-    font-weight: 900;
-    cursor: pointer;
-  }
-  
-  .btn:disabled {
-    opacity: 0.55;
-    cursor: not-allowed;
-  }
-  
-  /* Form styles */
-  form label {
-    display: block;
-    margin-top: 16px;
-    margin-bottom: 6px;
-    font-weight: 600;
-  }
-  
-  form input, form textarea {
-    width: 100%;
-    padding: 12px;
-    border-radius: 12px;
-    border: 1px solid var(--stroke);
-    background: rgba(255, 255, 255, 0.06);
-    color: var(--text);
-    font-size: 16px;
-  }
-  
-  form textarea {
-    min-height: 100px;
-    resize: vertical;
-  }
+  textarea.input{height:auto}
 </style>
 </head>
 <body>
   <div class="wrap">
-    <div class="hero">
-      <img src="logo.png" alt="A-1 Halal Meat (banner)" />
-    </div>
+    <header>
+      <div>
+        <div class="brand">A-1 Halal Meat</div>
+        <div class="status">● Open for pickup</div>
+      </div>
+      <div class="status">Secure checkout</div>
+    </header>
 
-    <h1>Order Halal Meat, Poultry &amp; Fish for Pickup</h1>
+    <!-- Category tabs -->
+    <nav class="tabs" role="tablist" aria-label="Categories">
+      <button class="tab" role="tab" aria-selected="true" data-cat="All">All</button>
+      <button class="tab" role="tab" aria-selected="false" data-cat="Poultry">Poultry</button>
+      <button class="tab" role="tab" aria-selected="false" data-cat="Meat">Meat</button>
+      <button class="tab" role="tab" aria-selected="false" data-cat="Fish">Fish</button>
+    </nav>
 
     <div class="grid">
-      <!-- Catalog -->
-      <section class="card">
-        <div class="catalog">
-          <!-- Poultry -->
-          <div class="group">
-            <h3>Poultry</h3>
-
-            <div class="item" data-sku="whole-chicken" data-name="Whole chicken" data-price="2.95" data-unit="/lb">
-              <div class="name">Whole chicken</div>
-              <div class="price">$2.95/lb</div>
-              <input class="qty" type="number" min="0.1" step="0.1" value="1">
-              <button class="add">ADD</button>
-            </div>
-
-            <div class="item" data-sku="hard-chicken" data-name="Hard chicken" data-price="3.49" data-unit="/lb">
-              <div class="name">Hard chicken</div>
-              <div class="price">$3.49/lb</div>
-              <input class="qty" type="number" min="0.1" step="0.1" value="1">
-              <button class="add">ADD</button>
-            </div>
-
-            <!-- More poultry items... -->
-          </div>
-
-          <!-- Meat -->
-          <div class="group">
-            <h3>Meat</h3>
-
-            <div class="item" data-sku="baby-goat-leg" data-name="Baby Goat Leg" data-price="13.99" data-unit="/lb">
-              <div class="name">Baby Goat Leg</div>
-              <div class="price">$13.99/lb</div>
-              <input class="qty" type="number" min="0.1" step="0.1" value="1">
-              <button class="add">ADD</button>
-            </div>
-
-            <!-- More meat items... -->
-          </div>
-
-          <!-- Fish -->
-          <div class="group">
-            <h3>Fish</h3>
-
-            <div class="item" data-sku="hilsha" data-name="Hilsha" data-price="9.99" data-unit="/lb">
-              <div class="name">Hilsha</div>
-              <div class="price">$9.99/lb</div>
-              <input class="qty" type="number" min="0.1" step="0.1" value="1">
-              <button class="add">ADD</button>
-            </div>
-
-            <!-- More fish items... -->
-          </div>
-        </div>
+      <!-- Left: product cards -->
+      <section class="catalog">
+        <h2 class="section-title" id="sectionTitle">All items</h2>
+        <div id="cards" class="cards" aria-live="polite"></div>
       </section>
 
-      <!-- Cart -->
-      <aside class="card cart">
-        <h3>Your Cart</h3>
+      <!-- Right: cart -->
+      <aside class="cart">
+        <h3>Your order</h3>
         <div id="empty" class="empty">No items yet. Add from the list →</div>
-        <div id="rows" class="rows" hidden></div>
+        <div id="cart" class="items" hidden></div>
 
         <div class="totals">
-          <div>Estimated total</div>
+          <div>TOTAL</div>
           <div id="total">$0.00</div>
         </div>
 
-        <form id="checkout" action="https://formspree.io/f/meozdjqy" method="POST">
+        <form id="checkoutForm" action="https://formspree.io/f/meozdjqy" method="POST" autocomplete="on">
           <input type="hidden" name="order_json" id="order_json">
           <input type="hidden" name="order_readable" id="order_readable">
           <input type="hidden" name="order_total" id="order_total">
 
-          <label for="name">Name</label>
-          <input id="name" name="name" required>
+          <label class="f-label">Name</label>
+          <input class="input" name="name" required>
 
-          <label for="phone">Phone</label>
-          <input id="phone" name="phone" type="tel" required>
+          <label class="f-label">Phone</label>
+          <input class="input" name="phone" type="tel" required>
 
-          <label for="pickup_time">Pickup Time (optional)</label>
-          <input id="pickup_time" name="pickup_time" placeholder="e.g., Today 5:30 PM">
+          <label class="f-label">Pickup time (optional)</label>
+          <input class="input" name="pickup_time" placeholder="e.g., Today 5:30 PM">
 
-          <label for="instructions">Cutting / special instructions</label>
-          <textarea id="instructions" name="instructions" rows="3" placeholder="e.g., cut small pieces, extra clean"></textarea>
+          <label class="f-label">Cutting / special instructions</label>
+          <textarea class="input" rows="3" name="instructions" placeholder="e.g., cut small pieces, extra clean"></textarea>
 
-          <button id="place" class="btn" type="submit" disabled>Place Order</button>
+          <button id="checkoutBtn" class="checkout" type="submit" disabled>Go to checkout →</button>
         </form>
       </aside>
     </div>
   </div>
 
 <script>
-(() => {
-  const money = v => '$' + (Math.round(v * 100) / 100).toFixed(2);
+(function(){
+  // ----- Inventory (no photos) -----
+  const INVENTORY = [
+    // Poultry
+    {cat:'Poultry', sku:'whole-chicken',   name:'Whole chicken',   price:2.95, unit:'/lb'},
+    {cat:'Poultry', sku:'hard-chicken',    name:'Hard chicken',    price:3.49, unit:'/lb'},
+    {cat:'Poultry', sku:'small-chicken',   name:'Small chicken',   price:3.29, unit:'/lb'},
+    {cat:'Poultry', sku:'chicken-legs',    name:'Chicken legs',    price:1.99, unit:'/lb'},
+    {cat:'Poultry', sku:'chicken-wings',   name:'Chicken wings',   price:4.79, unit:'/lb'},
+    {cat:'Poultry', sku:'chicken-breast',  name:'Chicken breast',  price:4.99, unit:'/lb'},
+    {cat:'Poultry', sku:'chicken-thighs',  name:'Chicken thighs',  price:4.49, unit:'/lb'},
+    {cat:'Poultry', sku:'ground-chicken',  name:'Ground chicken',  price:3.99, unit:'/lb'},
+
+    // Meat
+    {cat:'Meat', sku:'baby-goat-leg',  name:'Baby Goat Leg',  price:13.99, unit:'/lb'},
+    {cat:'Meat', sku:'goat-shoulder',  name:'Goat shoulder',  price:13.99, unit:'/lb'},
+    {cat:'Meat', sku:'goat-chest',     name:'Goat chest',     price:11.99, unit:'/lb'},
+    {cat:'Meat', sku:'goat-feet',      name:'Goat feet',      price:6.99, unit:'/lb'},
+    {cat:'Meat', sku:'lamb-leg',       name:'Lamb Leg',       price:10.99, unit:'/lb'},
+    {cat:'Meat', sku:'lamb-shoulder',  name:'Lamb shoulder',  price:10.99, unit:'/lb'},
+    {cat:'Meat', sku:'lamb-chop',      name:'Lamb chop',      price:12.99, unit:'/lb'},
+    {cat:'Meat', sku:'beef-bone',      name:'Beef with Bone', price:5.99,  unit:'/lb'},
+    {cat:'Meat', sku:'beef-boneless',  name:'Beef Boneless',  price:7.99,  unit:'/lb'},
+    {cat:'Meat', sku:'beef-liver',     name:'Beef Liver',     price:3.99,  unit:'/lb'},
+    {cat:'Meat', sku:'ground-beef',    name:'Ground Beef',    price:6.99,  unit:'/lb'},
+    {cat:'Meat', sku:'shank-nihari',   name:'Shank (Nihari)', price:5.99,  unit:'/lb'},
+    {cat:'Meat', sku:'steak-tbone',    name:'Steak (T-Bone)', price:8.99,  unit:'/lb'},
+    {cat:'Meat', sku:'ribeye',         name:'Ribeye',         price:8.99,  unit:'/lb'},
+    {cat:'Meat', sku:'beef-ribs',      name:'Beef Ribs',      price:5.99,  unit:'/lb'},
+    {cat:'Meat', sku:'oxtail',         name:'Ox-tail',        price:11.99, unit:'/lb'},
+    {cat:'Meat', sku:'cow-feet',       name:'Cow feet',       price:4.99,  unit:'/lb'},
+
+    // Fish
+    {cat:'Fish', sku:'hilsha',   name:'Hilsha',   price:9.99, unit:'/lb'},
+    {cat:'Fish', sku:'rohu',     name:'Rohu',     price:3.99, unit:'/lb'},
+    {cat:'Fish', sku:'snapper',  name:'Snapper',  price:9.99, unit:'/lb'},
+    {cat:'Fish', sku:'pompano',  name:'Pompano',  price:6.99, unit:'/lb'},
+    {cat:'Fish', sku:'kingfish', name:'Kingfish', price:8.99, unit:'/lb'},
+  ];
+
+  const money = n => '$' + (Math.round(n*100)/100).toFixed(2);
   const parseQty = v => {
     if (typeof v !== 'string') v = String(v ?? '');
-    v = v.replace(',', '.');
-    const n = parseFloat(v);
+    const n = Number.parseFloat(v.replace(',', '.'));
     return Number.isFinite(n) && n > 0 ? n : 0;
   };
 
+  const cardsEl = document.getElementById('cards');
+  const sectionTitle = document.getElementById('sectionTitle');
+  const tabs = document.querySelectorAll('.tab');
+
+  let currentCat = 'All';
   const cart = new Map(); // sku -> {name, price, unit, qty}
 
-  const rowsEl = document.getElementById('rows');
-  const emptyEl = document.getElementById('empty');
-  const totalEl = document.getElementById('total');
-  const placeBtn = document.getElementById('place');
+  function renderCards(){
+    const list = currentCat==='All' ? INVENTORY : INVENTORY.filter(i=>i.cat===currentCat);
+    sectionTitle.textContent = currentCat==='All' ? 'All items' : currentCat;
+    cardsEl.innerHTML = '';
+    list.forEach(it=>{
+      const card = document.createElement('div');
+      card.className = 'card';
+      card.innerHTML = `
+        <div class="name">${it.name}</div>
+        <div class="price">${money(it.price)}${it.unit}</div>
+        <div class="controls">
+          <input class="qty" type="number" min="0.1" step="0.1" value="1" aria-label="Quantity for ${it.name}">
+          <button class="add" data-sku="${it.sku}">Order now</button>
+        </div>
+      `;
+      cardsEl.appendChild(card);
+    });
 
-  // Hook up ADD buttons
-  document.querySelectorAll('.item .add').forEach(btn => {
-    btn.addEventListener('click', e => {
-      const row = e.target.closest('.item');
-      const sku = row.dataset.sku;
-      const name = row.dataset.name;
-      const price = parseFloat(row.dataset.price);
-      const unit = row.dataset.unit || '';
-      const qty = parseQty(row.querySelector('.qty').value);
-      if (!qty) return;
+    // wire add buttons
+    cardsEl.querySelectorAll('.add').forEach(btn=>{
+      btn.addEventListener('click', e=>{
+        const sku = e.currentTarget.dataset.sku;
+        const it = INVENTORY.find(i=>i.sku===sku);
+        const qty = parseQty(e.currentTarget.previousElementSibling.value);
+        if(!qty) return;
+        if(cart.has(sku)) cart.get(sku).qty = +(cart.get(sku).qty + qty).toFixed(2);
+        else cart.set(sku, {name:it.name, price:it.price, unit:it.unit, qty});
+        e.currentTarget.previousElementSibling.value = 1;
+        renderCart();
+      });
+    });
+  }
 
-      if (cart.has(sku)) {
-        cart.get(sku).qty = +(cart.get(sku).qty + qty).toFixed(2);
-      } else {
-        cart.set(sku, {name, price, unit, qty});
-      }
-      row.querySelector('.qty').value = 1;
-      render();
+  // Tabs behavior
+  tabs.forEach(t=>{
+    t.addEventListener('click', ()=>{
+      tabs.forEach(b=>b.setAttribute('aria-selected','false'));
+      t.setAttribute('aria-selected','true');
+      currentCat = t.dataset.cat;
+      renderCards();
     });
   });
 
-  function render() {
-    const items = Array.from(cart.entries());
-    const has = items.length > 0;
-    emptyEl.hidden = has;
-    rowsEl.hidden = !has;
-    rowsEl.innerHTML = '';
-    let sum = 0;
+  // Cart render/submit
+  const cartEl = document.getElementById('cart');
+  const emptyEl = document.getElementById('empty');
+  const totalEl = document.getElementById('total');
+  const checkoutBtn = document.getElementById('checkoutBtn');
 
-    items.forEach(([sku, it]) => {
-      const line = it.price * it.qty;
-      sum += line;
+  function renderCart(){
+    const items = Array.from(cart.entries());
+    const has = items.length>0;
+    emptyEl.hidden = has;
+    cartEl.hidden  = !has;
+    cartEl.innerHTML = '';
+    let total = 0;
+
+    items.forEach(([sku, it])=>{
+      const line = it.price * it.qty; total += line;
       const row = document.createElement('div');
       row.className = 'row';
       row.innerHTML = `
         <div>
           <strong>${it.name}</strong>
-          <div style="font-size:12px;color:${getComputedStyle(document.body).getPropertyValue('--muted')}">
-            ${money(it.price)}${it.unit}
-          </div>
+          <div class="meta">${money(it.price)}${it.unit}</div>
         </div>
         <input type="number" min="0" step="0.1" value="${it.qty.toFixed(2)}" data-sku="${sku}" class="q">
         <div>${money(line)}</div>
-        <button class="rmv" data-sku="${sku}">✕</button>
+        <button class="rmv" data-sku="${sku}" aria-label="Remove ${it.name}">✕</button>
       `;
-      rowsEl.appendChild(row);
+      cartEl.appendChild(row);
     });
 
-    rowsEl.querySelectorAll('.q').forEach(inp => {
-      inp.addEventListener('input', e => {
+    cartEl.querySelectorAll('.q').forEach(inp=>{
+      inp.addEventListener('input', e=>{
         const sku = e.target.dataset.sku;
         const q = parseQty(e.target.value);
-        if (!q) cart.delete(sku);
-        else cart.get(sku).qty = q;
-        render();
+        if(!q){ cart.delete(sku); } else { cart.get(sku).qty = q; }
+        renderCart();
       });
     });
-    
-    rowsEl.querySelectorAll('.rmv').forEach(btn => {
-      btn.addEventListener('click', e => {
+    cartEl.querySelectorAll('.rmv').forEach(btn=>{
+      btn.addEventListener('click', e=>{
         e.preventDefault();
-        cart.delete(e.target.dataset.sku);
-        render();
+        cart.delete(e.currentTarget.dataset.sku);
+        renderCart();
       });
     });
 
-    totalEl.textContent = money(sum);
-    placeBtn.disabled = !has;
+    totalEl.textContent = money(total);
+    checkoutBtn.disabled = !has;
   }
 
-  // Submit to Formspree
-  const form = document.getElementById('checkout');
-  form.addEventListener('submit', e => {
-    if (cart.size === 0) {
-      e.preventDefault();
-      alert('Your cart is empty.');
-      return;
-    }
-    
-    const items = Array.from(cart.values()).map(it => ({
-      item: it.name,
-      price_per_unit: it.price,
-      unit: it.unit,
-      quantity: +it.qty,
-      line_total: +(it.price * it.qty).toFixed(2)
+  // Submit payload to Formspree
+  const form = document.getElementById('checkoutForm');
+  form.addEventListener('submit', e=>{
+    if(cart.size===0){ e.preventDefault(); alert('Your cart is empty.'); return; }
+    const items = Array.from(cart.values()).map(it=>({
+      item: it.name, price_per_unit: it.price, unit: it.unit,
+      quantity: +it.qty, line_total: +(it.price*it.qty).toFixed(2)
     }));
-    
-    const total = items.reduce((s, i) => s + i.line_total, 0);
-    document.getElementById('order_json').value = JSON.stringify({items, total}, null, 2);
+    const total = items.reduce((s,i)=>s+i.line_total,0);
+    document.getElementById('order_json').value = JSON.stringify({items,total}, null, 2);
     document.getElementById('order_readable').value =
-      items.map(i => `• ${i.item} — ${i.quantity}${i.unit} @ $${i.price_per_unit}/lb = $${i.line_total}`).join('\n');
+      items.map(i=>`• ${i.item} — ${i.quantity}${i.unit} @ $${i.price_per_unit}/lb = $${i.line_total}`).join('\n');
     document.getElementById('order_total').value = money(total);
   });
+
+  // initial render
+  renderCards();
 })();
 </script>
 </body>
