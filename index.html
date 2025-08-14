@@ -195,21 +195,31 @@
         <div id="empty" class="empty">No items yet. Add from the list →</div>
         <div id="cart" class="items" hidden></div>
 
-        <div class="totals">
+        <!-- Make total screen-reader friendly -->
+        <div class="totals" aria-live="polite" aria-atomic="true">
           <div>TOTAL</div>
           <div id="total">$0.00</div>
         </div>
 
-        <form id="checkoutForm" action="https://formspree.io/f/xyzpvyle" method="POST" autocomplete="on">
+        <!-- UPDATED FORM START -->
+        <form id="checkoutForm" action="https://formspree.io/f/xyzpvpyle" method="POST" autocomplete="on">
+          <!-- cart snapshot -->
           <input type="hidden" name="order_json" id="order_json">
           <input type="hidden" name="order_readable" id="order_readable">
           <input type="hidden" name="order_total" id="order_total">
+
+          <!-- extras for Formspree -->
+          <input type="hidden" name="_subject" value="A-1 Online Order">
+          <input type="hidden" name="_redirect" value="thank-you.html">
+          <input type="text" name="_gotcha" style="display:none">
 
           <label class="f-label">Name</label>
           <input class="input" name="name" required>
 
           <label class="f-label">Phone</label>
-          <input class="input" name="phone" type="tel" required>
+          <input class="input" name="phone" type="tel" inputmode="tel"
+                 pattern="^[0-9\\-\\+\\(\\)\\s]{7,}$"
+                 placeholder="e.g., (607) 555-0123" required>
 
           <label class="f-label">Pickup time (optional)</label>
           <input class="input" name="pickup_time" placeholder="e.g., Today 5:30 PM">
@@ -223,6 +233,7 @@
             *Prices shown are estimates and may vary slightly at pickup based on exact product weight and market conditions. Thank you for understanding.
           </p>
         </form>
+        <!-- UPDATED FORM END -->
       </aside>
     </div>
   </div>
@@ -298,7 +309,7 @@
         <div class="name">${it.name}</div>
         <div class="price">${money(it.price)}${it.unit}</div>
         <div class="controls">
-          <input class="qty" type="number" min="0.1" step="0.1" value="1" aria-label="Quantity for ${it.name}">
+          <input class="qty" type="number" min="0.1" step="0.1" inputmode="decimal" value="1" aria-label="Quantity for ${it.name}">
           <button class="add" data-sku="${it.sku}" data-cat="${it.cat}">Order now</button>
         </div>
       `;
@@ -357,7 +368,7 @@
           <strong>${it.name}</strong>
           <div class="meta">${money(it.price)}${it.unit}</div>
         </div>
-        <input type="number" min="0" step="0.1" value="${it.qty.toFixed(2)}" data-sku="${sku}" class="q">
+        <input type="number" min="0" step="0.1" value="${it.qty.toFixed(2)}" data-sku="${sku}" class="q" inputmode="decimal">
         <div>${money(line)}</div>
         <button class="rmv" data-sku="${sku}" aria-label="Remove ${it.name}">✕</button>
       `;
@@ -394,7 +405,7 @@
     const total = items.reduce((s,i)=>s+i.line_total,0);
     document.getElementById('order_json').value = JSON.stringify({items,total}, null, 2);
     document.getElementById('order_readable').value =
-      items.map(i=>`• ${i.item} — ${i.quantity}${i.unit} @ $${i.price_per_unit}/lb = $${i.line_total}`).join('\n');
+      items.map(i=>`• ${i.item} — ${i.quantity}${i.unit} @ $${i.price_per_unit}/lb = $${i.line_total}`).join('\\n');
     document.getElementById('order_total').value = money(total);
   });
 
