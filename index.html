@@ -366,43 +366,44 @@
 
 <script>
   // ---------- DATA ----------
-  const CATALOG = [
-    // Poultry
-    {cat:'Poultry', sku:'whole-chicken',   name:'Whole chicken',   price:2.95, unit:'/lb', img:'images/whole-chicken.jpg'},
-    {cat:'Poultry', sku:'hard-chicken',    name:'Hard chicken',    price:3.49, unit:'/lb', img:'images/hard-chicken.jpg'},
-    {cat:'Poultry', sku:'small-chicken',   name:'Small chicken',   price:3.29, unit:'/lb', img:'images/small-chicken.jpg'},
-    {cat:'Poultry', sku:'chicken-legs',    name:'Chicken legs',    price:1.99, unit:'/lb', img:'images/chicken-legs.jpg'},
-    {cat:'Poultry', sku:'chicken-wings',   name:'Chicken wings',   price:4.79, unit:'/lb', img:'images/chicken-wings.jpg'},
-    {cat:'Poultry', sku:'chicken-breast',  name:'Chicken breast',  price:4.99, unit:'/lb', img:'images/chicken-breast.jpg'},
-    {cat:'Poultry', sku:'chicken-thighs',  name:'Chicken thighs',  price:4.49, unit:'/lb', img:'images/chicken-thighs.jpg'},
-    {cat:'Poultry', sku:'ground-chicken',  name:'Ground chicken',  price:3.99, unit:'/lb', img:'images/ground-chicken.jpg'},
+  // Replace your CATALOG array with this one (has stock photo URLs):
+const CATALOG = [
+  // Poultry
+  {cat:'Poultry', sku:'whole-chicken',   name:'Whole chicken',   price:2.95, unit:'/lb', img:'https://images.unsplash.com/photo-1587593810167-a84920ea0781?w=400&h=300&fit=crop'},
+  {cat:'Poultry', sku:'hard-chicken',    name:'Hard chicken',    price:3.49, unit:'/lb', img:'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400&h=300&fit=crop'},
+  {cat:'Poultry', sku:'small-chicken',   name:'Small chicken',   price:3.29, unit:'/lb', img:'https://images.unsplash.com/photo-1551218372-a8789b81b253?w=400&h=300&fit=crop'},
+  {cat:'Poultry', sku:'chicken-legs',    name:'Chicken legs',    price:1.99, unit:'/lb', img:'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=400&h=300&fit=crop'},
+  {cat:'Poultry', sku:'chicken-wings',   name:'Chicken wings',   price:4.79, unit:'/lb', img:'https://images.unsplash.com/photo-1527477396000-e27163b481c2?w=400&h=300&fit=crop'},
+  {cat:'Poultry', sku:'chicken-breast',  name:'Chicken breast',  price:4.99, unit:'/lb', img:'https://images.unsplash.com/photo-1604503468506-a8da13d82791?w=400&h=300&fit=crop'},
+  {cat:'Poultry', sku:'chicken-thighs',  name:'Chicken thighs',  price:4.49, unit:'/lb', img:'https://images.unsplash.com/photo-1598103442097-8b74394b95c6?w=400&h=300&fit=crop'},
+  {cat:'Poultry', sku:'ground-chicken',  name:'Ground chicken',  price:3.99, unit:'/lb', img:'https://images.unsplash.com/photo-1588347818837-c4f96bbda7c3?w=400&h=300&fit=crop'},
 
-    // Meat
-    {cat:'Meat', sku:'baby-goat-leg',  name:'Baby Goat Leg',  price:13.99, unit:'/lb', img:'images/baby-goat-leg.jpg'},
-    {cat:'Meat', sku:'goat-shoulder',  name:'Goat shoulder',  price:13.99, unit:'/lb', img:'images/goat-shoulder.jpg'},
-    {cat:'Meat', sku:'goat-chest',     name:'Goat chest',     price:11.99, unit:'/lb', img:'images/goat-chest.jpg'},
-    {cat:'Meat', sku:'goat-feet',      name:'Goat feet',      price:6.99, unit:'/lb', img:'images/goat-feet.jpg'},
-    {cat:'Meat', sku:'lamb-leg',       name:'Lamb Leg',       price:10.99, unit:'/lb', img:'images/lamb-leg.jpg'},
-    {cat:'Meat', sku:'lamb-shoulder',  name:'Lamb shoulder',  price:10.99, unit:'/lb', img:'images/lamb-shoulder.jpg'},
-    {cat:'Meat', sku:'lamb-chop',      name:'Lamb chop',      price:12.99, unit:'/lb', img:'images/lamb-chop.jpg'},
-    {cat:'Meat', sku:'beef-bone',      name:'Beef with Bone', price:5.99,  unit:'/lb', img:'images/beef-bone.jpg'},
-    {cat:'Meat', sku:'beef-boneless',  name:'Beef Boneless',  price:7.99,  unit:'/lb', img:'images/beef-boneless.jpg'},
-    {cat:'Meat', sku:'beef-liver',     name:'Beef Liver',     price:3.99,  unit:'/lb', img:'images/beef-liver.jpg'},
-    {cat:'Meat', sku:'ground-beef',    name:'Ground Beef',    price:6.99,  unit:'/lb', img:'images/ground-beef.jpg'},
-    {cat:'Meat', sku:'shank-nihari',   name:'Shank (Nihari)', price:5.99,  unit:'/lb', img:'images/shank-nihari.jpg'},
-    {cat:'Meat', sku:'steak-tbone',    name:'Steak (T-Bone)', price:8.99,  unit:'/lb', img:'images/steak-tbone.jpg'},
-    {cat:'Meat', sku:'ribeye',         name:'Ribeye',         price:8.99,  unit:'/lb', img:'images/ribeye.jpg'},
-    {cat:'Meat', sku:'beef-ribs',      name:'Beef Ribs',      price:5.99,  unit:'/lb', img:'images/beef-ribs.jpg'},
-    {cat:'Meat', sku:'oxtail',         name:'Ox-tail',        price:11.99, unit:'/lb', img:'images/oxtail.jpg'},
-    {cat:'Meat', sku:'cow-feet',       name:'Cow feet',       price:4.99,  unit:'/lb', img:'images/cow-feet.jpg'},
+  // Meat
+  {cat:'Meat', sku:'baby-goat-leg',  name:'Baby Goat Leg',  price:13.99, unit:'/lb', img:'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'goat-shoulder',  name:'Goat shoulder',  price:13.99, unit:'/lb', img:'https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'goat-chest',     name:'Goat chest',     price:11.99, unit:'/lb', img:'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'goat-feet',      name:'Goat feet',      price:6.99, unit:'/lb', img:'https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'lamb-leg',       name:'Lamb Leg',       price:10.99, unit:'/lb', img:'https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'lamb-shoulder',  name:'Lamb shoulder',  price:10.99, unit:'/lb', img:'https://images.unsplash.com/photo-1603048588665-791ca8aea617?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'lamb-chop',      name:'Lamb chop',      price:12.99, unit:'/lb', img:'https://images.unsplash.com/photo-1544025162-d76694265947?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'beef-bone',      name:'Beef with Bone', price:5.99,  unit:'/lb', img:'https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'beef-boneless',  name:'Beef Boneless',  price:7.99,  unit:'/lb', img:'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'beef-liver',     name:'Beef Liver',     price:3.99,  unit:'/lb', img:'https://images.unsplash.com/photo-1588347818837-c4f96bbda7c3?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'ground-beef',    name:'Ground Beef',    price:6.99,  unit:'/lb', img:'https://images.unsplash.com/photo-1588347818837-c4f96bbda7c3?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'shank-nihari',   name:'Shank (Nihari)', price:5.99,  unit:'/lb', img:'https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'steak-tbone',    name:'Steak (T-Bone)', price:8.99,  unit:'/lb', img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'ribeye',         name:'Ribeye',         price:8.99,  unit:'/lb', img:'https://images.unsplash.com/photo-1546833999-b9f581a1996d?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'beef-ribs',      name:'Beef Ribs',      price:5.99,  unit:'/lb', img:'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'oxtail',         name:'Ox-tail',        price:11.99, unit:'/lb', img:'https://images.unsplash.com/photo-1603048297172-c92544798d5a?w=400&h=300&fit=crop'},
+  {cat:'Meat', sku:'cow-feet',       name:'Cow feet',       price:4.99,  unit:'/lb', img:'https://images.unsplash.com/photo-1529692236671-f1f6cf9683ba?w=400&h=300&fit=crop'},
 
-    // Fish
-    {cat:'Fish', sku:'hilsha',   name:'Hilsha',   price:9.99, unit:'/lb', img:'images/hilsha.jpg'},
-    {cat:'Fish', sku:'rohu',     name:'Rohu',     price:3.99, unit:'/lb', img:'images/rohu.jpg'},
-    {cat:'Fish', sku:'snapper',  name:'Snapper',  price:9.99, unit:'/lb', img:'images/snapper.jpg'},
-    {cat:'Fish', sku:'pompano',  name:'Pompano',  price:6.99, unit:'/lb', img:'images/pompano.jpg'},
-    {cat:'Fish', sku:'kingfish', name:'Kingfish', price:8.99, unit:'/lb', img:'images/kingfish.jpg'},
-  ];
+  // Fish
+  {cat:'Fish', sku:'hilsha',   name:'Hilsha',   price:9.99, unit:'/lb', img:'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=400&h=300&fit=crop'},
+  {cat:'Fish', sku:'rohu',     name:'Rohu',     price:3.99, unit:'/lb', img:'https://images.unsplash.com/photo-1535140728325-781d1518340e?w=400&h=300&fit=crop'},
+  {cat:'Fish', sku:'snapper',  name:'Snapper',  price:9.99, unit:'/lb', img:'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=400&h=300&fit=crop'},
+  {cat:'Fish', sku:'pompano',  name:'Pompano',  price:6.99, unit:'/lb', img:'https://images.unsplash.com/photo-1535140728325-781d1518340e?w=400&h=300&fit=crop'},
+  {cat:'Fish', sku:'kingfish', name:'Kingfish', price:8.99, unit:'/lb', img:'https://images.unsplash.com/photo-1544943910-4c1dc44aab44?w=400&h=300&fit=crop'},
+];
 
   const el = (sel)=>document.querySelector(sel);
   const fmt = (n)=> `$${n.toFixed(2)}`;
