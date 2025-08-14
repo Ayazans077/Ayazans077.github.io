@@ -166,12 +166,12 @@
     border-color:#bff9e0; box-shadow:0 0 0 6px rgba(191,249,224,.12); transform:translateY(-1px);
   }
 
-  /* Always-visible chip labels */
+  /* Labels INSIDE the fields (replaces the green chip pills) */
   .field label{
-    position:absolute; left:12px; top:-11px;
-    padding:4px 10px; border-radius:999px;
-    font-size:12px; letter-spacing:.2px; color:#083b2e;
-    background:linear-gradient(90deg,#d9fbe6,#bff9e0); border:1px solid #ffffff66;
+    position:absolute; left:14px; top:6px;
+    padding:0; border:none; background:none;
+    font-size:12px; letter-spacing:.2px; color:#bff9e0;
+    pointer-events:none; z-index:1;
   }
   .help{ font-size:12px; color:var(--muted); margin-top:6px }
 
@@ -194,6 +194,14 @@
   .actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:6px; }
   .btn-primary.big{ font-size:15px; padding:12px 16px; border-radius:14px; font-weight:900 }
   .btn-ghost.round{ border-radius:14px }
+
+  /* SOLD badge (used when available:false) */
+  .sold-badge{
+    position:absolute; top:8px; left:8px;
+    background:#ef4444; color:white; font-weight:900;
+    padding:4px 8px; border-radius:6px; font-size:14px;
+    z-index:2;
+  }
 </style>
 </head>
 <body>
@@ -263,7 +271,6 @@
           <input type="hidden" name="order_total" id="orderTotal" />
 
           <div class="form-grid">
-            <!-- FULL NAME — clearly visible -->
             <div class="field">
               <label for="name">Full name</label>
               <input id="name" name="name" required placeholder="Your full name" />
@@ -366,12 +373,9 @@
 
 <script>
   // ---------- DATA ----------
-  // Replace your CATALOG array with this one (has stock photo URLs):
-// Option: Use food icons instead of photos
-// This creates colored icon backgrounds for each product
-
+  // Use available:false on any sold-out item.
 const CATALOG = [
-  // Poultry - with food icons
+  // Poultry
   {cat:'Poultry', sku:'whole-chicken',   name:'Whole chicken',   price:2.95, unit:'/lb', icon:'🐔', color:'#fef3c7'},
   {cat:'Poultry', sku:'hard-chicken',    name:'Hard chicken',    price:3.49, unit:'/lb', icon:'🐔', color:'#fde68a'},
   {cat:'Poultry', sku:'small-chicken',   name:'Small chicken',   price:3.29, unit:'/lb', icon:'🐔', color:'#fcd34d'},
@@ -381,12 +385,12 @@ const CATALOG = [
   {cat:'Poultry', sku:'chicken-thighs',  name:'Chicken thighs',  price:4.49, unit:'/lb', icon:'🍗', color:'#92400e'},
   {cat:'Poultry', sku:'ground-chicken',  name:'Ground chicken',  price:3.99, unit:'/lb', icon:'🍗', color:'#78350f'},
 
-  // Meat - with meat icons
+  // Meat (example: Lamb Leg is SOLD)
   {cat:'Meat', sku:'baby-goat-leg',  name:'Baby Goat Leg',  price:13.99, unit:'/lb', icon:'🥩', color:'#fecaca'},
   {cat:'Meat', sku:'goat-shoulder',  name:'Goat shoulder',  price:13.99, unit:'/lb', icon:'🥩', color:'#fca5a5'},
   {cat:'Meat', sku:'goat-chest',     name:'Goat chest',     price:11.99, unit:'/lb', icon:'🥩', color:'#f87171'},
   {cat:'Meat', sku:'goat-feet',      name:'Goat feet',      price:6.99, unit:'/lb', icon:'🥩', color:'#ef4444'},
-  {cat:'Meat', sku:'lamb-leg',       name:'Lamb Leg',       price:10.99, unit:'/lb', icon:'🐑', color:'#dc2626'},
+  {cat:'Meat', sku:'lamb-leg',       name:'Lamb Leg',       price:10.99, unit:'/lb', icon:'🐑', color:'#dc2626', available:false}, // SOLD example
   {cat:'Meat', sku:'lamb-shoulder',  name:'Lamb shoulder',  price:10.99, unit:'/lb', icon:'🐑', color:'#b91c1c'},
   {cat:'Meat', sku:'lamb-chop',      name:'Lamb chop',      price:12.99, unit:'/lb', icon:'🐑', color:'#991b1b'},
   {cat:'Meat', sku:'beef-bone',      name:'Beef with Bone', price:5.99,  unit:'/lb', icon:'🐄', color:'#7f1d1d'},
@@ -400,7 +404,7 @@ const CATALOG = [
   {cat:'Meat', sku:'oxtail',         name:'Ox-tail',        price:11.99, unit:'/lb', icon:'🐄', color:'#991b1b'},
   {cat:'Meat', sku:'cow-feet',       name:'Cow feet',       price:4.99,  unit:'/lb', icon:'🐄', color:'#7f1d1d'},
 
-  // Fish - with fish icons  
+  // Fish
   {cat:'Fish', sku:'hilsha',   name:'Hilsha',   price:9.99, unit:'/lb', icon:'🐟', color:'#dbeafe'},
   {cat:'Fish', sku:'rohu',     name:'Rohu',     price:3.99, unit:'/lb', icon:'🐟', color:'#bfdbfe'},
   {cat:'Fish', sku:'snapper',  name:'Snapper',  price:9.99, unit:'/lb', icon:'🐟', color:'#93c5fd'},
@@ -443,7 +447,7 @@ const CATALOG = [
     const label = document.createElement('span'); label.style.opacity='.85'; label.textContent='Order by';
     const seg = document.createElement('div'); seg.className='seg-mini';
     const blb  = document.createElement('button'); blb.type='button'; blb.textContent='Lb';
-    const busd = document.createElement('button'); busd.type='button'; busd.textContent='$';
+    const busd = document.createElement('button'); busd.type='button'; b usd.textContent='$';
     seg.append(blb,busd); holder.append(label,seg); box.appendChild(holder);
 
     function paint(){
@@ -563,6 +567,26 @@ const CATALOG = [
       bDol.onclick=()=>{ useDollar=true;  paintMode(); syncOpposite(); toggleAdd(); };
       inLb.addEventListener('input', ()=>{ syncOpposite(); toggleAdd(); });
       inDol.addEventListener('input', ()=>{ syncOpposite(); toggleAdd(); });
+
+      // ----- SOLD / Not Available handling -----
+      if (item.available === false) {
+        const soldTag = document.createElement('div');
+        soldTag.className = 'sold-badge';
+        soldTag.textContent = 'SOLD';
+        inner.appendChild(soldTag);
+
+        // disable inputs and quick buttons
+        [bLb,bDol,inLb,inDol].forEach(x=> x.disabled = true);
+        quick.querySelectorAll('button').forEach(x=> x.disabled = true);
+
+        // lock the add button
+        addBtn.textContent = 'Not Available';
+        addBtn.disabled = true;
+        addBtn.className = 'add disabled';
+
+        // soften the card look
+        card.style.opacity = '0.6';
+      }
 
       paintMode();
       addBtn.onclick=()=>{
