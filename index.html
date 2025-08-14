@@ -210,7 +210,8 @@
 
           <!-- extras for Formspree -->
           <input type="hidden" name="_subject" value="A-1 Online Order">
-          <input type="hidden" name="_redirect" value="thank-you.html">
+          <!-- absolute thank-you URL so redirect always works -->
+          <input type="hidden" name="_redirect" value="https://ayazans077.github.io/thank-you.html">
           <input type="text" name="_gotcha" style="display:none">
 
           <label class="f-label">Name</label>
@@ -405,7 +406,7 @@
     const total = items.reduce((s,i)=>s+i.line_total,0);
     document.getElementById('order_json').value = JSON.stringify({items,total}, null, 2);
     document.getElementById('order_readable').value =
-      items.map(i=>`• ${i.item} — ${i.quantity}${i.unit} @ $${i.price_per_unit}/lb = $${i.line_total}`).join('\\n');
+      items.map(i=>`• ${i.item} — ${i.quantity}${i.unit} @ $${i.price_per_unit}/lb = $${i.line_total}`).join('\n');
     document.getElementById('order_total').value = money(total);
   });
 
