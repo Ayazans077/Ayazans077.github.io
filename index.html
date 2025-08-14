@@ -273,11 +273,15 @@
     <div class="wrap" style="display:grid;gap:18px;grid-template-columns:1fr;align-items:start">
       <div class="card card--pickup reveal">
         <div class="form-head"><div class="bubble">🛒</div><div>Pickup details</div></div>
-        <p class="form-sub">Enter your info. We’ll confirm by email/text. Pay at pickup.</p>
+        <p class="form-sub">Enter your info. We’ll confirm by email/text.</p>
 
         <form id="orderForm" action="https://formspree.io/f/xyzpvyle" method="POST" style="display:grid; gap:16px">
           <textarea name="order_summary" id="orderSummary" class="hidden" style="display:none"></textarea>
           <input type="hidden" name="order_total" id="orderTotal" />
+          <!-- deposit meta sent with the form -->
+          <input type="hidden" name="deposit_amount" id="depositAmountHidden" value="0.00" />
+          <input type="hidden" name="deposit_status" id="depositStatusHidden" value="unconfirmed" />
+          <input type="hidden" name="deposit_method" id="depositMethodHidden" value="clover" />
 
           <div class="form-grid">
             <div class="field">
@@ -327,9 +331,47 @@
             </div>
           </div>
 
+          <!-- ===== DEPOSIT SECTION ===== -->
+          <div class="pcard" style="border-color:#ffffff22;background:linear-gradient(135deg,#b6ffe21a,#8fffe41a)">
+            <div style="display:grid;gap:12px">
+              <div style="font-weight:900;font-size:18px">Down payment required</div>
+
+              <div class="field" style="max-width:260px">
+                <label for="deposit_amount">Deposit (20% of subtotal, rounded up)</label>
+                <input id="deposit_amount" value="0.00" readonly />
+              </div>
+
+              <!-- Clover primary button -->
+              <a id="cloverBtn" href="#" target="_blank" rel="noopener"
+                 class="btn btn-primary big"
+                 style="background:#00a65a;color:#fff;display:inline-block;text-align:center;">
+                Pay Deposit with Clover
+              </a>
+              <div class="faint" style="font-size:12px">
+                If Clover asks for the amount, enter <strong id="cloverAmtInline">$0.00</strong>.
+              </div>
+
+              <!-- Other payment options (optional backups) -->
+              <div class="chips" id="payBackups" style="margin-top:6px;flex-wrap:wrap">
+                <span class="chip-label" style="margin-right:6px">Other options</span>
+                <a id="ppLink" class="chip" target="_blank" rel="noopener">PayPal</a>
+                <a id="venmoLink" class="chip" target="_blank" rel="noopener">Venmo</a>
+                <a id="cashAppLink" class="chip" target="_blank" rel="noopener">Cash App</a>
+                <a id="zelleLink" class="chip" target="_blank" rel="noopener">Zelle</a>
+              </div>
+
+              <label class="check">
+                <input type="checkbox" id="deposit_paid_check" />
+                <span>I have completed the deposit payment.</span>
+              </label>
+              <div id="depositWarn" class="faint" style="color:#ffd9d9; display:none">Please pay the deposit and tick the box to continue.</div>
+            </div>
+          </div>
+          <!-- ===== END DEPOSIT ===== -->
+
           <label class="check">
             <input type="checkbox" required />
-            <span>I’ll pay at pickup and understand prices are per pound where listed.</span>
+            <span>I’ll pay the remaining balance at pickup (prices per pound where listed).</span>
           </label>
           <label class="check">
             <input type="checkbox" required />
@@ -337,7 +379,7 @@
           </label>
 
           <div class="actions">
-            <button class="btn btn-primary big" style="background:var(--accent);color:var(--accent-ink)">Place Pickup Order</button>
+            <button id="placeOrderBtn" class="btn btn-primary big" style="background:#8eb4a7;color:var(--accent-ink)" disabled>Place Pickup Order</button>
             <button type="button" id="reviewCart" class="btn btn-ghost round">Review Cart</button>
           </div>
         </form>
@@ -381,6 +423,17 @@
   </div>
 
 <script>
+  /* ---------- CONFIG: fill these ---------- */
+  const CONFIG = {
+    CLOVER_LINK: 'https://your-clover-payment-link', // paste your Clover Payment Link (prefer “customer enters amount”)
+    DEPOSIT_PERCENT: 0.20,
+    MIN_DEPOSIT: 1,
+    PAYPAL_USERNAME: 'AmmaarAnsari',
+    VENMO_USERNAME: 'A1Grocery',
+    CASH_TAG: 'AmmaarAnsari',
+    ZELLE_PHONE: '+16077520285'
+  };
+
   // ---------- DATA ----------
   const CATALOG = [
     // Poultry
@@ -674,7 +727,71 @@
     document.getElementById('fabTotal').textContent = fmt(cartTotal());
   }
 
-  function updateUI(){ renderChips(); renderProducts(); renderSummary(); updateBadges(); }
+  // ---- Deposit helpers ----
+  function computeDeposit(){
+    const sub = cartTotal();
+    if(sub <= 0) return 0;
+    const raw = sub * (CONFIG.DEPOSIT_PERCENT || 0.20);
+    return Math.max(CONFIG.MIN_DEPOSIT || 1, Math.ceil(raw));
+  }
+
+  function updateDepositAmount(){
+    const amt = computeDeposit();
+    const amtStr = Number(amt).toFixed(2);
+    const needs = amt > 0;
+
+    const depInput = document.getElementById('deposit_amount');
+    const depHidden = document.getElementById('depositAmountHidden');
+    const cloverAmtInline = document.getElementById('cloverAmtInline');
+    const cloverBtn = document.getElementById('cloverBtn');
+    const payBackups = document.getElementById('payBackups');
+
+    if(depInput) depInput.value = amtStr;
+    if(depHidden) depHidden.value = amtStr;
+    if(cloverAmtInline) cloverAmtInline.textContent = `$${amtStr}`;
+
+    // Clover primary button
+    if(cloverBtn){
+      cloverBtn.href = CONFIG.CLOVER_LINK || '#';
+      cloverBtn.textContent = needs ? `Pay ${fmt(Number(amt))} with Clover` : 'Pay Deposit with Clover';
+      cloverBtn.style.display = needs ? 'inline-block' : 'none';
+    }
+
+    // Backup links
+    if(payBackups) payBackups.style.display = needs ? 'flex' : 'none';
+    const paypal = document.getElementById('ppLink');
+    const venmo  = document.getElementById('venmoLink');
+    const cash   = document.getElementById('cashAppLink');
+    const zelle  = document.getElementById('zelleLink');
+    if(paypal) paypal.href = `https://paypal.me/${CONFIG.PAYPAL_USERNAME}/${amtStr}`;
+    if(venmo)  venmo.href  = `https://venmo.com/?txn=pay&audience=private&recipients=${CONFIG.VENMO_USERNAME}&amount=${amtStr}&note=${encodeURIComponent('A1 Halal Deposit')}`;
+    if(cash)   cash.href   = `https://cash.app/$${CONFIG.CASH_TAG}/${amtStr}`;
+    if(zelle)  zelle.href  = `mailto:?subject=${encodeURIComponent('Zelle Deposit')}&body=${encodeURIComponent('Send Zelle deposit of $'+amtStr+' to '+CONFIG.ZELLE_PHONE)}`;
+
+    updatePlaceOrderState();
+  }
+
+  function updatePlaceOrderState(){
+    const needs = Number(document.getElementById('deposit_amount')?.value || '0') > 0;
+    const checked = document.getElementById('deposit_paid_check')?.checked;
+    const btn = document.getElementById('placeOrderBtn');
+    const warn = document.getElementById('depositWarn');
+    if(!btn || !warn) return;
+
+    if(needs){
+      btn.disabled = !checked;
+      btn.style.background = checked ? 'var(--accent)' : '#8eb4a7';
+      warn.style.display = checked ? 'none' : 'block';
+      document.getElementById('depositStatusHidden').value = checked ? 'paid' : 'unconfirmed';
+    }else{
+      btn.disabled = false;
+      btn.style.background = 'var(--accent)';
+      warn.style.display = 'none';
+      document.getElementById('depositStatusHidden').value = 'not-required';
+    }
+  }
+
+  function updateUI(){ renderChips(); renderProducts(); renderSummary(); updateBadges(); updateDepositAmount(); }
 
   const LINES = ["Zabeha Halal • Cut to order","Fresh • Halal • Ready for Pickup","Hand-cut meat, prepared your way","Same-day pickup slots available"];
   function typeLoop(node, lines){ let i=0, j=0, erasing=false; (function tick(){ const line = lines[i];
@@ -710,10 +827,22 @@
   document.getElementById('scrim').onclick = closeDrawer;
   document.getElementById('goCheckout').onclick = ()=>{ closeDrawer(); document.getElementById('checkout').scrollIntoView({behavior:'smooth'}); };
   document.getElementById('search').addEventListener('input', renderProducts);
+  document.getElementById('deposit_paid_check').addEventListener('change', updatePlaceOrderState);
 
   document.getElementById('orderForm').addEventListener('submit', (e)=>{
     if(Object.keys(state.cart).length===0){ e.preventDefault(); alert('Your cart is empty. Add items before submitting.'); return; }
-    document.getElementById('orderSummary').value = cartEntries().map(it=> `${it.name} — ${fmtLb(it.qty)} × ${fmt(it.price)} = ${fmt(it.qty*it.price)}`).concat('',`Subtotal: ${fmt(cartTotal())}`).join('\n');
+
+    const amt = Number(document.getElementById('deposit_amount').value||'0');
+    if(amt>0 && !document.getElementById('deposit_paid_check').checked){
+      e.preventDefault(); alert(`Please pay the ${fmt(amt)} deposit (Clover) and check the box to continue.`); return;
+    }
+
+    // Build order summary + totals + deposit meta
+    document.getElementById('orderSummary').value = cartEntries()
+      .map(it=> `${it.name} — ${fmtLb(it.qty)} × ${fmt(it.price)} = ${fmt(it.qty*it.price)}`)
+      .concat('',`Subtotal: ${fmt(cartTotal())}`, `Deposit: ${fmt(amt)} (${document.getElementById('depositStatusHidden').value})`)
+      .join('\n');
+
     document.getElementById('orderTotal').value = cartTotal().toFixed(2);
   });
 
