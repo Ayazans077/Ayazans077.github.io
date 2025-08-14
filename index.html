@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -271,7 +272,7 @@
 
             <div class="field">
               <label for="phone">Phone</label>
-              <input id="phone" name="phone" required placeholder="" value="" />
+              <input id="phone" name="phone" required placeholder="(607) 722-1055" value="(607) 722-1055" />
             </div>
 
             <div class="field">
@@ -409,7 +410,7 @@ const CATALOG = [
 ];
 
   const el = (sel)=>document.querySelector(sel);
-  const fmt = (n)=> $${n.toFixed(2)};
+  const fmt = (n)=> `$${n.toFixed(2)}`;
   const fmtLb = (n)=> {
     if (!isFinite(n)) return '0 lb';
     const s = Number(n).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1');
@@ -511,7 +512,7 @@ const CATALOG = [
 
       const quick = document.createElement('div'); quick.className='quick-dollars';
       [10,20,50].forEach(amt=>{
-        const b = document.createElement('button'); b.type='button'; b.textContent = $${amt};
+        const b = document.createElement('button'); b.type='button'; b.textContent = `$${amt}`;
         b.onclick = ()=>{ bDol.click(); inDol.value = String(amt); syncOpposite(); toggleAdd(); };
         quick.appendChild(b);
       });
@@ -598,8 +599,8 @@ const CATALOG = [
       const row = document.createElement('div'); row.className='line';
 
       const info=document.createElement('div');
-      info.innerHTML=<div style="font-weight:600">${it.name}</div>
-                      <div style="font-size:12px;color:#6b7280">Price ${fmt(it.price)} /lb</div>;
+      info.innerHTML=`<div style="font-weight:600">${it.name}</div>
+                      <div style="font-size:12px;color:#6b7280">Price ${fmt(it.price)} /lb</div>`;
       row.appendChild(info);
 
       const right=document.createElement('div'); right.className='right';
@@ -639,7 +640,7 @@ const CATALOG = [
     if(items.length===0){ const p=document.createElement('div'); p.className='muted'; p.textContent='No items yet. Add from the menu.'; box.appendChild(p); }
     items.forEach(it=>{
       const row=document.createElement('div'); row.className='line'; row.style.borderColor='#ffffff22'; row.style.background='transparent'; row.style.color='var(--text)'; row.style.borderRadius='14px';
-      const body=document.createElement('div'); body.innerHTML=<div style="font-weight:600">${it.name}</div><div class="muted" style="font-size:12px">${fmt(it.price)} /lb</div>;
+      const body=document.createElement('div'); body.innerHTML=`<div style="font-weight:600">${it.name}</div><div class="muted" style="font-size:12px">${fmt(it.price)} /lb</div>`;
       const qty=document.createElement('div'); qty.textContent='× '+fmtLb(it.qty);
       const total=document.createElement('div'); total.style.fontWeight='700'; total.textContent=fmt(it.qty*it.price);
       row.append(body); const right=document.createElement('div'); right.style.marginLeft='auto'; right.style.display='flex'; right.style.gap='10px'; right.append(qty,total); row.appendChild(right); box.appendChild(row);
@@ -653,8 +654,8 @@ const CATALOG = [
   }
 
   function buildOrderSummaryText(){
-    const lines = cartEntries().map(it=> ${it.name} — ${fmtLb(it.qty)} × ${fmt(it.price)} = ${fmt(it.qty*it.price)});
-    lines.push('', Subtotal: ${fmt(cartTotal())});
+    const lines = cartEntries().map(it=> `${it.name} — ${fmtLb(it.qty)} × ${fmt(it.price)} = ${fmt(it.qty*it.price)}`);
+    lines.push('', `Subtotal: ${fmt(cartTotal())}`);
     return lines.join('\n');
   }
 
