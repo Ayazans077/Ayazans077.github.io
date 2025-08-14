@@ -111,28 +111,16 @@
     font-size:12px;
   }
 
-  /* drawer */
-  .drawer{position:fixed; inset:0; display:none; z-index:1000;}
-  .drawer.open{display:block}
-  .scrim{position:absolute; inset:0; background:rgba(0,0,0,.55)}
-  .panel{position:absolute; right:0; top:0; height:100%; width:min(92vw, 430px); background:#fff; color:#111827; display:flex; flex-direction:column; box-shadow:var(--shadow)}
-  .panel header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #e5e7eb}
-  .panel main{padding:16px;overflow:auto;flex:1}
-  .line{border:1px solid #e5e7eb;border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center}
-  .line .right{margin-left:auto;display:flex;align-items:center;gap:8px}
-  .remove{background:none;border:0;color:#dc2626;cursor:pointer;font-size:12px}
-
-  .form .control{display:flex;flex-direction:column;gap:6px}
-  .form input, .form select, .form textarea{background:#ffffff10;border:1px solid var(--border);color:var(--text);border-radius:14px;padding:12px;outline:none}
-  .muted{color:#e8fbf2a6;font-size:13px}
-  .foot{border-top:1px solid var(--border); text-align:center; padding:26px 0; color:#d7f7ea99; font-size:14px}
-
-  .fab{position:fixed; right:18px; bottom:18px; z-index:4; background:var(--accent); color:var(--accent-ink); border:0; font-weight:900; border-radius:999px; padding:12px 16px; box-shadow:var(--shadow); cursor:pointer}
-
+  /* GLOBAL toggle next to chips */
   .chip{padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--panel);cursor:pointer;transition:transform .2s}
   .chip.active{background:white;color:#0b2a25;font-weight:700}
   .chip:hover{transform:translateY(-1px)}
   .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
+  .chip-label{padding:8px 10px;border:1px solid var(--border);border-radius:999px;background:var(--panel);display:inline-flex;align-items:center;gap:8px}
+  .seg-mini{display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .seg-mini button{background:transparent;color:var(--text);border:0;padding:6px 10px;cursor:pointer}
+  .seg-mini button.active{background:#fff;color:#0b2a25;font-weight:800}
+
   h2,h3{margin:0}
   .h1{font-size:clamp(28px, 4vw, 44px); line-height:1.1; font-weight:900}
   .gradient-text{background:linear-gradient(90deg, #b7ffe9, #ddfff6); -webkit-background-clip:text; background-clip:text; color:transparent}
@@ -340,7 +328,10 @@
     return s+' lb';
   };
   const ICON = { Poultry:'🍗', Meat:'🥩', Fish:'🐟' };
-  const state = { cart: {}, filter: 'All' };
+
+  // Load saved mode and cart
+  const savedMode = localStorage.getItem('a1-mode');
+  const state = { cart: {}, filter: 'All', mode: (savedMode === 'usd' ? 'usd' : 'lb') };
 
   try{
     const saved = JSON.parse(localStorage.getItem('a1-cart')||'{}');
@@ -351,6 +342,8 @@
 
   function renderChips(){
     const box = el('#chips'); box.innerHTML = '';
+
+    // Category chips (with emoji)
     categories.forEach(c=>{
       const b=document.createElement('button');
       b.className='chip' + (state.filter===c?' active':'');
@@ -359,6 +352,27 @@
       b.onclick=()=>{ state.filter=c; renderProducts(); };
       box.appendChild(b);
     });
+
+    // spacer
+    const spacer = document.createElement('div'); spacer.style.width='8px'; box.appendChild(spacer);
+
+    // Global Order-by toggle
+    const holder = document.createElement('div'); holder.className='chip-label';
+    const label = document.createElement('span'); label.style.opacity='.85'; label.textContent='Order by';
+    const seg = document.createElement('div'); seg.className='seg-mini';
+    const blb  = document.createElement('button'); blb.type='button'; blb.textContent='Lb';
+    const busd = document.createElement('button'); busd.type='button'; busd.textContent='$';
+    seg.append(blb,busd);
+    holder.append(label,seg);
+    box.appendChild(holder);
+
+    function paint(){
+      if(state.mode==='usd'){ busd.classList.add('active'); blb.classList.remove('active'); }
+      else{ blb.classList.add('active'); busd.classList.remove('active'); }
+    }
+    blb.onclick = ()=>{ state.mode='lb';  localStorage.setItem('a1-mode','lb');  paint(); renderProducts(); };
+    busd.onclick= ()=>{ state.mode='usd'; localStorage.setItem('a1-mode','usd'); paint(); renderProducts(); };
+    paint();
   }
 
   function renderProducts(){
@@ -381,7 +395,7 @@
       if (item.img){
         const img = document.createElement('img');
         img.className='product-photo'; img.alt = item.name; img.src = item.img; img.loading='lazy';
-        img.onerror = ()=> img.remove(); // no broken icon
+        img.onerror = ()=> img.remove();
         inner.appendChild(img);
       }
 
@@ -403,7 +417,7 @@
       // ===== lb / $ mode =====
       const mode = document.createElement('div'); mode.className='mode';
       const seg = document.createElement('div'); seg.className='seg';
-      const bLb = document.createElement('button'); bLb.type='button'; bLb.textContent='By lb'; bLb.className='active';
+      const bLb = document.createElement('button'); bLb.type='button'; bLb.textContent='By lb';
       const bDol= document.createElement('button'); bDol.type='button'; bDol.textContent='By $';
       seg.append(bLb,bDol);
 
@@ -412,7 +426,7 @@
       const sufLb = document.createElement('span'); sufLb.className='suf'; sufLb.textContent='lb';
       numLb.append(inLb,sufLb);
 
-      const numDol= document.createElement('div'); numDol.className='num'; numDol.style.display='none';
+      const numDol= document.createElement('div'); numDol.className='num';
       const inDol = document.createElement('input'); inDol.type='number'; inDol.min='0'; inDol.step='1'; inDol.placeholder='0';
       const sufDol= document.createElement('span'); sufDol.className='suf'; sufDol.textContent='$';
       numDol.append(inDol,sufDol);
@@ -421,12 +435,7 @@
       const quick = document.createElement('div'); quick.className='quick-dollars';
       [10,20,50].forEach(amt=>{
         const b = document.createElement('button'); b.type='button'; b.textContent = `$${amt}`;
-        b.onclick = ()=>{
-          bDol.click();
-          inDol.value = String(amt);
-          syncOpposite();
-          toggleAdd();
-        };
+        b.onclick = ()=>{ bDol.click(); inDol.value = String(amt); syncOpposite(); toggleAdd(); };
         quick.appendChild(b);
       });
 
@@ -436,7 +445,18 @@
       const addBtn = document.createElement('button'); addBtn.className='add disabled'; addBtn.textContent='Add to Cart'; addBtn.disabled=true;
       inner.appendChild(addBtn);
 
-      let useDollar=false;
+      // default mode comes from GLOBAL state.mode
+      let useDollar = (state.mode === 'usd');
+      function paintMode(){
+        if(useDollar){
+          bDol.classList.add('active'); bLb.classList.remove('active');
+          numDol.style.display='flex'; numLb.style.display='none';
+        }else{
+          bLb.classList.add('active'); bDol.classList.remove('active');
+          numLb.style.display='flex'; numDol.style.display='none';
+        }
+      }
+
       function poundsFromInputs(){
         if(useDollar){
           const dollars = parseFloat(inDol.value||'0');
@@ -462,10 +482,13 @@
           inDol.value = dollars;
         }
       }
-      bLb.onclick=()=>{ useDollar=false; bLb.classList.add('active'); bDol.classList.remove('active'); numLb.style.display='flex'; numDol.style.display='none'; syncOpposite(); toggleAdd(); };
-      bDol.onclick=()=>{ useDollar=true;  bDol.classList.add('active'); bLb.classList.remove('active'); numDol.style.display='flex'; numLb.style.display='none'; syncOpposite(); toggleAdd(); };
+
+      bLb.onclick=()=>{ useDollar=false; paintMode(); syncOpposite(); toggleAdd(); };
+      bDol.onclick=()=>{ useDollar=true;  paintMode(); syncOpposite(); toggleAdd(); };
       inLb.addEventListener('input', ()=>{ syncOpposite(); toggleAdd(); });
       inDol.addEventListener('input', ()=>{ syncOpposite(); toggleAdd(); });
+
+      paintMode();  // initialize from global
 
       addBtn.onclick=()=>{
         const lbs = poundsFromInputs();
@@ -479,8 +502,8 @@
       grid.appendChild(card);
     });
 
-    initReveal();   // scroll animation
-    initTilt();     // hover tilt
+    initReveal();
+    initTilt();
   }
 
   function saveCart(){ localStorage.setItem('a1-cart', JSON.stringify(state.cart)); }
