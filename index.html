@@ -204,7 +204,8 @@
         <h2 style="font-size:24px;font-weight:900">Pickup details</h2>
         <p class="muted" style="margin-top:6px">Enter your info. We’ll confirm by email/text. Pay at pickup.</p>
 
-        <form id="orderForm" class="form" action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID" method="POST" style="margin-top:16px;display:grid;gap:12px">
+        <!-- ✅ Your Formspree URL is wired here -->
+        <form id="orderForm" class="form" action="https://formspree.io/f/xyzpvyle" method="POST" style="margin-top:16px;display:grid;gap:12px">
           <!-- Hidden order summary populated by JS -->
           <textarea name="order_summary" id="orderSummary" class="hidden" style="display:none"></textarea>
           <input type="hidden" name="order_total" id="orderTotal" />
@@ -263,7 +264,7 @@
             <button type="button" id="reviewCart" class="btn btn-ghost">Review Cart</button>
           </div>
 
-          <p class="muted">Form powered by Formspree. Replace the action URL with your form ID to receive orders via email.</p>
+          <p class="muted">Form powered by Formspree.</p>
         </form>
       </div>
 
@@ -299,7 +300,7 @@
       <main id="cartLines"></main>
       <div style="padding:16px;border-top:1px solid #e5e7eb;display:grid;gap:10px">
         <div class="row" style="font-size:15px"><span>Subtotal</span><strong id="drawerTotal">$0.00</strong></div>
-        <div style="font-size:12px;color:#6b7280">Prices shown are per pound where noted. Pay in-store at pickup.</div>
+        <div style="font-size:12px;color:#6b7280">Prices shown are per pound where listed. Pay in-store at pickup.</div>
         <button id="goCheckout" class="btn" style="background:#10b981;color:#052e2b;font-weight:900">Checkout</button>
       </div>
     </aside>
@@ -381,9 +382,10 @@
   function renderProducts(){
     const grid = el('#products');
     grid.innerHTML = '';
+    const q = el('#search')?.value?.toLowerCase() || '';
     const list = CATALOG.filter(i=>{
       const okCat = state.filter==='All' || i.cat===state.filter;
-      const okQ = i.name.toLowerCase().includes(state.q.toLowerCase());
+      const okQ = i.name.toLowerCase().includes(q);
       return okCat && okQ;
     });
 
@@ -596,7 +598,6 @@
   };
 
   el('#search').addEventListener('input', (e)=>{
-    state.q = e.target.value || '';
     renderProducts();
   });
 
