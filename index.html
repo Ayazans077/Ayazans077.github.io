@@ -90,14 +90,26 @@
   .add.enabled{background:var(--accent);color:var(--accent-ink)}
   .add.disabled{background:rgba(255,255,255,.1);color:#ffffff66;cursor:not-allowed}
 
-  /* dual mode controls */
-  .mode{display:flex;gap:8px;align-items:center;margin-top:8px}
+  /* lb / $ controls + quick dollars */
+  .mode{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
   .seg{display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden}
   .seg button{background:transparent;color:var(--text);border:0;padding:6px 10px;cursor:pointer}
   .seg button.active{background:white;color:#0b2a25;font-weight:800}
   .num{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:6px 10px}
   .num input{background:transparent;border:0;outline:none;color:var(--text);width:7ch}
   .num .suf{opacity:.8;font-size:12px}
+
+  .quick-dollars{display:flex;gap:6px;flex-wrap:wrap}
+  .quick-dollars button{
+    border:1px solid var(--border);
+    background:var(--panel);
+    color:var(--text);
+    border-radius:999px;
+    padding:6px 10px;
+    cursor:pointer;
+    font-weight:700;
+    font-size:12px;
+  }
 
   /* drawer */
   .drawer{position:fixed; inset:0; display:none; z-index:1000;}
@@ -327,6 +339,7 @@
     const s = Number(n).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1');
     return s+' lb';
   };
+  const ICON = { Poultry:'🍗', Meat:'🥩', Fish:'🐟' };
   const state = { cart: {}, filter: 'All' };
 
   try{
@@ -341,7 +354,8 @@
     categories.forEach(c=>{
       const b=document.createElement('button');
       b.className='chip' + (state.filter===c?' active':'');
-      b.textContent = c;
+      const emoji = ICON[c] ? ICON[c] + ' ' : '';
+      b.textContent = emoji + c;
       b.onclick=()=>{ state.filter=c; renderProducts(); };
       box.appendChild(b);
     });
@@ -371,7 +385,14 @@
         inner.appendChild(img);
       }
 
-      const name = document.createElement('div'); name.style.fontWeight='700'; name.style.fontSize='18px'; name.textContent=item.name; inner.appendChild(name);
+      // name row with small icon
+      const nameRow = document.createElement('div');
+      nameRow.style.display='flex'; nameRow.style.alignItems='center'; nameRow.style.gap='8px';
+      const emoji = document.createElement('div'); emoji.textContent = ICON[item.cat] || ''; emoji.style.fontSize='18px';
+      const name = document.createElement('div'); name.style.fontWeight='700'; name.style.fontSize='18px'; name.textContent=item.name;
+      nameRow.append(emoji, name);
+      inner.appendChild(nameRow);
+
       const cat = document.createElement('div'); cat.className='faint'; cat.textContent=item.cat; inner.appendChild(cat);
 
       const rowTop = document.createElement('div'); rowTop.className='row'; rowTop.style.marginTop='8px';
@@ -396,7 +417,20 @@
       const sufDol= document.createElement('span'); sufDol.className='suf'; sufDol.textContent='$';
       numDol.append(inDol,sufDol);
 
-      mode.append(seg,numLb,numDol);
+      // quick dollars
+      const quick = document.createElement('div'); quick.className='quick-dollars';
+      [10,20,50].forEach(amt=>{
+        const b = document.createElement('button'); b.type='button'; b.textContent = `$${amt}`;
+        b.onclick = ()=>{
+          bDol.click();
+          inDol.value = String(amt);
+          syncOpposite();
+          toggleAdd();
+        };
+        quick.appendChild(b);
+      });
+
+      mode.append(seg,numLb,numDol,quick);
       inner.appendChild(mode);
 
       const addBtn = document.createElement('button'); addBtn.className='add disabled'; addBtn.textContent='Add to Cart'; addBtn.disabled=true;
@@ -436,9 +470,8 @@
       addBtn.onclick=()=>{
         const lbs = poundsFromInputs();
         if(lbs<=0) return;
-        // store with 2 decimals to avoid floating drift
         const prev = Number(state.cart[item.sku]||0);
-        state.cart[item.sku] = Math.round((prev + lbs) * 100)/100;
+        state.cart[item.sku] = Math.round((prev + lbs) * 100)/100; // 2-decimal lbs
         inLb.value=''; inDol.value=''; toggleAdd();
         saveCart(); updateUI();
       };
