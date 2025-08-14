@@ -132,7 +132,7 @@
   .reveal.in{opacity:1; transform:translateY(0)}
   .phone{border:1px dashed #b7ffe9;padding:8px 10px;border-radius:12px;color:#b7ffe9;font-weight:700}
 
-  /* ===== Fancy form layout additions ===== */
+  /* ===== Fancy form layout (always-on floating labels) ===== */
   .card--pickup{ 
     border-radius:28px; padding:28px;
     background:
@@ -157,7 +157,7 @@
   .field{ position:relative; isolation:isolate; }
   .field input, .field select, .field textarea{
     width:100%; border:1px solid var(--border); background:rgba(255,255,255,.06);
-    color:var(--text); border-radius:14px; padding:14px; outline:none;
+    color:var(--text); border-radius:14px; padding:18px 14px 14px; outline:none;
     transition:.2s border-color,.2s box-shadow,.2s transform;
     box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
   }
@@ -165,15 +165,14 @@
   .field input:focus, .field select:focus, .field textarea:focus{
     border-color:#bff9e0; box-shadow:0 0 0 6px rgba(191,249,224,.12); transform:translateY(-1px);
   }
+
+  /* Always-visible chip labels */
   .field label{
-    position:absolute; left:12px; top:12px; padding:3px 10px; border-radius:999px;
+    position:absolute; left:12px; top:-11px;
+    padding:4px 10px; border-radius:999px;
     font-size:12px; letter-spacing:.2px; color:#083b2e;
     background:linear-gradient(90deg,#d9fbe6,#bff9e0); border:1px solid #ffffff66;
-    transform-origin:left top; transition:.15s transform,.15s opacity; pointer-events:none; opacity:0;
   }
-  .field input:not(:placeholder-shown) ~ label,
-  .field select:valid ~ label,
-  .field textarea:not(:placeholder-shown) ~ label{ opacity:1; transform:translateY(-22px) scale(.92); }
   .help{ font-size:12px; color:var(--muted); margin-top:6px }
 
   .check{
@@ -264,27 +263,29 @@
           <input type="hidden" name="order_total" id="orderTotal" />
 
           <div class="form-grid">
+            <!-- FULL NAME — clearly visible -->
             <div class="field">
-              <input id="name" name="name" required placeholder=" " />
               <label for="name">Full name</label>
+              <input id="name" name="name" required placeholder="Your full name" />
             </div>
 
             <div class="field">
-              <input id="phone" name="phone" required placeholder=" " value="(607) 722-1055" />
               <label for="phone">Phone</label>
+              <input id="phone" name="phone" required placeholder="(607) 722-1055" value="(607) 722-1055" />
             </div>
 
             <div class="field">
-              <input id="email" name="email" type="email" required placeholder=" " />
               <label for="email">Email</label>
+              <input id="email" name="email" type="email" required placeholder="you@example.com" />
             </div>
 
             <div class="row-compact">
               <div class="field">
-                <input id="pickup_date" name="pickup_date" type="date" required placeholder=" " />
                 <label for="pickup_date">Pickup date</label>
+                <input id="pickup_date" name="pickup_date" type="date" required />
               </div>
               <div class="field">
+                <label for="pickup_time">Pickup time</label>
                 <select id="pickup_time" name="pickup_time" required>
                   <option value="" selected disabled>Select a time</option>
                   <option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option>
@@ -292,22 +293,21 @@
                   <option>5:00 PM</option><option>6:00 PM</option><option>7:00 PM</option>
                   <option>8:00 PM</option>
                 </select>
-                <label for="pickup_time">Pickup time</label>
               </div>
             </div>
 
             <div class="field">
+              <label for="cut_preference">Cut preference (optional)</label>
               <select id="cut_preference" name="cut_preference">
                 <option>Standard</option><option>Small pieces</option><option>Medium pieces</option>
                 <option>Large pieces</option><option>Whole (no cut)</option>
               </select>
-              <label for="cut_preference">Cut preference (optional)</label>
             </div>
 
             <div class="field" style="grid-column:1/-1">
-              <textarea id="notes" name="notes" placeholder=" "></textarea>
               <label for="notes">Notes for the butcher (optional)</label>
-              <div class="help">Ex: thin slices, remove skin, extra fat trimmed.</div>
+              <textarea id="notes" name="notes" placeholder="Ex: thin slices, remove skin, extra fat trimmed."></textarea>
+              <div class="help">We’ll do our best to match your request.</div>
             </div>
           </div>
 
@@ -317,7 +317,7 @@
           </label>
           <label class="check">
             <input type="checkbox" required />
-            <span>Final price at pickup may be slightly higher or lower than the online total due to exact weight and trimming.</span>
+            <span>Final price may be slightly higher or lower than the online total due to exact weight and trimming.</span>
           </label>
 
           <div class="actions">
@@ -701,7 +701,7 @@
   updateUI();
   typeLoop(document.getElementById('typing'), LINES);
 
-  // OPTIONAL: set min & default pickup date to today
+  // Set min & default pickup date to today
   (function(){
     const pd = document.getElementById('pickup_date');
     if(pd){ const iso = new Date().toISOString().split('T')[0]; pd.min = iso; if(!pd.value) pd.value = iso; }
