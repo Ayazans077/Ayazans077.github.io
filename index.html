@@ -3,420 +3,617 @@
 <head>
 <meta charset="utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>A-1 Halal Meat — Online Pickup</title>
-<meta name="description" content="Order halal poultry, meat, and fish for pickup. Simple cart with multiple items." />
-
+<title>A1 Grocery & Halal Meat — Online Pickup</title>
+<meta name="description" content="Order halal poultry, meat, and fish for pickup. Fancy cart with live subtotal." />
 <style>
   :root{
-    --bg:#ffffff;            /* white background */
-    --panel:#e6f2e6;         /* light green panels */
-    --panel-soft:#d4ecd4;    /* softer green cards */
-    --text:#1a331a;          /* dark green text */
-    --muted:#4d664d;         /* muted green text */
-    --accent:#2eb82e;        /* bright green buttons */
-    --accent-2:#aeeaae;      /* lighter green accents */
-    --line:#99cc99;          /* green borders */
-    --radius:16px;
-    --shadow:0 10px 26px rgba(0,0,0,.15);
-    --input-h:46px;
-    --max:1260px;
+    --bg1:#052e2b;
+    --bg2:#041f22;
+    --panel:rgba(255,255,255,.06);
+    --border:rgba(255,255,255,.15);
+    --text:#e8fbf2;
+    --muted:#b4d7c8;
+    --brand:#42f5b3;
+    --brand-2:#86ffd8;
+    --accent:#10b981; /* emerald-500-ish */
+    --accent-ink:#052e2b;
+    --shadow:0 12px 30px rgba(0,0,0,.35);
+    --radius:18px;
   }
-
   *{box-sizing:border-box}
   html,body{height:100%}
   body{
-    margin:0;
-    font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;
-    color:var(--text);
-    background:
-      radial-gradient(900px 520px at 10% -10%, #eaf6ea 0%, var(--bg) 60%),
-      radial-gradient(800px 460px at 120% -10%, #edf8ed 0%, var(--bg) 60%),
-      var(--bg);
-    line-height:1.35;
+    margin:0; color:var(--text); font:16px/1.55 system-ui, Segoe UI, Roboto, Arial, sans-serif;
+    background:radial-gradient(1200px 500px at 50% -5%, #0f7b6c44, transparent),
+               radial-gradient(800px 300px at 85% 20%, #1cc4a833, transparent),
+               linear-gradient(180deg, var(--bg1), var(--bg2));
   }
-
-  .wrap{max-width:var(--max); margin:0 auto; padding:18px}
-
-  header{
-    display:flex; align-items:center; justify-content:space-between; gap:16px;
-    padding:12px 16px; background:var(--panel); border:1px solid var(--line);
-    border-radius:20px; box-shadow:var(--shadow);
+  a{color:inherit}
+  .wrap{max-width:1120px;margin:0 auto;padding:0 16px}
+  /* Header */
+  .nav{
+    position:sticky; top:0; z-index:50;
+    backdrop-filter:saturate(120%) blur(10px);
+    background:linear-gradient(180deg, rgba(5,46,43,.85), rgba(5,46,43,.55));
+    border-bottom:1px solid var(--border);
   }
-  .brand-wrap{display:flex; align-items:center; gap:14px}
-  /* BIGGER LOGO */
+  .nav-row{display:flex;align-items:center;gap:12px;padding:12px 0}
   .logo{
-    height:72px; width:auto; border-radius:12px;
-    background:#fff; padding:4px; box-shadow:0 2px 6px rgba(0,0,0,.06);
+    width:44px;height:44px;border-radius:14px;
+    display:grid;place-items:center;font-weight:900;
+    color:var(--accent-ink);
+    background:conic-gradient(from 120deg, var(--brand), var(--brand-2), var(--brand));
+    box-shadow:var(--shadow)
   }
-  .brand{font-weight:800; letter-spacing:.3px; font-size:24px; line-height:1}
-  .status{font-size:12px; color:#1b5e20}
-
-  /* Info ribbon under header */
-  .notice{
-    margin:12px 0 0; padding:10px 14px; background:#e9f6e9; border:1px solid var(--line);
-    border-radius:12px; display:flex; gap:14px; flex-wrap:wrap; align-items:center;
-    box-shadow:var(--shadow);
-    font-size:14px;
-  }
-  .badge{background:#cfeecd; color:#0f3f12; padding:4px 10px; border-radius:999px; font-weight:700}
-
-  /* Tabs */
-  .tabs{
-    display:flex; gap:12px; margin:18px 0 14px; flex-wrap:wrap;
-    background:var(--panel); border:1px solid var(--line); border-radius:999px; padding:8px;
-    box-shadow:var(--shadow);
-  }
-  .tab{
-    padding:10px 18px; border-radius:999px; background:transparent; color:var(--text);
-    border:1px solid transparent; cursor:pointer; font-weight:700; letter-spacing:.2px;
-  }
-  .tab[aria-selected="true"]{
-    background:var(--accent-2); border-color:var(--accent);
-    box-shadow: inset 0 1px 0 rgba(0,0,0,.06);
-  }
-
-  /* Layout */
-  .grid{
-    display:grid; gap:18px; grid-template-columns: 1.7fr 1fr;
-  }
-  @media (max-width:1024px){ .grid{grid-template-columns:1fr} }
-
-  /* Left: product area */
-  .catalog{
-    background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:18px;
-    box-shadow:var(--shadow);
-  }
-  .section-title{margin:0 2px 12px; font-size:20px; font-weight:800}
-  .cards{
-    display:grid; grid-template-columns: repeat(3,minmax(0,1fr)); gap:16px;
-  }
-  @media (max-width:1150px){ .cards{grid-template-columns: repeat(2,minmax(0,1fr))} }
-  @media (max-width:620px){  .cards{grid-template-columns: 1fr} }
-
-  .card{
-    display:flex; flex-direction:column; gap:10px;
-    background:var(--panel-soft); border:1px solid var(--line); border-radius:18px; padding:14px;
-    min-height:148px; box-shadow:var(--shadow);
-  }
-  .name{font-weight:800}
-  .price{color:var(--muted)}
-  .controls{margin-top:auto; display:flex; gap:10px; align-items:center}
-
-  /* Quantity input -> white */
-  .qty{
-    width:92px; height:var(--input-h); padding:10px; border-radius:12px; border:1px solid var(--line);
-    background:#ffffff; color:#000000;
-  }
-
-  /* Add button -> green */
-  .add{
-    height:var(--input-h); padding:0 18px; border-radius:12px; border:0;
-    background:linear-gradient(180deg, var(--accent), #1b5e20);
-    color:#ffffff; font-weight:900; cursor:pointer; box-shadow:0 8px 16px rgba(46,125,50,.25);
-  }
-  .add:active{transform:translateY(1px)}
-
-  /* Right: cart */
-  .cart{
-    position:sticky; top:12px; align-self:start;
-    background:var(--panel); border:1px solid var(--line); border-radius:20px; padding:16px;
-    box-shadow:var(--shadow);
-  }
-  .cart h3{margin:2px 0 10px}
-  .empty{color:var(--muted); text-align:center; padding:8px 0}
-  .items{display:grid; gap:10px; max-height:520px; overflow:auto}
-  .row{
-    display:grid; grid-template-columns: 1fr 100px 90px auto; gap:10px; align-items:center;
-    background:var(--panel-soft); border:1px solid var(--line); border-radius:14px; padding:10px;
-  }
-  /* Inputs in cart rows -> white */
-  .row input{
-    width:100%; height:var(--input-h); border-radius:12px; border:1px solid var(--line);
-    background:#ffffff; color:#000000; padding:10px;
-  }
-  .rmv{border:0; background:transparent; color:#c62828; font-weight:900; cursor:pointer}
-  .meta{font-size:12px; color:#4c6b4c}
-  .totals{display:flex; justify-content:space-between; margin-top:12px; font-weight:900}
-
-  /* Checkout button -> green */
-  .checkout{
-    width:100%; height:var(--input-h); margin-top:10px; border-radius:14px; border:0;
-    background:linear-gradient(180deg, var(--accent), #1b5e20); color:#ffffff; font-weight:900; cursor:pointer;
-    box-shadow:0 10px 24px rgba(46,125,50,.25);
-  }
-  .checkout:disabled{opacity:.55; cursor:not-allowed}
-
-  .f-label{margin-top:12px; font-size:14px}
-
-  /* Cart form fields -> white */
+  .brand h1{margin:0;font-size:18px;letter-spacing:.2px}
+  .brand small{display:block;color:#d7f7ea99;font-size:12px;margin-top:2px}
+  .nav-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
+  .search{display:none}
+  @media (min-width:640px){ .search{display:block} }
   .input{
-    width:100%; height:var(--input-h); padding:10px; border-radius:12px; border:1px solid var(--line);
-    background:#ffffff; color:#000000;
+    background:var(--panel); border:1px solid var(--border); color:var(--text);
+    border-radius:14px; padding:10px 12px; outline:none; width:260px;
   }
-  textarea.input{height:auto; min-height:90px}
+  .btn{
+    border:0; cursor:pointer; border-radius:14px; padding:10px 14px; font-weight:700;
+  }
+  .btn-primary{background:white;color:#0b2a25}
+  .btn-ghost{background:var(--panel); color:var(--text); border:1px solid var(--border)}
+  .chip{padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--panel);cursor:pointer}
+  .chip.active{background:white;color:#0b2a25;font-weight:700}
 
-  .disclaimer{font-size:12px; color:#4c4c4c; margin-top:10px}
+  /* Sections */
+  .section{padding:28px 0}
+  .hero{
+    display:grid; gap:28px; align-items:center;
+  }
+  @media (min-width:860px){
+    .hero{grid-template-columns:1.1fr .9fr}
+  }
+  .card{
+    position:relative; border:1px solid var(--border); border-radius:24px; padding:22px;
+    background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+    box-shadow:var(--shadow);
+  }
+  .faint{color:#e8fbf2b0; font-size:14px}
+  .grid{
+    display:grid; gap:16px;
+    grid-template-columns:repeat(1,minmax(0,1fr));
+  }
+  @media (min-width:640px){ .grid{grid-template-columns:repeat(2, minmax(0,1fr));} }
+  @media (min-width:1024px){ .grid{grid-template-columns:repeat(3, minmax(0,1fr));} }
+
+  /* Product card */
+  .pcard{border:1px solid var(--border);border-radius:22px;background:var(--panel);padding:16px;transition:.2s transform,.2s box-shadow}
+  .pcard:hover{transform:translateY(-2px); box-shadow:0 18px 36px rgba(0,0,0,.35)}
+  .unit{position:absolute;right:12px;top:-10px;background:#fff;color:#0b2a25;border-radius:999px;padding:6px 10px;font-size:12px;border:1px solid #00000010}
+
+  .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
+  .qty{display:flex;align-items:center;gap:10px}
+  .qty button{width:30px;height:30px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer}
+  .qty div{min-width:2ch;text-align:center}
+
+  .price{font-weight:900;font-size:20px}
+  .add{margin-top:10px;width:100%;padding:10px 12px;border-radius:12px;font-weight:800;border:0;cursor:pointer}
+  .add.enabled{background:var(--accent);color:var(--accent-ink)}
+  .add.disabled{background:rgba(255,255,255,.1);color:#ffffff66;cursor:not-allowed}
+
+  /* Drawer */
+  .drawer{
+    position:fixed; inset:0; display:none;
+  }
+  .drawer.open{display:block}
+  .scrim{position:absolute; inset:0; background:rgba(0,0,0,.55)}
+  .panel{
+    position:absolute; right:0; top:0; height:100%; width:min(92vw, 430px);
+    background:#fff; color:#111827; display:flex; flex-direction:column; box-shadow:var(--shadow)
+  }
+  .panel header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #e5e7eb}
+  .panel main{padding:16px;overflow:auto;flex:1}
+  .line{border:1px solid #e5e7eb;border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center}
+  .line .right{margin-left:auto;display:flex;align-items:center;gap:8px}
+  .pill{display:inline-block;background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;font-size:12px;padding:2px 8px;border-radius:999px}
+  .remove{background:none;border:0;color:#dc2626;cursor:pointer;font-size:12px}
+
+  /* Checkout */
+  .form .control{display:flex;flex-direction:column;gap:6px}
+  .form input, .form select, .form textarea{
+    background:#ffffff10;border:1px solid var(--border);color:var(--text);border-radius:14px;padding:12px;outline:none
+  }
+  .muted{color:#e8fbf2a6;font-size:13px}
+  .foot{border-top:1px solid var(--border); text-align:center; padding:26px 0; color:#d7f7ea99; font-size:14px}
+
+  /* Floating cart */
+  .fab{
+    position:fixed; right:18px; bottom:18px; z-index:45;
+    background:var(--accent); color:var(--accent-ink); border:0; font-weight:900; border-radius:999px; padding:12px 16px; box-shadow:var(--shadow); cursor:pointer
+  }
+
+  /* Category chips row */
+  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
+  h2,h3{margin:0}
+  .h1{font-size:clamp(28px, 4vw, 44px); line-height:1.1; font-weight:900}
+  .gradient-text{background:linear-gradient(90deg, #b7ffe9, #ddfff6); -webkit-background-clip:text; background-clip:text; color:transparent}
 </style>
 </head>
 <body>
-  <div class="wrap">
-    <header>
-      <div class="brand-wrap">
-        <img src="logo.png" alt="A-1 Grocery & Halal Meat logo" class="logo" />
-        <div class="brand">A-1 Grocery & Halal Meat</div>
+
+  <!-- NAV -->
+  <div class="nav">
+    <div class="wrap nav-row">
+      <div class="logo">A1</div>
+      <div class="brand">
+        <h1>A1 Grocery & Halal Meat</h1>
+        <small>Fresh • Halal • Ready for Pickup</small>
       </div>
-      <div class="status">Secure checkout</div>
-    </header>
 
-    <!-- Hours & policy ribbon -->
-    <div class="notice">
-      <span class="badge">Meat Dept: 11:00 AM – 8:00 PM</span>
-      <span><strong>Store closes 9:00 PM.</strong> Meat orders placed after <strong>8:00 PM</strong> are held for the next day.</span>
-    </div>
-
-    <!-- Category tabs -->
-    <nav class="tabs" role="tablist" aria-label="Categories">
-      <button class="tab" role="tab" aria-selected="true" data-cat="All">All</button>
-      <button class="tab" role="tab" aria-selected="false" data-cat="Poultry">Poultry</button>
-      <button class="tab" role="tab" aria-selected="false" data-cat="Meat">Meat</button>
-      <button class="tab" role="tab" aria-selected="false" data-cat="Fish">Fish</button>
-    </nav>
-
-    <div class="grid">
-      <!-- Left: product cards -->
-      <section class="catalog">
-        <h2 class="section-title" id="sectionTitle">All items</h2>
-        <div id="cards" class="cards" aria-live="polite"></div>
-      </section>
-
-      <!-- Right: cart -->
-      <aside class="cart">
-        <h3>Your order</h3>
-        <div id="empty" class="empty">No items yet. Add from the list →</div>
-        <div id="cart" class="items" hidden></div>
-
-        <!-- Make total screen-reader friendly -->
-        <div class="totals" aria-live="polite" aria-atomic="true">
-          <div>TOTAL</div>
-          <div id="total">$0.00</div>
-        </div>
-
-      <!-- UPDATED FORM START -->
-<form id="checkoutForm" action="https://formspree.io/f/xyzpvyle" method="POST" autocomplete="on">
-  <!-- Redirect to thank-you page -->
-  <input type="hidden" name="_next" value="https://ayazans077.github.io/thank-you.html">
-
-  <!-- cart snapshot -->
-  <input type="hidden" name="order_json" id="order_json">
-  <input type="hidden" name="order_readable" id="order_readable">
-  <input type="hidden" name="order_total" id="order_total">
-
-
-
-          <!-- extras for Formspree -->
-          <input type="hidden" name="_subject" value="A-1 Online Order">
-          <!-- absolute thank-you URL so redirect always works -->
-          <input type="hidden" name="_redirect" value="https://ayazans077.github.io/thank-you.html">
-          <input type="text" name="_gotcha" style="display:none">
-
-          <label class="f-label">Name</label>
-          <input class="input" name="name" required>
-
-          <label class="f-label">Phone</label>
-          <input class="input" name="phone" type="tel" inputmode="tel"
-                 pattern="^[0-9\\-\\+\\(\\)\\s]{7,}$"
-                 placeholder="e.g., (607) 555-0123" required>
-
-          <label class="f-label">Pickup time (optional)</label>
-          <input class="input" name="pickup_time" placeholder="e.g., Today 5:30 PM">
-
-          <label class="f-label">Cutting / special instructions</label>
-          <textarea class="input" rows="3" name="instructions" placeholder="e.g., cut small pieces, extra clean"></textarea>
-
-          <button id="checkoutBtn" class="checkout" type="submit" disabled>Go to checkout →</button>
-
-          <p class="disclaimer">
-            *Prices shown are estimates and may vary slightly at pickup based on exact product weight and market conditions. Thank you for understanding.
-          </p>
-        </form>
-        <!-- UPDATED FORM END -->
-      </aside>
+      <div class="nav-actions">
+        <input id="search" class="input search" placeholder="Search items…" />
+        <button id="openCart" class="btn btn-primary">View Cart <span id="cartCount" class="pill" style="margin-left:8px">0</span></button>
+      </div>
     </div>
   </div>
 
+  <!-- HERO -->
+  <section class="section">
+    <div class="wrap hero">
+      <div>
+        <div class="h1">Fresh Halal Cuts, <span class="gradient-text">ready when you arrive.</span></div>
+        <p class="faint" style="margin-top:10px;max-width:60ch">
+          Order online for pickup. We prepare your poultry, meat, and fish to your preference. Pay in-store. Same-day slots usually available.
+        </p>
+        <div class="chips" id="chips"></div>
+      </div>
+
+      <div class="card">
+        <div class="faint" style="text-transform:uppercase;letter-spacing:.12em">New</div>
+        <div style="font-weight:900;font-size:22px;margin-top:4px">Weekend Family Pack</div>
+        <p class="faint" style="margin-top:4px">Mix any poultry + meat + fish and save at pickup.</p>
+        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px">
+          <div class="pcard">
+            <div style="font-size:28px">🍗</div>
+            <div style="font-weight:700">Poultry</div>
+            <div class="faint">fresh daily</div>
+          </div>
+          <div class="pcard">
+            <div style="font-size:28px">🥩</div>
+            <div style="font-weight:700">Meat</div>
+            <div class="faint">hand-cut</div>
+          </div>
+          <div class="pcard">
+            <div style="font-size:28px">🐟</div>
+            <div style="font-weight:700">Fish</div>
+            <div class="faint">wild & farm</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PRODUCTS -->
+  <section class="section">
+    <div class="wrap">
+      <div id="products" class="grid"></div>
+    </div>
+  </section>
+
+  <!-- CHECKOUT -->
+  <section class="section" id="checkout">
+    <div class="wrap" style="display:grid;gap:18px;grid-template-columns:1fr;align-items:start">
+      <div class="card">
+        <h2 style="font-size:24px;font-weight:900">Pickup details</h2>
+        <p class="muted" style="margin-top:6px">Enter your info. We’ll confirm by email/text. Pay at pickup.</p>
+
+        <form id="orderForm" class="form" action="https://formspree.io/f/REPLACE_WITH_YOUR_FORM_ID" method="POST" style="margin-top:16px;display:grid;gap:12px">
+          <!-- Hidden order summary populated by JS -->
+          <textarea name="order_summary" id="orderSummary" class="hidden" style="display:none"></textarea>
+          <input type="hidden" name="order_total" id="orderTotal" />
+
+          <div style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
+            <div class="control">
+              <label>Full name</label>
+              <input required name="name" placeholder="Your name" />
+            </div>
+            <div class="control">
+              <label>Phone</label>
+              <input required name="phone" placeholder="(555) 123-4567" />
+            </div>
+            <div class="control">
+              <label>Email</label>
+              <input required type="email" name="email" placeholder="you@example.com" />
+            </div>
+            <div class="control">
+              <label>Pickup date</label>
+              <input required type="date" name="pickup_date" />
+            </div>
+            <div class="control">
+              <label>Pickup time</label>
+              <select required name="pickup_time">
+                <option value="">Select a time</option>
+                <option>10:00 AM</option><option>11:00 AM</option><option>12:00 PM</option>
+                <option>1:00 PM</option><option>2:00 PM</option><option>3:00 PM</option>
+                <option>4:00 PM</option><option>5:00 PM</option><option>6:00 PM</option>
+                <option>7:00 PM</option><option>8:00 PM</option><option>9:00 PM</option>
+              </select>
+            </div>
+            <div class="control">
+              <label>Cut preference (optional)</label>
+              <select name="cut_preference">
+                <option>Standard</option>
+                <option>Small pieces</option>
+                <option>Medium pieces</option>
+                <option>Large pieces</option>
+                <option>Whole (no cut)</option>
+              </select>
+            </div>
+          </div>
+
+          <div class="control">
+            <label>Notes for the butcher (optional)</label>
+            <textarea name="notes" rows="4" placeholder="Ex: thin slices, remove skin, extra fat trimmed, etc."></textarea>
+          </div>
+
+          <label style="display:flex;align-items:center;gap:8px;font-size:14px">
+            <input type="checkbox" required />
+            I’ll pay at pickup and understand prices are per pound where listed.
+          </label>
+
+          <div style="display:flex;gap:10px;align-items:center">
+            <button class="btn" style="background:var(--accent);color:var(--accent-ink);font-weight:900">Place Pickup Order</button>
+            <button type="button" id="reviewCart" class="btn btn-ghost">Review Cart</button>
+          </div>
+
+          <p class="muted">Form powered by Formspree. Replace the action URL with your form ID to receive orders via email.</p>
+        </form>
+      </div>
+
+      <div class="card">
+        <h3 style="font-size:20px;font-weight:900">Order summary</h3>
+        <div id="summary" style="margin-top:12px;display:grid;gap:12px;max-height:360px;overflow:auto"></div>
+        <div class="row" style="margin-top:12px;font-size:18px">
+          <div class="muted">Subtotal</div>
+          <div id="summaryTotal" style="font-weight:900">$0.00</div>
+        </div>
+
+        <div class="pcard" style="margin-top:18px;background:linear-gradient(135deg, #b6ffe21a, #8fffe41a);border-color:#ffffff22">
+          <div style="font-weight:700">Store Hours</div>
+          <div class="faint">Mon–Sun <strong>9:00 AM – 11:00 PM</strong></div>
+          <div class="faint"><strong>Meat Department closes at 8:00 PM</strong></div>
+          <div class="faint">123 Main St, Binghamton, NY</div>
+          <div class="muted" style="margin-top:6px">Update with your real address.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <button class="fab" id="fab">Cart • <span id="fabTotal">$0.00</span></button>
+
+  <!-- CART DRAWER -->
+  <div class="drawer" id="drawer" aria-hidden="true">
+    <div class="scrim" id="scrim"></div>
+    <aside class="panel" role="dialog" aria-label="Cart">
+      <header>
+        <strong>Your Cart</strong>
+        <button id="closeDrawer" class="btn btn-ghost">Close</button>
+      </header>
+      <main id="cartLines"></main>
+      <div style="padding:16px;border-top:1px solid #e5e7eb;display:grid;gap:10px">
+        <div class="row" style="font-size:15px"><span>Subtotal</span><strong id="drawerTotal">$0.00</strong></div>
+        <div style="font-size:12px;color:#6b7280">Prices shown are per pound where noted. Pay in-store at pickup.</div>
+        <button id="goCheckout" class="btn" style="background:#10b981;color:#052e2b;font-weight:900">Checkout</button>
+      </div>
+    </aside>
+  </div>
+
 <script>
-(function(){
-  // ----- Inventory (no photos) -----
-  const INVENTORY = [
+  // ---------- DATA ----------
+  const CATALOG = [
     // Poultry
-    {cat:'Poultry', sku:'whole-chicken',   name:'Whole chicken',   price:2.95, unit:'/lb'},
-    {cat:'Poultry', sku:'hard-chicken',    name:'Hard chicken',    price:3.49, unit:'/lb'},
-    {cat:'Poultry', sku:'small-chicken',   name:'Small chicken',   price:3.29, unit:'/lb'},
-    {cat:'Poultry', sku:'chicken-legs',    name:'Chicken legs',    price:1.99, unit:'/lb'},
-    {cat:'Poultry', sku:'chicken-wings',   name:'Chicken wings',   price:4.79, unit:'/lb'},
-    {cat:'Poultry', sku:'chicken-breast',  name:'Chicken breast',  price:4.99, unit:'/lb'},
-    {cat:'Poultry', sku:'chicken-thighs',  name:'Chicken thighs',  price:4.49, unit:'/lb'},
-    {cat:'Poultry', sku:'ground-chicken',  name:'Ground chicken',  price:3.99, unit:'/lb'},
+    {cat:'Poultry', sku:'whole-chicken',   name:'Whole chicken',   price:2.95, unit:'/lb', icon:'🍗'},
+    {cat:'Poultry', sku:'hard-chicken',    name:'Hard chicken',    price:3.49, unit:'/lb', icon:'🍗'},
+    {cat:'Poultry', sku:'small-chicken',   name:'Small chicken',   price:3.29, unit:'/lb', icon:'🍗'},
+    {cat:'Poultry', sku:'chicken-legs',    name:'Chicken legs',    price:1.99, unit:'/lb', icon:'🍗'},
+    {cat:'Poultry', sku:'chicken-wings',   name:'Chicken wings',   price:4.79, unit:'/lb', icon:'🍗'},
+    {cat:'Poultry', sku:'chicken-breast',  name:'Chicken breast',  price:4.99, unit:'/lb', icon:'🍗'},
+    {cat:'Poultry', sku:'chicken-thighs',  name:'Chicken thighs',  price:4.49, unit:'/lb', icon:'🍗'},
+    {cat:'Poultry', sku:'ground-chicken',  name:'Ground chicken',  price:3.99, unit:'/lb', icon:'🍗'},
 
     // Meat
-    {cat:'Meat', sku:'baby-goat-leg',  name:'Baby Goat Leg',  price:13.99, unit:'/lb'},
-    {cat:'Meat', sku:'goat-shoulder',  name:'Goat shoulder',  price:13.99, unit:'/lb'},
-    {cat:'Meat', sku:'goat-chest',     name:'Goat chest',     price:11.99, unit:'/lb'},
-    {cat:'Meat', sku:'goat-feet',      name:'Goat feet',      price:6.99, unit:'/lb'},
-    {cat:'Meat', sku:'lamb-leg',       name:'Lamb Leg',       price:10.99, unit:'/lb'},
-    {cat:'Meat', sku:'lamb-shoulder',  name:'Lamb shoulder',  price:10.99, unit:'/lb'},
-    {cat:'Meat', sku:'lamb-chop',      name:'Lamb chop',      price:12.99, unit:'/lb'},
-    {cat:'Meat', sku:'beef-bone',      name:'Beef with Bone', price:5.99,  unit:'/lb'},
-    {cat:'Meat', sku:'beef-boneless',  name:'Beef Boneless',  price:7.99,  unit:'/lb'},
-    {cat:'Meat', sku:'beef-liver',     name:'Beef Liver',     price:3.99,  unit:'/lb'},
-    {cat:'Meat', sku:'ground-beef',    name:'Ground Beef',    price:6.99,  unit:'/lb'},
-    {cat:'Meat', sku:'shank-nihari',   name:'Shank (Nihari)', price:5.99,  unit:'/lb'},
-    {cat:'Meat', sku:'steak-tbone',    name:'Steak (T-Bone)', price:8.99,  unit:'/lb'},
-    {cat:'Meat', sku:'ribeye',         name:'Ribeye',         price:8.99,  unit:'/lb'},
-    {cat:'Meat', sku:'beef-ribs',      name:'Beef Ribs',      price:5.99,  unit:'/lb'},
-    {cat:'Meat', sku:'oxtail',         name:'Ox-tail',        price:11.99, unit:'/lb'},
-    {cat:'Meat', sku:'cow-feet',       name:'Cow feet',       price:4.99,  unit:'/lb'},
+    {cat:'Meat', sku:'baby-goat-leg',  name:'Baby Goat Leg',  price:13.99, unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'goat-shoulder',  name:'Goat shoulder',  price:13.99, unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'goat-chest',     name:'Goat chest',     price:11.99, unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'goat-feet',      name:'Goat feet',      price:6.99, unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'lamb-leg',       name:'Lamb Leg',       price:10.99, unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'lamb-shoulder',  name:'Lamb shoulder',  price:10.99, unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'lamb-chop',      name:'Lamb chop',      price:12.99, unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'beef-bone',      name:'Beef with Bone', price:5.99,  unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'beef-boneless',  name:'Beef Boneless',  price:7.99,  unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'beef-liver',     name:'Beef Liver',     price:3.99,  unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'ground-beef',    name:'Ground Beef',    price:6.99,  unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'shank-nihari',   name:'Shank (Nihari)', price:5.99,  unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'steak-tbone',    name:'Steak (T-Bone)', price:8.99,  unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'ribeye',         name:'Ribeye',         price:8.99,  unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'beef-ribs',      name:'Beef Ribs',      price:5.99,  unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'oxtail',         name:'Ox-tail',        price:11.99, unit:'/lb', icon:'🥩'},
+    {cat:'Meat', sku:'cow-feet',       name:'Cow feet',       price:4.99,  unit:'/lb', icon:'🥩'},
 
     // Fish
-    {cat:'Fish', sku:'hilsha',   name:'Hilsha',   price:9.99, unit:'/lb'},
-    {cat:'Fish', sku:'rohu',     name:'Rohu',     price:3.99, unit:'/lb'},
-    {cat:'Fish', sku:'snapper',  name:'Snapper',  price:9.99, unit:'/lb'},
-    {cat:'Fish', sku:'pompano',  name:'Pompano',  price:6.99, unit:'/lb'},
-    {cat:'Fish', sku:'kingfish', name:'Kingfish', price:8.99, unit:'/lb'},
+    {cat:'Fish', sku:'hilsha',   name:'Hilsha',   price:9.99, unit:'/lb', icon:'🐟'},
+    {cat:'Fish', sku:'rohu',     name:'Rohu',     price:3.99, unit:'/lb', icon:'🐟'},
+    {cat:'Fish', sku:'snapper',  name:'Snapper',  price:9.99, unit:'/lb', icon:'🐟'},
+    {cat:'Fish', sku:'pompano',  name:'Pompano',  price:6.99, unit:'/lb', icon:'🐟'},
+    {cat:'Fish', sku:'kingfish', name:'Kingfish', price:8.99, unit:'/lb', icon:'🐟'},
   ];
 
-  const money = n => '$' + (Math.round(n*100)/100).toFixed(2);
-  const parseQty = v => {
-    if (typeof v !== 'string') v = String(v ?? '');
-    const n = Number.parseFloat(v.replace(',', '.'));
-    return Number.isFinite(n) && n > 0 ? n : 0;
+  const el = (sel)=>document.querySelector(sel);
+  const els = (sel)=>Array.from(document.querySelectorAll(sel));
+  const fmt = (n)=> `$${n.toFixed(2)}`;
+
+  // State
+  const state = {
+    cart: {},
+    filter: 'All',
+    q: ''
   };
 
-  const cardsEl = document.getElementById('cards');
-  const sectionTitle = document.getElementById('sectionTitle');
-  const tabs = document.querySelectorAll('.tab');
+  // Load cart from localStorage
+  try{
+    const saved = JSON.parse(localStorage.getItem('a1-cart')||'{}');
+    if(saved && typeof saved==='object') state.cart = saved;
+  }catch{}
 
-  let currentCat = 'All';
-  const cart = new Map(); // sku -> {name, price, unit, qty}
+  const categories = ['All','Poultry','Meat','Fish'];
 
-  function isAfter8PM(){
-    const now = new Date();
-    return now.getHours() >= 20;
+  // Render category chips
+  function renderChips(){
+    const box = el('#chips');
+    box.innerHTML = '';
+    categories.forEach(c=>{
+      const b=document.createElement('button');
+      b.className='chip' + (state.filter===c?' active':'');
+      b.textContent = (c==='Poultry'?'🍗 ':'') + (c==='Meat'?'🥩 ':'') + (c==='Fish'?'🐟 ':'') + c;
+      b.onclick=()=>{ state.filter=c; renderProducts(); };
+      box.appendChild(b);
+    });
   }
 
-  function renderCards(){
-    const list = currentCat==='All' ? INVENTORY : INVENTORY.filter(i=>i.cat===currentCat);
-    sectionTitle.textContent = currentCat==='All' ? 'All items' : currentCat;
-    cardsEl.innerHTML = '';
-    list.forEach(it=>{
+  // Render products grid
+  function renderProducts(){
+    const grid = el('#products');
+    grid.innerHTML = '';
+    const list = CATALOG.filter(i=>{
+      const okCat = state.filter==='All' || i.cat===state.filter;
+      const okQ = i.name.toLowerCase().includes(state.q.toLowerCase());
+      return okCat && okQ;
+    });
+
+    list.forEach(item=>{
       const card = document.createElement('div');
-      card.className = 'card';
-      card.innerHTML = `
-        <div class="name">${it.name}</div>
-        <div class="price">${money(it.price)}${it.unit}</div>
-        <div class="controls">
-          <input class="qty" type="number" min="0.1" step="0.1" inputmode="decimal" value="1" aria-label="Quantity for ${it.name}">
-          <button class="add" data-sku="${it.sku}" data-cat="${it.cat}">Order now</button>
-        </div>
-      `;
-      cardsEl.appendChild(card);
-    });
+      card.className='pcard';
+      card.style.position='relative';
 
-    cardsEl.querySelectorAll('.add').forEach(btn=>{
-      btn.addEventListener('click', e=>{
-        const sku = e.currentTarget.dataset.sku;
-        const cat = e.currentTarget.dataset.cat;
-        const it = INVENTORY.find(i=>i.sku===sku);
-        const qty = parseQty(e.currentTarget.previousElementSibling.value);
+      const unit = document.createElement('div');
+      unit.className='unit';
+      unit.textContent = item.unit;
+      card.appendChild(unit);
 
-        if(cat === 'Meat' && isAfter8PM()){
-          alert('Meat Department is closed for today (after 8:00 PM). You can still browse items or place an order tomorrow after 11:00 AM.');
-          return;
-        }
+      const icon = document.createElement('div');
+      icon.style.fontSize='24px';
+      icon.textContent=item.icon;
+      card.appendChild(icon);
 
-        if(!qty) return;
-        if(cart.has(sku)) cart.get(sku).qty = +(cart.get(sku).qty + qty).toFixed(2);
-        else cart.set(sku, {name:it.name, price:it.price, unit:it.unit, qty});
-        e.currentTarget.previousElementSibling.value = 1;
-        renderCart();
-      });
-    });
-  }
+      const name = document.createElement('div');
+      name.style.fontWeight='700';
+      name.style.fontSize='18px';
+      name.textContent=item.name;
+      card.appendChild(name);
 
-  tabs.forEach(t=>{
-    t.addEventListener('click', ()=>{
-      tabs.forEach(b=>b.setAttribute('aria-selected','false'));
-      t.setAttribute('aria-selected','true');
-      currentCat = t.dataset.cat;
-      renderCards();
-    });
-  });
+      const cat = document.createElement('div');
+      cat.className='faint';
+      cat.textContent=item.cat;
+      card.appendChild(cat);
 
-  const cartEl = document.getElementById('cart');
-  const emptyEl = document.getElementById('empty');
-  const totalEl = document.getElementById('total');
-  const checkoutBtn = document.getElementById('checkoutBtn');
-
-  function renderCart(){
-    const items = Array.from(cart.entries());
-    const has = items.length>0;
-    emptyEl.hidden = has;
-    cartEl.hidden  = !has;
-    cartEl.innerHTML = '';
-    let total = 0;
-
-    items.forEach(([sku, it])=>{
-      const line = it.price * it.qty; total += line;
       const row = document.createElement('div');
-      row.className = 'row';
-      row.innerHTML = `
-        <div>
-          <strong>${it.name}</strong>
-          <div class="meta">${money(it.price)}${it.unit}</div>
-        </div>
-        <input type="number" min="0" step="0.1" value="${it.qty.toFixed(2)}" data-sku="${sku}" class="q" inputmode="decimal">
-        <div>${money(line)}</div>
-        <button class="rmv" data-sku="${sku}" aria-label="Remove ${it.name}">✕</button>
-      `;
-      cartEl.appendChild(row);
-    });
+      row.className='row';
+      row.style.marginTop='8px';
 
-    cartEl.querySelectorAll('.q').forEach(inp=>{
-      inp.addEventListener('input', e=>{
-        const sku = e.target.dataset.sku;
-        const q = parseQty(e.target.value);
-        if(!q){ cart.delete(sku); } else { cart.get(sku).qty = q; }
-        renderCart();
-      });
-    });
-    cartEl.querySelectorAll('.rmv').forEach(btn=>{
-      btn.addEventListener('click', e=>{
-        e.preventDefault();
-        cart.delete(e.currentTarget.dataset.sku);
-        renderCart();
-      });
-    });
+      const price = document.createElement('div');
+      price.className='price';
+      price.textContent = fmt(item.price);
+      row.appendChild(price);
 
-    totalEl.textContent = money(total);
-    checkoutBtn.disabled = !has;
+      // qty controls
+      const qtyBox = document.createElement('div');
+      qtyBox.className='qty';
+      let qty=0;
+      const minus=document.createElement('button'); minus.textContent='−';
+      const qtyVal=document.createElement('div'); qtyVal.textContent='0';
+      const plus=document.createElement('button'); plus.textContent='+';
+      minus.onclick=()=>{ qty=Math.max(0, qty-1); qtyVal.textContent=String(qty); toggleAdd(); };
+      plus.onclick=()=>{ qty=Math.min(999, qty+1); qtyVal.textContent=String(qty); toggleAdd(); };
+      qtyBox.append(minus, qtyVal, plus);
+      row.appendChild(qtyBox);
+
+      card.appendChild(row);
+
+      const addBtn = document.createElement('button');
+      addBtn.className='add disabled';
+      addBtn.textContent='Add to Cart';
+      addBtn.disabled=true;
+      function toggleAdd(){
+        if(qty>0){ addBtn.className='add enabled'; addBtn.disabled=false; }
+        else{ addBtn.className='add disabled'; addBtn.disabled=true; }
+      }
+      addBtn.onclick=()=>{
+        state.cart[item.sku]=(state.cart[item.sku]||0)+qty;
+        qty=0; qtyVal.textContent='0'; toggleAdd();
+        saveCart(); updateUI();
+      };
+      card.appendChild(addBtn);
+
+      grid.appendChild(card);
+    });
   }
 
-  const form = document.getElementById('checkoutForm');
-  form.addEventListener('submit', e=>{
-    if(cart.size===0){ e.preventDefault(); alert('Your cart is empty.'); return; }
-    const items = Array.from(cart.values()).map(it=>({
-      item: it.name, price_per_unit: it.price, unit: it.unit,
-      quantity: +it.qty, line_total: +(it.price*it.qty).toFixed(2)
-    }));
-    const total = items.reduce((s,i)=>s+i.line_total,0);
-    document.getElementById('order_json').value = JSON.stringify({items,total}, null, 2);
-    document.getElementById('order_readable').value =
-      items.map(i=>`• ${i.item} — ${i.quantity}${i.unit} @ $${i.price_per_unit}/lb = $${i.line_total}`).join('\n');
-    document.getElementById('order_total').value = money(total);
+  function saveCart(){
+    localStorage.setItem('a1-cart', JSON.stringify(state.cart));
+  }
+
+  function cartEntries(){
+    return Object.entries(state.cart).map(([sku,qty])=>{
+      const it=CATALOG.find(x=>x.sku===sku);
+      return { ...it, qty };
+    }).filter(Boolean);
+  }
+
+  function cartTotal(){
+    return cartEntries().reduce((s,it)=> s + it.price*it.qty, 0);
+  }
+
+  // Cart drawer
+  function openDrawer(){ el('#drawer').classList.add('open'); }
+  function closeDrawer(){ el('#drawer').classList.remove('open'); }
+
+  function renderDrawer(){
+    const lines = el('#cartLines');
+    lines.innerHTML='';
+    const items = cartEntries();
+
+    if(items.length===0){
+      const p=document.createElement('div');
+      p.style.color='#6b7280';
+      p.style.fontSize='14px';
+      p.textContent='Your cart is empty.';
+      lines.appendChild(p);
+    }
+
+    items.forEach(it=>{
+      const row = document.createElement('div');
+      row.className='line';
+
+      const icon=document.createElement('div'); icon.textContent=it.icon; icon.style.fontSize='20px';
+      row.appendChild(icon);
+
+      const info=document.createElement('div');
+      info.innerHTML=`<div style="font-weight:600">${it.name}</div>
+                      <div style="font-size:12px;color:#6b7280">${it.unit} • ${fmt(it.price)}</div>`;
+      row.appendChild(info);
+
+      const right=document.createElement('div'); right.className='right';
+
+      const minus=document.createElement('button'); minus.className='btn btn-ghost'; minus.textContent='−';
+      const num=document.createElement('div'); num.textContent=it.qty;
+      const plus=document.createElement('button'); plus.className='btn btn-ghost'; plus.textContent='+';
+
+      minus.onclick=()=>{
+        const n=Math.max(0,(state.cart[it.sku]||0)-1);
+        if(n===0) delete state.cart[it.sku]; else state.cart[it.sku]=n;
+        saveCart(); updateUI(); renderDrawer();
+      };
+      plus.onclick=()=>{
+        state.cart[it.sku]=(state.cart[it.sku]||0)+1;
+        saveCart(); updateUI(); renderDrawer();
+      };
+
+      const price=document.createElement('div'); price.style.width='70px'; price.style.textAlign='right'; price.style.fontWeight='700';
+      price.textContent=fmt(it.qty*it.price);
+
+      const rm=document.createElement('button'); rm.className='remove'; rm.textContent='Remove';
+      rm.onclick=()=>{ delete state.cart[it.sku]; saveCart(); updateUI(); renderDrawer(); };
+
+      right.append(minus,num,plus,price,rm);
+      row.appendChild(right);
+
+      lines.appendChild(row);
+    });
+
+    el('#drawerTotal').textContent = fmt(cartTotal());
+  }
+
+  // Summary (checkout sidebar)
+  function renderSummary(){
+    const box = el('#summary');
+    box.innerHTML='';
+    const items = cartEntries();
+
+    if(items.length===0){
+      const p=document.createElement('div'); p.className='muted'; p.textContent='No items yet. Add from the menu.';
+      box.appendChild(p);
+    }
+
+    items.forEach(it=>{
+      const row=document.createElement('div');
+      row.className='line';
+      row.style.borderColor='#ffffff22';
+      row.style.background='transparent';
+      row.style.color='var(--text)';
+      row.style.borderRadius='14px';
+
+      const icon=document.createElement('div'); icon.textContent=it.icon; icon.style.fontSize='20px';
+      const body=document.createElement('div'); body.innerHTML=`<div style="font-weight:600">${it.name}</div><div class="muted" style="font-size:12px">${it.unit} • ${fmt(it.price)}</div>`;
+      const qty=document.createElement('div'); qty.textContent='× '+it.qty;
+      const total=document.createElement('div'); total.style.fontWeight='700'; total.textContent=fmt(it.qty*it.price);
+
+      row.append(icon, body);
+      const right=document.createElement('div'); right.style.marginLeft='auto'; right.style.display='flex'; right.style.gap='10px'; right.append(qty,total);
+      row.appendChild(right);
+
+      box.appendChild(row);
+    });
+
+    el('#summaryTotal').textContent = fmt(cartTotal());
+  }
+
+  function updateBadges(){
+    const count = Object.keys(state.cart).length;
+    el('#cartCount').textContent = String(count);
+    el('#fabTotal').textContent = fmt(cartTotal());
+  }
+
+  // Build order summary text for form
+  function buildOrderSummaryText(){
+    const lines = cartEntries().map(it=> `${it.name} — ${it.qty} × ${fmt(it.price)} ${it.unit}`);
+    lines.push('', `Subtotal: ${fmt(cartTotal())}`);
+    return lines.join('\n');
+  }
+
+  function updateUI(){
+    renderChips();
+    renderProducts();
+    renderSummary();
+    updateBadges();
+  }
+
+  // Events
+  el('#openCart').onclick = ()=>{ renderDrawer(); openDrawer(); };
+  el('#reviewCart').onclick = ()=>{ renderDrawer(); openDrawer(); };
+  el('#fab').onclick = ()=>{ renderDrawer(); openDrawer(); };
+  el('#closeDrawer').onclick = closeDrawer;
+  el('#scrim').onclick = closeDrawer;
+  el('#goCheckout').onclick = ()=>{
+    closeDrawer();
+    document.getElementById('checkout').scrollIntoView({behavior:'smooth'});
+  };
+
+  el('#search').addEventListener('input', (e)=>{
+    state.q = e.target.value || '';
+    renderProducts();
   });
 
-  renderCards();
-})();
+  // Form submission guard
+  el('#orderForm').addEventListener('submit', (e)=>{
+    if(Object.keys(state.cart).length===0){
+      e.preventDefault();
+      alert('Your cart is empty. Add items before submitting.');
+      return;
+    }
+    // inject summary + total
+    el('#orderSummary').value = buildOrderSummaryText();
+    el('#orderTotal').value = cartTotal().toFixed(2);
+  });
+
+  // Initial
+  updateUI();
 </script>
 </body>
 </html>
