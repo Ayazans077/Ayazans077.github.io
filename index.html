@@ -18,7 +18,6 @@
     --bg1:#052e2b; --bg2:#041f22; --panel:rgba(255,255,255,.06); --border:rgba(255,255,255,.15);
     --text:#e8fbf2; --muted:#b4d7c8; --brand:#42f5b3; --brand-2:#86ffd8;
     --accent:#10b981; --accent-ink:#052e2b; --shadow:0 12px 30px rgba(0,0,0,.35);
-    --radius:18px;
   }
   *{box-sizing:border-box}
   html,body{height:100%}
@@ -29,29 +28,26 @@
                linear-gradient(180deg, var(--bg1), var(--bg2));
     overflow-x:hidden;
   }
-  /* Lock the page when the cart drawer is open */
-  body.lock { overflow:hidden; }
+  body.lock{overflow:hidden}
 
   a{color:inherit;text-decoration:none}
   .wrap{max-width:1120px;margin:0 auto;padding:0 16px}
 
-  /* Background orbs (gentle motion) */
+  /* moving background */
   .orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
   .orb{position:absolute;filter:blur(50px);opacity:.22;border-radius:999px;
        background:radial-gradient(circle at 30% 30%, #7fffd4, transparent 60%);
-       animation:drift 18s ease-in-out infinite alternate;transform:translate3d(0,0,0) scale(1);}
+       animation:drift 18s ease-in-out infinite alternate;transform:translate3d(0,0,0) scale(1)}
   .orb.o2{left:70%; top:10%; width:420px; height:420px; animation-duration:22s}
   .orb.o1{left:10%; top:35%; width:520px; height:520px}
   .orb.o3{left:55%; top:70%; width:360px; height:360px; animation-duration:26s}
   @keyframes drift{0%{transform:translate3d(0,0,0) scale(1.02)}100%{transform:translate3d(20px,-25px,0) scale(1.06)}}
 
-  /* Top banners */
   .topbar{
     text-align:center;background:linear-gradient(90deg,#d9fbe6,#bff9e0);color:#083b2e;font-weight:900;
     letter-spacing:.5px;padding:8px 12px;border-bottom:1px solid #ffffff33;position:relative;z-index:2;
   }
 
-  /* Header */
   .nav{position:sticky; top:0; z-index:5; backdrop-filter:saturate(120%) blur(10px);
        background:linear-gradient(180deg, rgba(5,46,43,.85), rgba(5,46,43,.55)); border-bottom:1px solid var(--border)}
   .nav-row{display:flex;align-items:center;gap:12px;padding:12px 0}
@@ -62,7 +58,7 @@
   .nav-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
   .input{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:14px;padding:10px 12px;outline:none;width:260px;transition:transform .25s, box-shadow .25s}
   .input:focus{transform:scale(1.02);box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  .btn{border:0;cursor:pointer;border-radius:14px;padding:10px 14px;font-weight:700;transition:transform .2s, filter .2s, box-shadow .2s}
+  .btn{border:0;cursor:pointer;border-radius:14px;padding:10px 14px;font-weight:700;transition:transform .2s}
   .btn:active{transform:translateY(1px) scale(.98)}
   .btn-primary{background:white;color:#0b2a25}
   .btn-ghost{background:var(--panel);color:var(--text);border:1px solid var(--border)}
@@ -72,64 +68,55 @@
   .hero{display:grid; gap:28px; align-items:center; animation:panzoom 16s ease-in-out infinite alternate}
   @keyframes panzoom{0%{transform:scale(1) translateY(0)}100%{transform:scale(1.015) translateY(-2px)}}
   @media (min-width:860px){ .hero{grid-template-columns:1.1fr .9fr} }
-  .card{position:relative;border:1px solid var(--border);border-radius:24px;padding:22px;background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));box-shadow:var(--shadow);backdrop-filter:saturate(110%) blur(2px);transition:transform .25s, box-shadow .25s}
-  .card:hover{transform:translateY(-3px); box-shadow:0 18px 36px rgba(0,0,0,.35)}
+  .card{position:relative;border:1px solid var(--border);border-radius:24px;padding:22px;background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));box-shadow:var(--shadow)}
+  .card:hover{transform:translateY(-3px)}
+
   .faint{color:#e8fbf2b0;font-size:14px}
   .grid{display:grid;gap:16px;grid-template-columns:repeat(1,minmax(0,1fr))}
   @media (min-width:640px){ .grid{grid-template-columns:repeat(2, minmax(0,1fr));} }
   @media (min-width:1024px){ .grid{grid-template-columns:repeat(3, minmax(0,1fr));} }
 
-  /* Product card + effects */
-  .pcard{
-    border:1px solid var(--border);
-    border-radius:22px;
-    background:var(--panel);
-    padding:16px;
-    transition:.25s transform,.25s box-shadow;
-    perspective:800px;
-    overflow:hidden; /* keep /lb badge inside */
-  }
+  /* product card */
+  .pcard{border:1px solid var(--border);border-radius:22px;background:var(--panel);padding:16px;transition:.25s transform,.25s box-shadow;perspective:800px;overflow:hidden}
   .pcard:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 18px 36px rgba(0,0,0,.35)}
   .pcard.tilt{transform-style:preserve-3d}
   .pcard.tilt:hover .tilt-inner{transform:rotateX(var(--rx,0)) rotateY(var(--ry,0))}
   .tilt-inner{transition:transform .15s}
-  .unit{
-    position:absolute;right:12px;top:8px;     /* was -10px */
-    background:#fff;color:#0b2a25;border-radius:999px;padding:6px 10px;font-size:12px;border:1px solid #00000010
-  }
+  .unit{position:absolute;right:12px;top:8px;background:#fff;color:#0b2a25;border-radius:999px;padding:6px 10px;font-size:12px;border:1px solid #00000010}
   .product-photo{width:100%;height:180px;object-fit:cover;border-radius:14px;margin-bottom:8px;display:block}
   .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .qty{display:flex;align-items:center;gap:10px}
-  .qty button{width:30px;height:30px;border-radius:999px;border:1px solid var(--border);background:transparent;color:var(--text);cursor:pointer}
-  .qty div{min-width:2ch;text-align:center}
   .price{font-weight:900;font-size:20px}
-  .add{margin-top:10px;width:100%;padding:10px 12px;border-radius:12px;font-weight:800;border:0;cursor:pointer;transition:transform .2s}
+  .add{margin-top:10px;width:100%;padding:10px 12px;border-radius:12px;font-weight:800;border:0;cursor:pointer}
   .add.enabled{background:var(--accent);color:var(--accent-ink)}
   .add.disabled{background:rgba(255,255,255,.1);color:#ffffff66;cursor:not-allowed}
-  .add.enabled:active{animation:pop .25s}
-  @keyframes pop{0%{transform:scale(1)}50%{transform:scale(1.05)}100%{transform:scale(1)}}
 
-  /* Drawer (kept above everything) */
+  /* dual mode controls */
+  .mode{display:flex;gap:8px;align-items:center;margin-top:8px}
+  .seg{display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden}
+  .seg button{background:transparent;color:var(--text);border:0;padding:6px 10px;cursor:pointer}
+  .seg button.active{background:white;color:#0b2a25;font-weight:800}
+  .num{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:6px 10px}
+  .num input{background:transparent;border:0;outline:none;color:var(--text);width:7ch}
+  .num .suf{opacity:.8;font-size:12px}
+
+  /* drawer */
   .drawer{position:fixed; inset:0; display:none; z-index:1000;}
   .drawer.open{display:block}
-  .scrim{position:absolute; inset:0; background:rgba(0,0,0,.55); z-index:1000}
-  .panel{position:absolute; right:0; top:0; height:100%; width:min(92vw, 430px); background:#fff; color:#111827; display:flex; flex-direction:column; box-shadow:var(--shadow); z-index:1001}
+  .scrim{position:absolute; inset:0; background:rgba(0,0,0,.55)}
+  .panel{position:absolute; right:0; top:0; height:100%; width:min(92vw, 430px); background:#fff; color:#111827; display:flex; flex-direction:column; box-shadow:var(--shadow)}
   .panel header{display:flex;align-items:center;justify-content:space-between;padding:14px 16px;border-bottom:1px solid #e5e7eb}
   .panel main{padding:16px;overflow:auto;flex:1}
   .line{border:1px solid #e5e7eb;border-radius:14px;padding:12px;display:flex;gap:10px;align-items:center}
   .line .right{margin-left:auto;display:flex;align-items:center;gap:8px}
   .remove{background:none;border:0;color:#dc2626;cursor:pointer;font-size:12px}
 
-  /* Checkout */
   .form .control{display:flex;flex-direction:column;gap:6px}
   .form input, .form select, .form textarea{background:#ffffff10;border:1px solid var(--border);color:var(--text);border-radius:14px;padding:12px;outline:none}
   .muted{color:#e8fbf2a6;font-size:13px}
   .foot{border-top:1px solid var(--border); text-align:center; padding:26px 0; color:#d7f7ea99; font-size:14px}
 
-  /* Floating cart */
   .fab{position:fixed; right:18px; bottom:18px; z-index:4; background:var(--accent); color:var(--accent-ink); border:0; font-weight:900; border-radius:999px; padding:12px 16px; box-shadow:var(--shadow); cursor:pointer}
 
-  /* Chips, title, typing */
   .chip{padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--panel);cursor:pointer;transition:transform .2s}
   .chip.active{background:white;color:#0b2a25;font-weight:700}
   .chip:hover{transform:translateY(-1px)}
@@ -140,23 +127,19 @@
   .typing{min-height:20px;margin-top:6px;color:#bff9e0;font-weight:700;letter-spacing:.4px}
   .cursor{display:inline-block;width:10px;background:#bff9e0;margin-left:4px;animation:blink 1s steps(1,end) infinite}
   @keyframes blink{50%{background:transparent}}
-  .phone{border:1px dashed #b7ffe9;padding:8px 10px;border-radius:12px;color:#b7ffe9;font-weight:700}
 
-  /* Scroll reveal */
   .reveal{opacity:0; transform:translateY(12px); transition:opacity .4s ease, transform .4s ease}
   .reveal.in{opacity:1; transform:translateY(0)}
+  .phone{border:1px dashed #b7ffe9;padding:8px 10px;border-radius:12px;color:#b7ffe9;font-weight:700}
 </style>
 </head>
 <body>
 
-  <!-- Orbs -->
   <div class="orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
 
-  <!-- Top banners -->
   <div class="topbar">Asalamualaikum</div>
   <div class="topbar" style="background:linear-gradient(90deg,#c6ffe1,#a8f7db)">Zabeha Halal</div>
 
-  <!-- NAV -->
   <div class="nav">
     <div class="wrap nav-row">
       <a class="brand-link" href="https://a1halalmeat.com" aria-label="A1 Halal Meat — Home">
@@ -175,7 +158,6 @@
     </div>
   </div>
 
-  <!-- HERO -->
   <section class="section">
     <div class="wrap hero reveal">
       <div>
@@ -192,22 +174,20 @@
         <div style="font-weight:900;font-size:22px;margin-top:4px">Weekend Family Pack</div>
         <p class="faint" style="margin-top:4px">Mix any poultry + meat + fish and save at pickup.</p>
         <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px">
-          <div class="pcard"><div style="font-size:28px">🍗</div><div style="font-weight:700">Poultry</div><div class="faint">fresh daily</div></div>
-          <div class="pcard"><div style="font-size:28px">🥩</div><div style="font-weight:700">Meat</div><div class="faint">hand-cut</div></div>
-          <div class="pcard"><div style="font-size:28px">🐟</div><div style="font-weight:700">Fish</div><div class="faint">wild & farm</div></div>
+          <div class="pcard"><div style="font-weight:700">Poultry</div><div class="faint">fresh daily</div></div>
+          <div class="pcard"><div style="font-weight:700">Meat</div><div class="faint">hand-cut</div></div>
+          <div class="pcard"><div style="font-weight:700">Fish</div><div class="faint">wild & farm</div></div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- PRODUCTS -->
   <section class="section">
     <div class="wrap">
       <div id="products" class="grid"></div>
     </div>
   </section>
 
-  <!-- CHECKOUT -->
   <section class="section" id="checkout">
     <div class="wrap" style="display:grid;gap:18px;grid-template-columns:1fr;align-items:start">
       <div class="card reveal">
@@ -247,7 +227,6 @@
             <textarea name="notes" rows="4" placeholder="Ex: thin slices, remove skin, extra fat trimmed, etc."></textarea>
           </div>
 
-          <!-- Required checkboxes -->
           <label style="display:flex;align-items:center;gap:8px;font-size:14px">
             <input type="checkbox" required />
             I’ll pay at pickup and understand prices are per pound where listed.
@@ -285,7 +264,6 @@
 
   <button class="fab" id="fab">Cart • <span id="fabTotal">$0.00</span></button>
 
-  <!-- CART DRAWER -->
   <div class="drawer" id="drawer" aria-hidden="true">
     <div class="scrim" id="scrim"></div>
     <aside class="panel" role="dialog" aria-label="Cart">
@@ -306,47 +284,55 @@
   // ---------- DATA ----------
   const CATALOG = [
     // Poultry
-    {cat:'Poultry', sku:'whole-chicken',   name:'Whole chicken',   price:2.95, unit:'/lb', icon:'🍗', img:'images/whole-chicken.jpg'},
-    {cat:'Poultry', sku:'hard-chicken',    name:'Hard chicken',    price:3.49, unit:'/lb', icon:'🍗', img:'images/hard-chicken.jpg'},
-    {cat:'Poultry', sku:'small-chicken',   name:'Small chicken',   price:3.29, unit:'/lb', icon:'🍗', img:'images/small-chicken.jpg'},
-    {cat:'Poultry', sku:'chicken-legs',    name:'Chicken legs',    price:1.99, unit:'/lb', icon:'🍗', img:'images/chicken-legs.jpg'},
-    {cat:'Poultry', sku:'chicken-wings',   name:'Chicken wings',   price:4.79, unit:'/lb', icon:'🍗', img:'images/chicken-wings.jpg'},
-    {cat:'Poultry', sku:'chicken-breast',  name:'Chicken breast',  price:4.99, unit:'/lb', icon:'🍗', img:'images/chicken-breast.jpg'},
-    {cat:'Poultry', sku:'chicken-thighs',  name:'Chicken thighs',  price:4.49, unit:'/lb', icon:'🍗', img:'images/chicken-thighs.jpg'},
-    {cat:'Poultry', sku:'ground-chicken',  name:'Ground chicken',  price:3.99, unit:'/lb', icon:'🍗', img:'images/ground-chicken.jpg'},
+    {cat:'Poultry', sku:'whole-chicken',   name:'Whole chicken',   price:2.95, unit:'/lb', img:'images/whole-chicken.jpg'},
+    {cat:'Poultry', sku:'hard-chicken',    name:'Hard chicken',    price:3.49, unit:'/lb', img:'images/hard-chicken.jpg'},
+    {cat:'Poultry', sku:'small-chicken',   name:'Small chicken',   price:3.29, unit:'/lb', img:'images/small-chicken.jpg'},
+    {cat:'Poultry', sku:'chicken-legs',    name:'Chicken legs',    price:1.99, unit:'/lb', img:'images/chicken-legs.jpg'},
+    {cat:'Poultry', sku:'chicken-wings',   name:'Chicken wings',   price:4.79, unit:'/lb', img:'images/chicken-wings.jpg'},
+    {cat:'Poultry', sku:'chicken-breast',  name:'Chicken breast',  price:4.99, unit:'/lb', img:'images/chicken-breast.jpg'},
+    {cat:'Poultry', sku:'chicken-thighs',  name:'Chicken thighs',  price:4.49, unit:'/lb', img:'images/chicken-thighs.jpg'},
+    {cat:'Poultry', sku:'ground-chicken',  name:'Ground chicken',  price:3.99, unit:'/lb', img:'images/ground-chicken.jpg'},
 
     // Meat
-    {cat:'Meat', sku:'baby-goat-leg',  name:'Baby Goat Leg',  price:13.99, unit:'/lb', icon:'🥩', img:'images/baby-goat-leg.jpg'},
-    {cat:'Meat', sku:'goat-shoulder',  name:'Goat shoulder',  price:13.99, unit:'/lb', icon:'🥩', img:'images/goat-shoulder.jpg'},
-    {cat:'Meat', sku:'goat-chest',     name:'Goat chest',     price:11.99, unit:'/lb', icon:'🥩', img:'images/goat-chest.jpg'},
-    {cat:'Meat', sku:'goat-feet',      name:'Goat feet',      price:6.99, unit:'/lb', icon:'🥩', img:'images/goat-feet.jpg'},
-    {cat:'Meat', sku:'lamb-leg',       name:'Lamb Leg',       price:10.99, unit:'/lb', icon:'🥩', img:'images/lamb-leg.jpg'},
-    {cat:'Meat', sku:'lamb-shoulder',  name:'Lamb shoulder',  price:10.99, unit:'/lb', icon:'🥩', img:'images/lamb-shoulder.jpg'},
-    {cat:'Meat', sku:'lamb-chop',      name:'Lamb chop',      price:12.99, unit:'/lb', icon:'🥩', img:'images/lamb-chop.jpg'},
-    {cat:'Meat', sku:'beef-bone',      name:'Beef with Bone', price:5.99,  unit:'/lb', icon:'🥩', img:'images/beef-bone.jpg'},
-    {cat:'Meat', sku:'beef-boneless',  name:'Beef Boneless',  price:7.99,  unit:'/lb', icon:'🥩', img:'images/beef-boneless.jpg'},
-    {cat:'Meat', sku:'beef-liver',     name:'Beef Liver',     price:3.99,  unit:'/lb', icon:'🥩', img:'images/beef-liver.jpg'},
-    {cat:'Meat', sku:'ground-beef',    name:'Ground Beef',    price:6.99,  unit:'/lb', icon:'🥩', img:'images/ground-beef.jpg'},
-    {cat:'Meat', sku:'shank-nihari',   name:'Shank (Nihari)', price:5.99,  unit:'/lb', icon:'🥩', img:'images/shank-nihari.jpg'},
-    {cat:'Meat', sku:'steak-tbone',    name:'Steak (T-Bone)', price:8.99,  unit:'/lb', icon:'🥩', img:'images/steak-tbone.jpg'},
-    {cat:'Meat', sku:'ribeye',         name:'Ribeye',         price:8.99,  unit:'/lb', icon:'🥩', img:'images/ribeye.jpg'},
-    {cat:'Meat', sku:'beef-ribs',      name:'Beef Ribs',      price:5.99,  unit:'/lb', icon:'🥩', img:'images/beef-ribs.jpg'},
-    {cat:'Meat', sku:'oxtail',         name:'Ox-tail',        price:11.99, unit:'/lb', icon:'🥩', img:'images/oxtail.jpg'},
-    {cat:'Meat', sku:'cow-feet',       name:'Cow feet',       price:4.99,  unit:'/lb', icon:'🥩', img:'images/cow-feet.jpg'},
+    {cat:'Meat', sku:'baby-goat-leg',  name:'Baby Goat Leg',  price:13.99, unit:'/lb', img:'images/baby-goat-leg.jpg'},
+    {cat:'Meat', sku:'goat-shoulder',  name:'Goat shoulder',  price:13.99, unit:'/lb', img:'images/goat-shoulder.jpg'},
+    {cat:'Meat', sku:'goat-chest',     name:'Goat chest',     price:11.99, unit:'/lb', img:'images/goat-chest.jpg'},
+    {cat:'Meat', sku:'goat-feet',      name:'Goat feet',      price:6.99, unit:'/lb', img:'images/goat-feet.jpg'},
+    {cat:'Meat', sku:'lamb-leg',       name:'Lamb Leg',       price:10.99, unit:'/lb', img:'images/lamb-leg.jpg'},
+    {cat:'Meat', sku:'lamb-shoulder',  name:'Lamb shoulder',  price:10.99, unit:'/lb', img:'images/lamb-shoulder.jpg'},
+    {cat:'Meat', sku:'lamb-chop',      name:'Lamb chop',      price:12.99, unit:'/lb', img:'images/lamb-chop.jpg'},
+    {cat:'Meat', sku:'beef-bone',      name:'Beef with Bone', price:5.99,  unit:'/lb', img:'images/beef-bone.jpg'},
+    {cat:'Meat', sku:'beef-boneless',  name:'Beef Boneless',  price:7.99,  unit:'/lb', img:'images/beef-boneless.jpg'},
+    {cat:'Meat', sku:'beef-liver',     name:'Beef Liver',     price:3.99,  unit:'/lb', img:'images/beef-liver.jpg'},
+    {cat:'Meat', sku:'ground-beef',    name:'Ground Beef',    price:6.99,  unit:'/lb', img:'images/ground-beef.jpg'},
+    {cat:'Meat', sku:'shank-nihari',   name:'Shank (Nihari)', price:5.99,  unit:'/lb', img:'images/shank-nihari.jpg'},
+    {cat:'Meat', sku:'steak-tbone',    name:'Steak (T-Bone)', price:8.99,  unit:'/lb', img:'images/steak-tbone.jpg'},
+    {cat:'Meat', sku:'ribeye',         name:'Ribeye',         price:8.99,  unit:'/lb', img:'images/ribeye.jpg'},
+    {cat:'Meat', sku:'beef-ribs',      name:'Beef Ribs',      price:5.99,  unit:'/lb', img:'images/beef-ribs.jpg'},
+    {cat:'Meat', sku:'oxtail',         name:'Ox-tail',        price:11.99, unit:'/lb', img:'images/oxtail.jpg'},
+    {cat:'Meat', sku:'cow-feet',       name:'Cow feet',       price:4.99,  unit:'/lb', img:'images/cow-feet.jpg'},
 
     // Fish
-    {cat:'Fish', sku:'hilsha',   name:'Hilsha',   price:9.99, unit:'/lb', icon:'🐟', img:'images/hilsha.jpg'},
-    {cat:'Fish', sku:'rohu',     name:'Rohu',     price:3.99, unit:'/lb', icon:'🐟', img:'images/rohu.jpg'},
-    {cat:'Fish', sku:'snapper',  name:'Snapper',  price:9.99, unit:'/lb', icon:'🐟', img:'images/snapper.jpg'},
-    {cat:'Fish', sku:'pompano',  name:'Pompano',  price:6.99, unit:'/lb', icon:'🐟', img:'images/pompano.jpg'},
-    {cat:'Fish', sku:'kingfish', name:'Kingfish', price:8.99, unit:'/lb', icon:'🐟', img:'images/kingfish.jpg'},
+    {cat:'Fish', sku:'hilsha',   name:'Hilsha',   price:9.99, unit:'/lb', img:'images/hilsha.jpg'},
+    {cat:'Fish', sku:'rohu',     name:'Rohu',     price:3.99, unit:'/lb', img:'images/rohu.jpg'},
+    {cat:'Fish', sku:'snapper',  name:'Snapper',  price:9.99, unit:'/lb', img:'images/snapper.jpg'},
+    {cat:'Fish', sku:'pompano',  name:'Pompano',  price:6.99, unit:'/lb', img:'images/pompano.jpg'},
+    {cat:'Fish', sku:'kingfish', name:'Kingfish', price:8.99, unit:'/lb', img:'images/kingfish.jpg'},
   ];
 
   const el = (sel)=>document.querySelector(sel);
   const fmt = (n)=> `$${n.toFixed(2)}`;
+  const fmtLb = (n)=> {
+    if (!isFinite(n)) return '0 lb';
+    const s = Number(n).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1');
+    return s+' lb';
+  };
   const state = { cart: {}, filter: 'All' };
 
-  try{ const saved = JSON.parse(localStorage.getItem('a1-cart')||'{}'); if(saved && typeof saved==='object') state.cart = saved; }catch{}
+  try{
+    const saved = JSON.parse(localStorage.getItem('a1-cart')||'{}');
+    if(saved && typeof saved==='object') state.cart = saved;
+  }catch{}
 
   const categories = ['All','Poultry','Meat','Fish'];
 
@@ -355,7 +341,7 @@
     categories.forEach(c=>{
       const b=document.createElement('button');
       b.className='chip' + (state.filter===c?' active':'');
-      b.textContent = (c==='Poultry'?'🍗 ':'') + (c==='Meat'?'🥩 ':'') + (c==='Fish'?'🐟 ':'') + c;
+      b.textContent = c;
       b.onclick=()=>{ state.filter=c; renderProducts(); };
       box.appendChild(b);
     });
@@ -374,49 +360,88 @@
       const card = document.createElement('div');
       card.className='pcard tilt reveal'; card.style.position='relative';
 
-      const inner = document.createElement('div');
-      inner.className='tilt-inner';
-      card.appendChild(inner);
+      const inner = document.createElement('div'); inner.className='tilt-inner'; card.appendChild(inner);
 
       const unit = document.createElement('div'); unit.className='unit'; unit.textContent = item.unit; inner.appendChild(unit);
 
-      // Photo (optional; hide if missing/broken)
       if (item.img){
         const img = document.createElement('img');
-        img.className='product-photo'; img.alt = item.name; img.src = item.img;
-        img.loading = 'lazy';
-        img.onerror = ()=> img.remove(); // hide broken icon automatically
+        img.className='product-photo'; img.alt = item.name; img.src = item.img; img.loading='lazy';
+        img.onerror = ()=> img.remove(); // no broken icon
         inner.appendChild(img);
       }
 
-      const icon = document.createElement('div'); icon.style.fontSize='20px'; icon.textContent=item.icon; inner.appendChild(icon);
-
       const name = document.createElement('div'); name.style.fontWeight='700'; name.style.fontSize='18px'; name.textContent=item.name; inner.appendChild(name);
-
       const cat = document.createElement('div'); cat.className='faint'; cat.textContent=item.cat; inner.appendChild(cat);
 
-      const row = document.createElement('div'); row.className='row'; row.style.marginTop='8px';
+      const rowTop = document.createElement('div'); rowTop.className='row'; rowTop.style.marginTop='8px';
+      const price = document.createElement('div'); price.className='price'; price.textContent = fmt(item.price);
+      rowTop.appendChild(price);
+      inner.appendChild(rowTop);
 
-      const price = document.createElement('div'); price.className='price'; price.textContent = fmt(item.price); row.appendChild(price);
+      // ===== lb / $ mode =====
+      const mode = document.createElement('div'); mode.className='mode';
+      const seg = document.createElement('div'); seg.className='seg';
+      const bLb = document.createElement('button'); bLb.type='button'; bLb.textContent='By lb'; bLb.className='active';
+      const bDol= document.createElement('button'); bDol.type='button'; bDol.textContent='By $';
+      seg.append(bLb,bDol);
 
-      const qtyBox = document.createElement('div'); qtyBox.className='qty';
-      let qty=0; const minus=document.createElement('button'); minus.textContent='−';
-      const qtyVal=document.createElement('div'); qtyVal.textContent='0';
-      const plus=document.createElement('button'); plus.textContent='+';
-      minus.onclick=()=>{ qty=Math.max(0, qty-1); qtyVal.textContent=String(qty); toggleAdd(); };
-      plus.onclick=()=>{ qty=Math.min(999, qty+1); qtyVal.textContent=String(qty); toggleAdd(); };
-      qtyBox.append(minus, qtyVal, plus); row.appendChild(qtyBox);
+      const numLb = document.createElement('div'); numLb.className='num';
+      const inLb  = document.createElement('input'); inLb.type='number'; inLb.min='0'; inLb.step='0.25'; inLb.placeholder='0.00';
+      const sufLb = document.createElement('span'); sufLb.className='suf'; sufLb.textContent='lb';
+      numLb.append(inLb,sufLb);
 
-      inner.appendChild(row);
+      const numDol= document.createElement('div'); numDol.className='num'; numDol.style.display='none';
+      const inDol = document.createElement('input'); inDol.type='number'; inDol.min='0'; inDol.step='1'; inDol.placeholder='0';
+      const sufDol= document.createElement('span'); sufDol.className='suf'; sufDol.textContent='$';
+      numDol.append(inDol,sufDol);
+
+      mode.append(seg,numLb,numDol);
+      inner.appendChild(mode);
 
       const addBtn = document.createElement('button'); addBtn.className='add disabled'; addBtn.textContent='Add to Cart'; addBtn.disabled=true;
-      function toggleAdd(){ if(qty>0){ addBtn.className='add enabled'; addBtn.disabled=false; } else { addBtn.className='add disabled'; addBtn.disabled=true; } }
+      inner.appendChild(addBtn);
+
+      let useDollar=false;
+      function poundsFromInputs(){
+        if(useDollar){
+          const dollars = parseFloat(inDol.value||'0');
+          return isNaN(dollars)||dollars<=0 ? 0 : (dollars / item.price);
+        }else{
+          const lbs = parseFloat(inLb.value||'0');
+          return isNaN(lbs)||lbs<=0 ? 0 : lbs;
+        }
+      }
+      function toggleAdd(){
+        const lbs = poundsFromInputs();
+        if(lbs>0){ addBtn.className='add enabled'; addBtn.disabled=false; addBtn.textContent='Add '+fmtLb(lbs); }
+        else{ addBtn.className='add disabled'; addBtn.disabled=true; addBtn.textContent='Add to Cart'; }
+      }
+      function syncOpposite(){
+        if(useDollar){
+          const dollars=parseFloat(inDol.value||'0');
+          const lbs = (isNaN(dollars)||dollars<=0)? '' : (dollars/item.price).toFixed(2);
+          inLb.value = lbs;
+        }else{
+          const lbs = parseFloat(inLb.value||'0');
+          const dollars = (isNaN(lbs)||lbs<=0)? '' : (lbs*item.price).toFixed(2);
+          inDol.value = dollars;
+        }
+      }
+      bLb.onclick=()=>{ useDollar=false; bLb.classList.add('active'); bDol.classList.remove('active'); numLb.style.display='flex'; numDol.style.display='none'; syncOpposite(); toggleAdd(); };
+      bDol.onclick=()=>{ useDollar=true;  bDol.classList.add('active'); bLb.classList.remove('active'); numDol.style.display='flex'; numLb.style.display='none'; syncOpposite(); toggleAdd(); };
+      inLb.addEventListener('input', ()=>{ syncOpposite(); toggleAdd(); });
+      inDol.addEventListener('input', ()=>{ syncOpposite(); toggleAdd(); });
+
       addBtn.onclick=()=>{
-        state.cart[item.sku]=(state.cart[item.sku]||0)+qty;
-        qty=0; qtyVal.textContent='0'; toggleAdd();
+        const lbs = poundsFromInputs();
+        if(lbs<=0) return;
+        // store with 2 decimals to avoid floating drift
+        const prev = Number(state.cart[item.sku]||0);
+        state.cart[item.sku] = Math.round((prev + lbs) * 100)/100;
+        inLb.value=''; inDol.value=''; toggleAdd();
         saveCart(); updateUI();
       };
-      inner.appendChild(addBtn);
 
       grid.appendChild(card);
     });
@@ -426,37 +451,55 @@
   }
 
   function saveCart(){ localStorage.setItem('a1-cart', JSON.stringify(state.cart)); }
-  function cartEntries(){ return Object.entries(state.cart).map(([sku,qty])=>{ const it=CATALOG.find(x=>x.sku===sku); return { ...it, qty }; }).filter(Boolean); }
+  function cartEntries(){ return Object.entries(state.cart).map(([sku,qtyLb])=>{ const it=CATALOG.find(x=>x.sku===sku); return { ...it, qty: qtyLb }; }).filter(Boolean); }
   function cartTotal(){ return cartEntries().reduce((s,it)=> s + it.price*it.qty, 0); }
 
-  // Drawer (with body lock)
-  function openDrawer(){
-    el('#drawer').classList.add('open');
-    document.body.classList.add('lock');
-  }
-  function closeDrawer(){
-    el('#drawer').classList.remove('open');
-    document.body.classList.remove('lock');
-  }
+  // Drawer + body lock
+  function openDrawer(){ el('#drawer').classList.add('open'); document.body.classList.add('lock'); }
+  function closeDrawer(){ el('#drawer').classList.remove('open'); document.body.classList.remove('lock'); }
 
   function renderDrawer(){
     const lines = el('#cartLines'); lines.innerHTML='';
     const items = cartEntries();
-    if(items.length===0){ const p=document.createElement('div'); p.style.color='#6b7280'; p.style.fontSize='14px'; p.textContent='Your cart is empty.'; lines.appendChild(p); }
+    if(items.length===0){
+      const p=document.createElement('div'); p.style.color='#6b7280'; p.style.fontSize='14px'; p.textContent='Your cart is empty.'; lines.appendChild(p);
+    }
     items.forEach(it=>{
       const row = document.createElement('div'); row.className='line';
-      const icon=document.createElement('div'); icon.textContent=it.icon; icon.style.fontSize='20px'; row.appendChild(icon);
-      const info=document.createElement('div'); info.innerHTML=`<div style="font-weight:600">${it.name}</div><div style="font-size:12px;color:#6b7280">${it.unit} • ${fmt(it.price)}</div>`; row.appendChild(info);
+
+      const info=document.createElement('div');
+      info.innerHTML=`<div style="font-weight:600">${it.name}</div>
+                      <div style="font-size:12px;color:#6b7280">Price ${fmt(it.price)} /lb</div>`;
+      row.appendChild(info);
+
       const right=document.createElement('div'); right.className='right';
+
       const minus=document.createElement('button'); minus.className='btn btn-ghost'; minus.textContent='−';
-      const num=document.createElement('div'); num.textContent=it.qty;
+      const num=document.createElement('div'); num.textContent=fmtLb(it.qty);
       const plus=document.createElement('button'); plus.className='btn btn-ghost'; plus.textContent='+';
-      minus.onclick=()=>{ const n=Math.max(0,(state.cart[it.sku]||0)-1); if(n===0) delete state.cart[it.sku]; else state.cart[it.sku]=n; saveCart(); updateUI(); renderDrawer(); };
-      plus.onclick=()=>{ state.cart[it.sku]=(state.cart[it.sku]||0)+1; saveCart(); updateUI(); renderDrawer(); };
-      const price=document.createElement('div'); price.style.width='70px'; price.style.textAlign='right'; price.style.fontWeight='700'; price.textContent=fmt(it.qty*it.price);
-      const rm=document.createElement('button'); rm.className='remove'; rm.textContent='Remove'; rm.onclick=()=>{ delete state.cart[it.sku]; saveCart(); updateUI(); renderDrawer(); };
-      right.append(minus,num,plus,price,rm); row.appendChild(right); lines.appendChild(row);
+
+      minus.onclick=()=>{
+        const n=Math.max(0, Number((it.qty - 0.5).toFixed(2)));
+        if(n===0) delete state.cart[it.sku]; else state.cart[it.sku]=n;
+        saveCart(); updateUI(); renderDrawer();
+      };
+      plus.onclick=()=>{
+        state.cart[it.sku]=Number((it.qty + 0.5).toFixed(2));
+        saveCart(); updateUI(); renderDrawer();
+      };
+
+      const price=document.createElement('div'); price.style.width='90px'; price.style.textAlign='right'; price.style.fontWeight='700';
+      price.textContent=fmt(it.qty*it.price);
+
+      const rm=document.createElement('button'); rm.className='remove'; rm.textContent='Remove';
+      rm.onclick=()=>{ delete state.cart[it.sku]; saveCart(); updateUI(); renderDrawer(); };
+
+      right.append(minus,num,plus,price,rm);
+      row.appendChild(right);
+
+      lines.appendChild(row);
     });
+
     el('#drawerTotal').textContent = fmt(cartTotal());
   }
 
@@ -466,29 +509,36 @@
     if(items.length===0){ const p=document.createElement('div'); p.className='muted'; p.textContent='No items yet. Add from the menu.'; box.appendChild(p); }
     items.forEach(it=>{
       const row=document.createElement('div'); row.className='line'; row.style.borderColor='#ffffff22'; row.style.background='transparent'; row.style.color='var(--text)'; row.style.borderRadius='14px';
-      const icon=document.createElement('div'); icon.textContent=it.icon; icon.style.fontSize='20px';
-      const body=document.createElement('div'); body.innerHTML=`<div style="font-weight:600">${it.name}</div><div class="muted" style="font-size:12px">${it.unit} • ${fmt(it.price)}</div>`;
-      const qty=document.createElement('div'); qty.textContent='× '+it.qty;
+      const body=document.createElement('div'); body.innerHTML=`<div style="font-weight:600">${it.name}</div><div class="muted" style="font-size:12px">${fmt(it.price)} /lb</div>`;
+      const qty=document.createElement('div'); qty.textContent='× '+fmtLb(it.qty);
       const total=document.createElement('div'); total.style.fontWeight='700'; total.textContent=fmt(it.qty*it.price);
-      row.append(icon, body); const right=document.createElement('div'); right.style.marginLeft='auto'; right.style.display='flex'; right.style.gap='10px'; right.append(qty,total); row.appendChild(right); box.appendChild(row);
+      row.append(body); const right=document.createElement('div'); right.style.marginLeft='auto'; right.style.display='flex'; right.style.gap='10px'; right.append(qty,total); row.appendChild(right); box.appendChild(row);
     });
     el('#summaryTotal').textContent = fmt(cartTotal());
   }
 
-  function updateBadges(){ document.getElementById('cartCount').textContent = String(Object.keys(state.cart).length); document.getElementById('fabTotal').textContent = fmt(cartTotal()); }
+  function updateBadges(){
+    document.getElementById('cartCount').textContent = String(Object.keys(state.cart).length);
+    document.getElementById('fabTotal').textContent = fmt(cartTotal());
+  }
 
-  function buildOrderSummaryText(){ const lines = cartEntries().map(it=> `${it.name} — ${it.qty} × ${fmt(it.price)} ${it.unit}`); lines.push('', `Subtotal: ${fmt(cartTotal())}`); return lines.join('\n'); }
+  function buildOrderSummaryText(){
+    const lines = cartEntries().map(it=> `${it.name} — ${fmtLb(it.qty)} × ${fmt(it.price)} = ${fmt(it.qty*it.price)}`);
+    lines.push('', `Subtotal: ${fmt(cartTotal())}`);
+    return lines.join('\n');
+  }
 
   function updateUI(){ renderChips(); renderProducts(); renderSummary(); updateBadges(); }
 
-  // Typing effect
+  // typing effect
   const LINES = ["Zabeha Halal • Cut to order","Fresh • Halal • Ready for Pickup","Hand-cut meat, prepared your way","Same-day pickup slots available"];
-  function typeLoop(node, lines){ let i=0, j=0, erasing=false; function tick(){ const line = lines[i];
-      if(!erasing){ j++; node.innerHTML = line.slice(0,j) + '<span class="cursor">&nbsp;</span>'; if(j>=line.length){ erasing=true; setTimeout(tick,1400); return; }
-      }else{ j--; node.innerHTML = line.slice(0,j) + '<span class="cursor">&nbsp;</span>'; if(j<=0){ erasing=false; i=(i+1)%lines.length; } }
-      setTimeout(tick, erasing?35:45); } tick(); }
+  function typeLoop(node, lines){ let i=0, j=0, erasing=false; (function tick(){ const line = lines[i];
+    if(!erasing){ j++; node.innerHTML = line.slice(0,j) + '<span class="cursor">&nbsp;</span>'; if(j>=line.length){ erasing=true; setTimeout(tick,1400); return; }
+    }else{ j--; node.innerHTML = line.slice(0,j) + '<span class="cursor">&nbsp;</span>'; if(j<=0){ erasing=false; i=(i+1)%lines.length; } }
+    setTimeout(tick, erasing?35:45);
+  })(); }
 
-  // Fancy effects
+  // effects
   function initReveal(){
     const obs = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } }); }, {threshold:0.1});
     document.querySelectorAll('.reveal').forEach(n=>obs.observe(n));
@@ -499,8 +549,8 @@
       card.addEventListener('mousemove', (e)=>{
         const r = card.getBoundingClientRect();
         const x = e.clientX - r.left, y = e.clientY - r.top;
-        const ry = ((x/r.width)-0.5)*10;  // rotateY
-        const rx = -((y/r.height)-0.5)*8; // rotateX
+        const ry = ((x/r.width)-0.5)*10;
+        const rx = -((y/r.height)-0.5)*8;
         inner.style.setProperty('--ry', ry+'deg');
         inner.style.setProperty('--rx', rx+'deg');
       });
@@ -508,14 +558,14 @@
     });
   }
 
-  // Events
+  // events
   document.getElementById('openCart').onclick = ()=>{ renderDrawer(); openDrawer(); };
   document.getElementById('reviewCart').onclick = ()=>{ renderDrawer(); openDrawer(); };
   document.getElementById('fab').onclick = ()=>{ renderDrawer(); openDrawer(); };
   document.getElementById('closeDrawer').onclick = closeDrawer;
   document.getElementById('scrim').onclick = closeDrawer;
   document.getElementById('goCheckout').onclick = ()=>{ closeDrawer(); document.getElementById('checkout').scrollIntoView({behavior:'smooth'}); };
-  document.getElementById('search').addEventListener('input', ()=>{ renderProducts(); });
+  document.getElementById('search').addEventListener('input', renderProducts);
 
   document.getElementById('orderForm').addEventListener('submit', (e)=>{
     if(Object.keys(state.cart).length===0){ e.preventDefault(); alert('Your cart is empty. Add items before submitting.'); return; }
@@ -523,7 +573,7 @@
     document.getElementById('orderTotal').value = cartTotal().toFixed(2);
   });
 
-  // Initial
+  // init
   updateUI();
   typeLoop(document.getElementById('typing'), LINES);
 </script>
