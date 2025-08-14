@@ -131,6 +131,70 @@
   .reveal{opacity:0; transform:translateY(12px); transition:opacity .4s ease, transform .4s ease}
   .reveal.in{opacity:1; transform:translateY(0)}
   .phone{border:1px dashed #b7ffe9;padding:8px 10px;border-radius:12px;color:#b7ffe9;font-weight:700}
+
+  /* ===== Fancy form layout additions ===== */
+  .card--pickup{ 
+    border-radius:28px; padding:28px;
+    background:
+      radial-gradient(800px 300px at 20% -10%, rgba(255,255,255,.08), transparent),
+      radial-gradient(700px 260px at 120% 120%, rgba(255,255,255,.06), transparent),
+      linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
+    box-shadow: var(--shadow);
+  }
+  .form-head{display:flex; align-items:center; gap:12px; font-weight:900; font-size:26px}
+  .form-head .bubble{
+    width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
+    background:linear-gradient(135deg, #b7ffe9, #86ffd8); color:#083b2e; font-size:20px; font-weight:900;
+    box-shadow:0 10px 24px rgba(0,0,0,.25);
+  }
+  .form-sub{ color:var(--muted); margin:6px 0 18px; }
+
+  .form-grid{display:grid; gap:14px; grid-template-columns:1fr 1fr}
+  @media (max-width:860px){ .form-grid{ grid-template-columns:1fr; } }
+  .row-compact{ display:grid; gap:12px; grid-template-columns:1fr 1fr; }
+  @media (max-width:860px){ .row-compact{ grid-template-columns:1fr; } }
+
+  .field{ position:relative; isolation:isolate; }
+  .field input, .field select, .field textarea{
+    width:100%; border:1px solid var(--border); background:rgba(255,255,255,.06);
+    color:var(--text); border-radius:14px; padding:14px; outline:none;
+    transition:.2s border-color,.2s box-shadow,.2s transform;
+    box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
+  }
+  .field textarea{ min-height:110px; resize:vertical; }
+  .field input:focus, .field select:focus, .field textarea:focus{
+    border-color:#bff9e0; box-shadow:0 0 0 6px rgba(191,249,224,.12); transform:translateY(-1px);
+  }
+  .field label{
+    position:absolute; left:12px; top:12px; padding:3px 10px; border-radius:999px;
+    font-size:12px; letter-spacing:.2px; color:#083b2e;
+    background:linear-gradient(90deg,#d9fbe6,#bff9e0); border:1px solid #ffffff66;
+    transform-origin:left top; transition:.15s transform,.15s opacity; pointer-events:none; opacity:0;
+  }
+  .field input:not(:placeholder-shown) ~ label,
+  .field select:valid ~ label,
+  .field textarea:not(:placeholder-shown) ~ label{ opacity:1; transform:translateY(-22px) scale(.92); }
+  .help{ font-size:12px; color:var(--muted); margin-top:6px }
+
+  .check{
+    display:flex; align-items:center; gap:10px; font-size:14px;
+    background:rgba(255,255,255,.05); border:1px solid var(--border);
+    padding:10px 12px; border-radius:12px;
+  }
+  .check input[type=checkbox]{
+    appearance:none; width:20px; height:20px; border-radius:6px;
+    border:1.5px solid #cdeedd; background:rgba(255,255,255,.1);
+    position:relative; cursor:pointer; transition:.15s;
+  }
+  .check input[type=checkbox]:checked{ background:#10b981; border-color:#10b981; }
+  .check input[type=checkbox]:checked::after{
+    content:""; position:absolute; inset:0;
+    background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%23052e2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>') center/16px 16px no-repeat;
+  }
+
+  .actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:6px; }
+  .btn-primary.big{ font-size:15px; padding:12px 16px; border-radius:14px; font-weight:900 }
+  .btn-ghost.round{ border-radius:14px }
 </style>
 </head>
 <body>
@@ -190,55 +254,75 @@
 
   <section class="section" id="checkout">
     <div class="wrap" style="display:grid;gap:18px;grid-template-columns:1fr;align-items:start">
-      <div class="card reveal">
-        <h2 style="font-size:24px;font-weight:900">Pickup details</h2>
-        <p class="muted" style="margin-top:6px">Enter your info. We’ll confirm by email/text. Pay at pickup.</p>
+      <!-- UPDATED PICKUP CARD -->
+      <div class="card card--pickup reveal">
+        <div class="form-head"><div class="bubble">🛒</div><div>Pickup details</div></div>
+        <p class="form-sub">Enter your info. We’ll confirm by email/text. Pay at pickup.</p>
 
-        <form id="orderForm" class="form" action="https://formspree.io/f/xyzpvyle" method="POST" style="margin-top:16px;display:grid;gap:12px">
+        <form id="orderForm" action="https://formspree.io/f/xyzpvyle" method="POST" style="display:grid; gap:16px">
           <textarea name="order_summary" id="orderSummary" class="hidden" style="display:none"></textarea>
           <input type="hidden" name="order_total" id="orderTotal" />
 
-          <div style="display:grid;gap:12px;grid-template-columns:1fr 1fr">
-            <div class="control"><label>Full name</label><input required name="name" placeholder="Your name" /></div>
-            <div class="control"><label>Phone</label><input required name="phone" placeholder="(607) 722-1055" value="(607) 722-1055" /></div>
-            <div class="control"><label>Email</label><input required type="email" name="email" placeholder="you@example.com" /></div>
-            <div class="control"><label>Pickup date</label><input required type="date" name="pickup_date" /></div>
-            <div class="control">
-              <label>Pickup time</label>
-              <select required name="pickup_time">
-                <option value="">Select a time</option>
-                <option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option>
-                <option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option>
-                <option>5:00 PM</option><option>6:00 PM</option><option>7:00 PM</option>
-                <option>8:00 PM</option>
-              </select>
+          <div class="form-grid">
+            <div class="field">
+              <input id="name" name="name" required placeholder=" " />
+              <label for="name">Full name</label>
             </div>
-            <div class="control">
-              <label>Cut preference (optional)</label>
-              <select name="cut_preference">
+
+            <div class="field">
+              <input id="phone" name="phone" required placeholder=" " value="(607) 722-1055" />
+              <label for="phone">Phone</label>
+            </div>
+
+            <div class="field">
+              <input id="email" name="email" type="email" required placeholder=" " />
+              <label for="email">Email</label>
+            </div>
+
+            <div class="row-compact">
+              <div class="field">
+                <input id="pickup_date" name="pickup_date" type="date" required placeholder=" " />
+                <label for="pickup_date">Pickup date</label>
+              </div>
+              <div class="field">
+                <select id="pickup_time" name="pickup_time" required>
+                  <option value="" selected disabled>Select a time</option>
+                  <option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option>
+                  <option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option>
+                  <option>5:00 PM</option><option>6:00 PM</option><option>7:00 PM</option>
+                  <option>8:00 PM</option>
+                </select>
+                <label for="pickup_time">Pickup time</label>
+              </div>
+            </div>
+
+            <div class="field">
+              <select id="cut_preference" name="cut_preference">
                 <option>Standard</option><option>Small pieces</option><option>Medium pieces</option>
                 <option>Large pieces</option><option>Whole (no cut)</option>
               </select>
+              <label for="cut_preference">Cut preference (optional)</label>
+            </div>
+
+            <div class="field" style="grid-column:1/-1">
+              <textarea id="notes" name="notes" placeholder=" "></textarea>
+              <label for="notes">Notes for the butcher (optional)</label>
+              <div class="help">Ex: thin slices, remove skin, extra fat trimmed.</div>
             </div>
           </div>
 
-          <div class="control">
-            <label>Notes for the butcher (optional)</label>
-            <textarea name="notes" rows="4" placeholder="Ex: thin slices, remove skin, extra fat trimmed, etc."></textarea>
-          </div>
-
-          <label style="display:flex;align-items:center;gap:8px;font-size:14px">
+          <label class="check">
             <input type="checkbox" required />
-            I’ll pay at pickup and understand prices are per pound where listed.
+            <span>I’ll pay at pickup and understand prices are per pound where listed.</span>
           </label>
-          <label style="display:flex;align-items:center;gap:8px;font-size:14px">
+          <label class="check">
             <input type="checkbox" required />
-            Final price at pickup may be slightly higher or lower than the online total due to exact weight and trimming.
+            <span>Final price at pickup may be slightly higher or lower than the online total due to exact weight and trimming.</span>
           </label>
 
-          <div style="display:flex;gap:10px;align-items:center">
-            <button class="btn" style="background:var(--accent);color:var(--accent-ink);font-weight:900">Place Pickup Order</button>
-            <button type="button" id="reviewCart" class="btn btn-ghost">Review Cart</button>
+          <div class="actions">
+            <button class="btn btn-primary big" style="background:var(--accent);color:var(--accent-ink)">Place Pickup Order</button>
+            <button type="button" id="reviewCart" class="btn btn-ghost round">Review Cart</button>
           </div>
         </form>
       </div>
@@ -329,7 +413,6 @@
   };
   const ICON = { Poultry:'🍗', Meat:'🥩', Fish:'🐟' };
 
-  // Load saved mode and cart
   const savedMode = localStorage.getItem('a1-mode');
   const state = { cart: {}, filter: 'All', mode: (savedMode === 'usd' ? 'usd' : 'lb') };
 
@@ -342,8 +425,6 @@
 
   function renderChips(){
     const box = el('#chips'); box.innerHTML = '';
-
-    // Category chips (with emoji)
     categories.forEach(c=>{
       const b=document.createElement('button');
       b.className='chip' + (state.filter===c?' active':'');
@@ -352,19 +433,14 @@
       b.onclick=()=>{ state.filter=c; renderProducts(); };
       box.appendChild(b);
     });
-
-    // spacer
     const spacer = document.createElement('div'); spacer.style.width='8px'; box.appendChild(spacer);
 
-    // Global Order-by toggle
     const holder = document.createElement('div'); holder.className='chip-label';
     const label = document.createElement('span'); label.style.opacity='.85'; label.textContent='Order by';
     const seg = document.createElement('div'); seg.className='seg-mini';
     const blb  = document.createElement('button'); blb.type='button'; blb.textContent='Lb';
     const busd = document.createElement('button'); busd.type='button'; busd.textContent='$';
-    seg.append(blb,busd);
-    holder.append(label,seg);
-    box.appendChild(holder);
+    seg.append(blb,busd); holder.append(label,seg); box.appendChild(holder);
 
     function paint(){
       if(state.mode==='usd'){ busd.classList.add('active'); blb.classList.remove('active'); }
@@ -399,7 +475,6 @@
         inner.appendChild(img);
       }
 
-      // name row with small icon
       const nameRow = document.createElement('div');
       nameRow.style.display='flex'; nameRow.style.alignItems='center'; nameRow.style.gap='8px';
       const emoji = document.createElement('div'); emoji.textContent = ICON[item.cat] || ''; emoji.style.fontSize='18px';
@@ -414,7 +489,6 @@
       rowTop.appendChild(price);
       inner.appendChild(rowTop);
 
-      // ===== lb / $ mode =====
       const mode = document.createElement('div'); mode.className='mode';
       const seg = document.createElement('div'); seg.className='seg';
       const bLb = document.createElement('button'); bLb.type='button'; bLb.textContent='By lb';
@@ -431,7 +505,6 @@
       const sufDol= document.createElement('span'); sufDol.className='suf'; sufDol.textContent='$';
       numDol.append(inDol,sufDol);
 
-      // quick dollars
       const quick = document.createElement('div'); quick.className='quick-dollars';
       [10,20,50].forEach(amt=>{
         const b = document.createElement('button'); b.type='button'; b.textContent = `$${amt}`;
@@ -445,7 +518,6 @@
       const addBtn = document.createElement('button'); addBtn.className='add disabled'; addBtn.textContent='Add to Cart'; addBtn.disabled=true;
       inner.appendChild(addBtn);
 
-      // default mode comes from GLOBAL state.mode
       let useDollar = (state.mode === 'usd');
       function paintMode(){
         if(useDollar){
@@ -488,13 +560,12 @@
       inLb.addEventListener('input', ()=>{ syncOpposite(); toggleAdd(); });
       inDol.addEventListener('input', ()=>{ syncOpposite(); toggleAdd(); });
 
-      paintMode();  // initialize from global
-
+      paintMode();
       addBtn.onclick=()=>{
         const lbs = poundsFromInputs();
         if(lbs<=0) return;
         const prev = Number(state.cart[item.sku]||0);
-        state.cart[item.sku] = Math.round((prev + lbs) * 100)/100; // 2-decimal lbs
+        state.cart[item.sku] = Math.round((prev + lbs) * 100)/100;
         inLb.value=''; inDol.value=''; toggleAdd();
         saveCart(); updateUI();
       };
@@ -510,7 +581,6 @@
   function cartEntries(){ return Object.entries(state.cart).map(([sku,qtyLb])=>{ const it=CATALOG.find(x=>x.sku===sku); return { ...it, qty: qtyLb }; }).filter(Boolean); }
   function cartTotal(){ return cartEntries().reduce((s,it)=> s + it.price*it.qty, 0); }
 
-  // Drawer + body lock
   function openDrawer(){ el('#drawer').classList.add('open'); document.body.classList.add('lock'); }
   function closeDrawer(){ el('#drawer').classList.remove('open'); document.body.classList.remove('lock'); }
 
@@ -586,7 +656,6 @@
 
   function updateUI(){ renderChips(); renderProducts(); renderSummary(); updateBadges(); }
 
-  // typing effect
   const LINES = ["Zabeha Halal • Cut to order","Fresh • Halal • Ready for Pickup","Hand-cut meat, prepared your way","Same-day pickup slots available"];
   function typeLoop(node, lines){ let i=0, j=0, erasing=false; (function tick(){ const line = lines[i];
     if(!erasing){ j++; node.innerHTML = line.slice(0,j) + '<span class="cursor">&nbsp;</span>'; if(j>=line.length){ erasing=true; setTimeout(tick,1400); return; }
@@ -594,7 +663,6 @@
     setTimeout(tick, erasing?35:45);
   })(); }
 
-  // effects
   function initReveal(){
     const obs = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } }); }, {threshold:0.1});
     document.querySelectorAll('.reveal').forEach(n=>obs.observe(n));
@@ -632,6 +700,12 @@
   // init
   updateUI();
   typeLoop(document.getElementById('typing'), LINES);
+
+  // OPTIONAL: set min & default pickup date to today
+  (function(){
+    const pd = document.getElementById('pickup_date');
+    if(pd){ const iso = new Date().toISOString().split('T')[0]; pd.min = iso; if(!pd.value) pd.value = iso; }
+  })();
 </script>
 
 <footer class="foot">
