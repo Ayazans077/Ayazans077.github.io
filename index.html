@@ -540,42 +540,54 @@
   };
 
   // ---------- DATA ----------
-  const CATALOG = [
-    // Poultry
-    {cat:'Poultry', sku:'whole-chicken', name:'Whole Chicken (sold by each)', price:2.95, unit:'/lb', icon:'🐔', color:'#fef3c7'},
-    {cat:'Poultry', sku:'hard-chicken',    name:'Hard chicken',    price:3.49, unit:'/lb', icon:'🐔', color:'#fde68a'},
-    {cat:'Poultry', sku:'small-chicken',   name:'Small chicken',   price:3.29, unit:'/lb', icon:'🐔', color:'#fcd34d'},
-    {cat:'Poultry', sku:'chicken-legs',    name:'Chicken legs',    price:2.10, unit:'/lb', icon:'🍗', color:'#f59e0b'},
-    {cat:'Poultry', sku:'chicken-wings',   name:'Chicken wings',   price:4.79, unit:'/lb', icon:'🍗', color:'#d97706'},
-    {cat:'Poultry', sku:'chicken-breast',  name:'Chicken breast',  price:4.99, unit:'/lb', icon:'🍗', color:'#b45309'},
-    {cat:'Poultry', sku:'chicken-thighs',  name:'Chicken thighs',  price:4.99, unit:'/lb', icon:'🍗', color:'#92400e'},
-    {cat:'Poultry', sku:'ground-chicken',  name:'Ground chicken',  price:3.99, unit:'/lb', icon:'🍗', color:'#78350f'},
-    // Meat
-    {cat:'Meat', sku:'baby-goat-leg',  name:'Baby Goat Leg',  price:13.99, unit:'/lb', icon:'🥩', color:'#fecaca'},
-    {cat:'Meat', sku:'goat-shoulder',  name:'Goat shoulder',  price:13.99, unit:'/lb', icon:'🥩', color:'#fca5a5'},
-    {cat:'Meat', sku:'goat-chest',     name:'Goat chest',     price:11.99, unit:'/lb', icon:'🥩', color:'#f87171'},
-    {cat:'Meat', sku:'Mix Goat',     name:'Mix Goat',     price:11.99, unit:'/lb', icon:'🥩', color:'#f87171'},
-    {cat:'Meat', sku:'goat-feet',      name:'Goat feet',      price:6.99, unit:'/lb', icon:'🥩', color:'#ef4444'},
-    {cat:'Meat', sku:'lamb-leg',       name:'Lamb Leg',       price:10.99, unit:'/lb', icon:'🐑', color:'#dc2626'},
-    {cat:'Meat', sku:'lamb-shoulder',  name:'Lamb shoulder',  price:10.99, unit:'/lb', icon:'🐑', color:'#b91c1c'},
-    {cat:'Meat', sku:'lamb-chop',      name:'Lamb chop',      price:12.99, unit:'/lb', icon:'🐑', color:'#991b1b'},
-    {cat:'Meat', sku:'beef-bone',      name:'Beef with Bone', price:5.99, unit:'/lb', icon:'🐄', color:'#7f1d1d'},
-    {cat:'Meat', sku:'beef-boneless',  name:'Beef Boneless',  price:7.99, unit:'/lb', icon:'🐄', color:'#fee2e2'},
-    {cat:'Meat', sku:'beef-liver',     name:'Beef Liver',     price:3.99, unit:'/lb', icon:'🐄', color:'#fecaca'},
-    {cat:'Meat', sku:'ground-beef',    name:'Ground Beef',    price:6.99, unit:'/lb', icon:'🍖', color:'#fca5a5'},
-    {cat:'Meat', sku:'shank-nihari',   name:'Shank (Nihari)', price:5.99, unit:'/lb', icon:'🍖', color:'#f87171'},
-    {cat:'Meat', sku:'steak-tbone',    name:'Steak (T-Bone)', price:8.99, unit:'/lb', icon:'🥩', color:'#ef4444'},
-    {cat:'Meat', sku:'ribeye',         name:'Ribeye',         price:8.99, unit:'/lb', icon:'🥩', color:'#dc2626'},
-    {cat:'Meat', sku:'beef-ribs',      name:'Beef Ribs',      price:5.99, unit:'/lb', icon:'🍖', color:'#b91c1c'},
-    {cat:'Meat', sku:'oxtail',         name:'Ox-tail',        price:11.99, unit:'/lb', icon:'🐄', color:'#991b1b'},
-    {cat:'Meat', sku:'cow-feet',       name:'Cow feet',       price:5.99, unit:'/lb', icon:'🐄', color:'#7f1d1d'},
-    // Fish
-    {cat:'Fish', sku:'hilsha',   name:'Hilsha',   price:9.99, unit:'/lb', icon:'🐟', color:'#dbeafe'},
-    {cat:'Fish', sku:'rohu',     name:'Rohu',     price:3.99, unit:'/lb', icon:'🐟', color:'#bfdbfe'},
-    {cat:'Fish', sku:'snapper',  name:'Snapper',  price:9.99, unit:'/lb', icon:'🐟', color:'#93c5fd'},
-    {cat:'Fish', sku:'pompano',  name:'Pompano',  price:6.99, unit:'/lb', icon:'🐟', color:'#60a5fa'},
-    {cat:'Fish', sku:'kingfish', name:'Kingfish', price:8.99, unit:'/lb', icon:'🐟', color:'#3b82f6'},
-  ];
+const CATALOG = [
+
+  // ================= POULTRY =================
+  {cat:'Poultry', sku:'whole-chicken', name:'Whole Chicken (sold by each)', price:2.95, unit:'/lb', img:'images/products/whole-chicken.jpg', icon:'🐔', color:'#fef3c7'},
+  {cat:'Poultry', sku:'hard-chicken', name:'Hard Chicken', price:3.49, unit:'/lb', img:'images/products/hard-chicken.jpg', icon:'🐔', color:'#fde68a'},
+  {cat:'Poultry', sku:'small-chicken', name:'Small Chicken', price:3.29, unit:'/lb', img:'images/products/small-chicken.jpg', icon:'🐔', color:'#fcd34d'},
+  {cat:'Poultry', sku:'chicken-legs', name:'Chicken Legs', price:2.10, unit:'/lb', img:'images/products/chicken-legs.jpg', icon:'🍗', color:'#f59e0b'},
+  {cat:'Poultry', sku:'chicken-wings', name:'Chicken Wings', price:4.79, unit:'/lb', img:'images/products/chicken-wings.jpg', icon:'🍗', color:'#d97706'},
+  {cat:'Poultry', sku:'chicken-breast', name:'Chicken Breast', price:4.99, unit:'/lb', img:'images/products/chicken-breast.jpg', icon:'🍗', color:'#b45309'},
+  {cat:'Poultry', sku:'chicken-thighs', name:'Chicken Thighs', price:4.99, unit:'/lb', img:'images/products/chicken-thighs.jpg', icon:'🍗', color:'#92400e'},
+  {cat:'Poultry', sku:'ground-chicken', name:'Ground Chicken', price:3.99, unit:'/lb', img:'images/products/ground-chicken.jpg', icon:'🍗', color:'#78350f'},
+
+
+  // ================= GOAT =================
+  {cat:'Meat', sku:'baby-goat-leg', name:'Baby Goat Leg (Whole)', price:13.99, unit:'/lb', minLb:4, avgLb:'4–6 lb', note:'Whole piece', img:'images/products/baby-goat-leg.jpg', icon:'🥩', color:'#fecaca'},
+  {cat:'Meat', sku:'goat-shoulder', name:'Goat Shoulder (Whole)', price:13.99, unit:'/lb', minLb:4, avgLb:'4–6 lb', note:'Whole piece', img:'images/products/goat-shoulder.jpg', icon:'🥩', color:'#fca5a5'},
+  {cat:'Meat', sku:'goat-chest', name:'Goat Chest', price:11.99, unit:'/lb', img:'images/products/goat-chest.jpg', icon:'🥩', color:'#f87171'},
+  {cat:'Meat', sku:'mix-goat', name:'Mix Goat', price:11.99, unit:'/lb', img:'images/products/mix-goat.jpg', icon:'🥩', color:'#f87171'},
+  {cat:'Meat', sku:'goat-feet', name:'Goat Feet', price:6.99, unit:'/lb', img:'images/products/goat-feet.jpg', icon:'🥩', color:'#ef4444'},
+
+
+  // ================= LAMB =================
+  {cat:'Meat', sku:'lamb-leg', name:'Lamb Leg (Whole)', price:10.99, unit:'/lb', minLb:4, avgLb:'4–7 lb', note:'Whole piece', img:'images/products/lamb-leg.jpg', icon:'🐑', color:'#dc2626'},
+  {cat:'Meat', sku:'lamb-shoulder', name:'Lamb Shoulder (Whole)', price:10.99, unit:'/lb', minLb:4, avgLb:'4–6 lb', note:'Whole piece', img:'images/products/lamb-shoulder.jpg', icon:'🐑', color:'#b91c1c'},
+  {cat:'Meat', sku:'lamb-chop', name:'Lamb Chops', price:12.99, unit:'/lb', img:'images/products/lamb-chop.jpg', icon:'🐑', color:'#991b1b'},
+
+
+  // ================= BEEF =================
+  {cat:'Meat', sku:'beef-bone', name:'Beef with Bone', price:5.99, unit:'/lb', img:'images/products/beef-bone.jpg', icon:'🐄', color:'#7f1d1d'},
+  {cat:'Meat', sku:'beef-boneless', name:'Beef Boneless', price:7.99, unit:'/lb', img:'images/products/beef-boneless.jpg', icon:'🐄', color:'#fee2e2'},
+  {cat:'Meat', sku:'beef-liver', name:'Beef Liver', price:3.99, unit:'/lb', img:'images/products/beef-liver.jpg', icon:'🐄', color:'#fecaca'},
+  {cat:'Meat', sku:'ground-beef', name:'Ground Beef', price:6.99, unit:'/lb', img:'images/products/ground-beef.jpg', icon:'🍖', color:'#fca5a5'},
+  {cat:'Meat', sku:'shank-nihari', name:'Shank (Nihari)', price:5.99, unit:'/lb', img:'images/products/shank-nihari.jpg', icon:'🍖', color:'#f87171'},
+  {cat:'Meat', sku:'steak-tbone', name:'Steak (T-Bone)', price:8.99, unit:'/lb', img:'images/products/steak-tbone.jpg', icon:'🥩', color:'#ef4444'},
+  {cat:'Meat', sku:'ribeye', name:'Ribeye', price:8.99, unit:'/lb', img:'images/products/ribeye.jpg', icon:'🥩', color:'#dc2626'},
+  {cat:'Meat', sku:'beef-ribs', name:'Beef Ribs', price:5.99, unit:'/lb', img:'images/products/beef-ribs.jpg', icon:'🍖', color:'#b91c1c'},
+  {cat:'Meat', sku:'oxtail', name:'Ox-Tail', price:11.99, unit:'/lb', img:'images/products/oxtail.jpg', icon:'🐄', color:'#991b1b'},
+  {cat:'Meat', sku:'cow-feet', name:'Cow Feet', price:5.99, unit:'/lb', img:'images/products/cow-feet.jpg', icon:'🐄', color:'#7f1d1d'},
+
+
+  // ================= FISH =================
+  {cat:'Fish', sku:'hilsha', name:'Hilsha', price:9.99, unit:'/lb', img:'images/products/hilsha.jpg', icon:'🐟', color:'#dbeafe'},
+  {cat:'Fish', sku:'rohu', name:'Rohu', price:3.99, unit:'/lb', img:'images/products/rohu.jpg', icon:'🐟', color:'#bfdbfe'},
+  {cat:'Fish', sku:'snapper', name:'Snapper', price:9.99, unit:'/lb', img:'images/products/snapper.jpg', icon:'🐟', color:'#93c5fd'},
+  {cat:'Fish', sku:'pompano', name:'Pompano', price:6.99, unit:'/lb', img:'images/products/pompano.jpg', icon:'🐟', color:'#60a5fa'},
+  {cat:'Fish', sku:'kingfish', name:'Kingfish', price:8.99, unit:'/lb', img:'images/products/kingfish.jpg', icon:'🐟', color:'#3b82f6'},
+
+];
 
   const el = (sel)=>document.querySelector(sel);
   const fmt = (n)=> `$${n.toFixed(2)}`;
