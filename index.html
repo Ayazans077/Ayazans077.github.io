@@ -679,6 +679,15 @@ const CATALOG = [
       inner.appendChild(nameRow);
 
       const cat = document.createElement('div'); cat.className='faint'; cat.textContent=item.cat; inner.appendChild(cat);
+if (item.minLb) {
+  const wholeTag = document.createElement('div');
+  wholeTag.style.marginTop = '6px';
+  wholeTag.style.fontSize = '12px';
+  wholeTag.style.fontWeight = '700';
+  wholeTag.style.color = '#b7ffe9';
+  wholeTag.textContent = `Whole item • Avg ${item.avgLb} • Min ${item.minLb} lb`;
+  inner.appendChild(wholeTag);
+}
 
       const rowTop = document.createElement('div'); rowTop.className='row'; rowTop.style.marginTop='8px';
       const price = document.createElement('div'); price.className='price'; price.textContent = fmt(item.price);
@@ -686,10 +695,24 @@ const CATALOG = [
       inner.appendChild(rowTop);
 
       const mode = document.createElement('div'); mode.className='mode';
-      const seg = document.createElement('div'); seg.className='seg';
-      const bLb = document.createElement('button'); bLb.type='button'; bLb.textContent='By lb';
-      const bDol= document.createElement('button'); bDol.type='button'; bDol.textContent='By $';
-      seg.append(bLb,bDol);
+const seg = document.createElement('div'); seg.className='seg';
+
+const bLb = document.createElement('button');
+bLb.type = 'button';
+bLb.textContent = 'By lb';
+
+const bDol = document.createElement('button');
+bDol.type = 'button';
+bDol.textContent = 'By $';
+
+// Disable dollar mode for whole items
+if (item.minLb) {
+  bDol.disabled = true;
+  bDol.style.opacity = '0.4';
+  bDol.style.cursor = 'not-allowed';
+}
+
+seg.append(bLb, bDol);
 
       const numLb = document.createElement('div'); numLb.className='num';
       const inLb  = document.createElement('input'); inLb.type='number'; inLb.min='0'; inLb.step='0.25'; inLb.placeholder='0.00';
@@ -726,14 +749,23 @@ const CATALOG = [
       }
 
       function poundsFromInputs(){
-        if(useDollar){
-          const dollars = parseFloat(inDol.value||'0');
-          return isNaN(dollars)||dollars<=0 ? 0 : (dollars / item.price);
-        }else{
-          const lbs = parseFloat(inLb.value||'0');
-          return isNaN(lbs)||lbs<=0 ? 0 : lbs;
-        }
-      }
+  let lbs = 0;
+
+  if(useDollar){
+    const dollars = parseFloat(inDol.value || '0');
+    lbs = (isNaN(dollars) || dollars <= 0) ? 0 : (dollars / item.price);
+  } else {
+    lbs = parseFloat(inLb.value || '0');
+    lbs = (isNaN(lbs) || lbs <= 0) ? 0 : lbs;
+  }
+
+  // 🔒 Enforce minimum for whole items
+  if (item.minLb && lbs > 0 && lbs < item.minLb) {
+    return 0;
+  }
+
+  return lbs;
+}
       function toggleAdd(){
         const lbs = poundsFromInputs();
         if(lbs>0){ addBtn.className='add enabled'; addBtn.disabled=false; addBtn.textContent='Add '+fmtLb(lbs); }
