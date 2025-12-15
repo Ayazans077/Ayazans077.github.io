@@ -901,15 +901,34 @@
     document.getElementById('orderTotal').value = cartTotal().toFixed(2);
   });
 
-  // init
-  updateUI();
-  typeLoop(document.getElementById('typing'), LINES);
+// init
+// ===== CATEGORY CARD CLICK HANDLER =====
+document.querySelectorAll('.category-card').forEach(card => {
+  card.addEventListener('click', () => {
+    const cat = card.dataset.cat;
+    state.filter = cat;
+    updateUI();
 
-  // Set min & default pickup date to today
-  (function(){
-    const pd = document.getElementById('pickup_date');
-    if(pd){ const iso = new Date().toISOString().split('T')[0]; pd.min = iso; if(!pd.value) pd.value = iso; }
-  })();
+    document
+      .getElementById('products')
+      .scrollIntoView({ behavior: 'smooth' });
+  });
+});
+
+// run once on page load
+updateUI();
+typeLoop(document.getElementById('typing'), LINES);
+
+// Set min & default pickup date to today
+(function(){
+  const pd = document.getElementById('pickup_date');
+  if(pd){
+    const iso = new Date().toISOString().split('T')[0];
+    pd.min = iso;
+    if(!pd.value) pd.value = iso;
+  }
+})();
+
 </script>
 
 <!-- ===== Mega Footer (like your example) ===== -->
