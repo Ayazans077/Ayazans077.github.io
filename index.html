@@ -391,7 +391,7 @@
           <div class="form-grid">
             <div class="field">
               <label for="name">Full name</label>
-              <input id="name" name="name" required placeholder="Your full name" autofocus />
+              <input id="name" name="name" required placeholder="Your full name" />
             </div>
 
             <div class="field">
@@ -995,14 +995,19 @@ seg.append(bLb, bDol);
 // init
 // ===== CATEGORY CARD CLICK HANDLER =====
 document.querySelectorAll('.category-card').forEach(card => {
-  card.addEventListener('click', () => {
+  card.addEventListener('click', (e) => {
+    // Only scroll if user actually clicked
+    if (!e.isTrusted) return;
+
     const cat = card.dataset.cat;
     state.filter = cat;
     updateUI();
 
-    document
-      .getElementById('products')
-      .scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+      document
+        .getElementById('products')
+        .scrollIntoView({ behavior: 'smooth' });
+    }, 50);
   });
 });
 
