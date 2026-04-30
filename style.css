@@ -1695,9 +1695,21 @@ h1 span {
 }
 
 @media (max-width: 620px) {
+  html,
+  body {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: clip;
+  }
+
   main,
   .site-header {
     width: 100%;
+    max-width: 100%;
+  }
+
+  main {
+    width: min(100% - 1rem, 1180px);
   }
 
   .top-bars {
@@ -1713,9 +1725,14 @@ h1 span {
   }
 
   .site-header {
+    grid-template-columns: minmax(0, 1fr) auto;
     margin-top: 0;
     padding: 0.58rem 0.7rem;
     border-radius: 0;
+  }
+
+  .brand {
+    min-width: 0;
   }
 
   .brand-thumb {
@@ -1739,6 +1756,7 @@ h1 span {
   }
 
   .header-actions {
+    min-width: 0;
     gap: 0.55rem;
   }
 
@@ -1753,17 +1771,28 @@ h1 span {
   }
 
   h1 {
-    font-size: clamp(3rem, 15vw, 4.3rem);
+    max-width: 100%;
+    font-size: clamp(2.75rem, 13.5vw, 4.1rem);
+    overflow-wrap: anywhere;
   }
 
   .hero {
     min-height: auto;
-    padding-top: 2.4rem;
+    padding: 2rem 0.85rem 2.4rem;
   }
 
   .hero-stage::before {
-    inset: 0 -0.5rem;
+    inset: 0;
     border-radius: 1.4rem;
+  }
+
+  .hero-visual {
+    min-height: 19rem;
+    animation: mobileFloat 4.8s ease-in-out infinite;
+  }
+
+  .hero-glass {
+    animation: mobileGlassGlow 3.8s ease-in-out infinite alternate;
   }
 
   .hero-stats {
@@ -1793,8 +1822,28 @@ h1 span {
     grid-template-columns: 1fr;
   }
 
+  .section,
+  .checkout-section,
+  .store-info {
+    padding: 2.4rem 0;
+  }
+
+  .section-heading h2,
+  .store-info h2 {
+    font-size: clamp(1.9rem, 9vw, 2.7rem);
+    overflow-wrap: anywhere;
+  }
+
+  .section-note,
+  .pickup-step-card p,
+  .desc,
+  .minimum {
+    overflow-wrap: anywhere;
+  }
+
   .pickup-step-card {
     min-height: auto;
+    animation: mobileCardBreathe 4.8s ease-in-out infinite alternate;
   }
 
   .step-number {
@@ -1806,13 +1855,83 @@ h1 span {
     grid-template-columns: 1fr;
   }
 
+  .product-card,
+  .category-card,
+  .pickup-step-card,
+  .checkout-card,
+  .summary-panel {
+    max-width: 100%;
+  }
+
+  .product-card {
+    animation: mobileCardBreathe 4.6s ease-in-out infinite alternate;
+  }
+
+  .product-card::after,
+  .category-card::after {
+    animation: mobileShine 3.6s ease-in-out infinite;
+  }
+
+  .product-title {
+    min-width: 0;
+  }
+
+  .product-title h3 {
+    min-width: 0;
+    overflow-wrap: anywhere;
+  }
+
+  .price {
+    min-width: auto;
+    white-space: nowrap;
+    font-size: clamp(1.05rem, 6vw, 1.55rem);
+  }
+
+  .mode-toggle {
+    max-width: 100%;
+  }
+
+  .pickup-form input,
+  .pickup-form select,
+  .pickup-form textarea,
+  .amount-row input {
+    min-width: 0;
+    width: 100%;
+  }
+
   .add-btn {
     min-height: 2.9rem;
+    animation: mobileButtonGlow 2.6s ease-in-out infinite alternate;
   }
 
   .store-info h2 {
     font-size: 2rem;
   }
+}
+
+@keyframes mobileFloat {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-8px) scale(1.01); }
+}
+
+@keyframes mobileGlassGlow {
+  from { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.12), 0 18px 42px rgba(0, 0, 0, 0.18); }
+  to { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18), 0 0 42px rgba(189, 244, 207, 0.14); }
+}
+
+@keyframes mobileCardBreathe {
+  from { box-shadow: 0 18px 46px rgba(0, 0, 0, 0.18); }
+  to { box-shadow: 0 24px 58px rgba(189, 244, 207, 0.09); }
+}
+
+@keyframes mobileShine {
+  0%, 55% { left: -45%; }
+  100% { left: 125%; }
+}
+
+@keyframes mobileButtonGlow {
+  from { box-shadow: 0 12px 28px rgba(217, 183, 101, 0.12); }
+  to { box-shadow: 0 0 34px rgba(189, 244, 207, 0.26); }
 }
 
 @media (prefers-reduced-motion: reduce) {
