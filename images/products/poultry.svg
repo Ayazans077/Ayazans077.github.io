@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-label="Poultry product placeholder">
+  <defs>
+    <linearGradient id="a" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#edfdf1"/>
+      <stop offset=".5" stop-color="#bdf4cf"/>
+      <stop offset="1" stop-color="#d9b765"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="420" fill="#0b271d"/>
+  <circle cx="500" cy="60" r="190" fill="#bdf4cf" opacity=".2"/>
+  <circle cx="90" cy="370" r="180" fill="#d9b765" opacity=".18"/>
+  <rect x="70" y="80" width="500" height="260" rx="36" fill="#ffffff" opacity=".09" stroke="#ffffff" stroke-opacity=".22"/>
+  <path d="M162 235c70-90 155-112 254-68 54 24 88 14 118-31" fill="none" stroke="url(#a)" stroke-width="28" stroke-linecap="round"/>
+  <text x="72" y="378" fill="#edfdf1" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="800">Poultry photo placeholder</text>
+</svg>

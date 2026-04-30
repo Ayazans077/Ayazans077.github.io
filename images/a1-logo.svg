@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1120 440" role="img" aria-labelledby="title desc">
+  <title id="title">A-1 Grocery &amp; Halal Meat</title>
+  <desc id="desc">A-1 Grocery and Halal Meat rectangular store sign logo.</desc>
+  <defs>
+    <filter id="shadow" x="-12%" y="-18%" width="124%" height="136%">
+      <feDropShadow dx="0" dy="12" stdDeviation="13" flood-color="#000000" flood-opacity=".38"/>
+    </filter>
+    <linearGradient id="cartFill" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#79bf43"/>
+      <stop offset="1" stop-color="#d5de3e"/>
+    </linearGradient>
+  </defs>
+
+  <rect x="44" y="62" width="1032" height="316" fill="#ffffff" filter="url(#shadow)"/>
+  <rect x="60" y="78" width="1000" height="284" fill="#fbfbf8" stroke="#1f2d27" stroke-width="2"/>
+  <rect x="78" y="96" width="964" height="248" fill="none" stroke="#1f2d27" stroke-width="2" opacity=".72"/>
+
+  <g transform="translate(106 132)">
+    <path d="M-18 16 22 23 41 122h118l17-77H48" fill="none" stroke="#062f21" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M45 49h103l-15 64H56Z" fill="url(#cartFill)"/>
+    <circle cx="70" cy="142" r="11" fill="#062f21"/>
+    <circle cx="141" cy="142" r="11" fill="#062f21"/>
+    <circle cx="70" cy="10" r="12" fill="#4d9a46"/>
+    <circle cx="94" cy="16" r="10" fill="#ff642f"/>
+    <circle cx="119" cy="18" r="8" fill="#4d9a46"/>
+    <circle cx="52" cy="30" r="9" fill="#ff642f"/>
+    <path d="M64 74c18-20 42-28 72-18" fill="none" stroke="#062f21" stroke-width="7" stroke-linecap="round"/>
+    <path d="M68 62h28l9 37H78Z" fill="#e63f43" stroke="#062f21" stroke-width="4"/>
+    <path d="M104 58h25l-6 45H97Z" fill="#e96a2b" stroke="#062f21" stroke-width="4"/>
+    <path d="M135 50h17l-11 59h-18Z" fill="#f4c72f" stroke="#062f21" stroke-width="4"/>
+    <path d="M90 42h21M115 36h22" stroke="#062f21" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <g transform="translate(854 132)">
+    <path d="M174 16 134 23l-19 99H-3l-17-77h128" fill="none" stroke="#062f21" stroke-width="9" stroke-linecap="round" stroke-linejoin="round"/>
+    <path d="M111 49H8l15 64h77Z" fill="url(#cartFill)"/>
+    <circle cx="86" cy="142" r="11" fill="#062f21"/>
+    <circle cx="15" cy="142" r="11" fill="#062f21"/>
+    <circle cx="86" cy="10" r="12" fill="#4d9a46"/>
+    <circle cx="62" cy="16" r="10" fill="#ff642f"/>
+    <circle cx="37" cy="18" r="8" fill="#4d9a46"/>
+    <circle cx="104" cy="30" r="9" fill="#ff642f"/>
+    <path d="M92 74c-18-20-42-28-72-18" fill="none" stroke="#062f21" stroke-width="7" stroke-linecap="round"/>
+    <path d="M88 62H60l-9 37h27Z" fill="#e63f43" stroke="#062f21" stroke-width="4"/>
+    <path d="M52 58H27l6 45h26Z" fill="#e96a2b" stroke="#062f21" stroke-width="4"/>
+    <path d="M21 50H4l11 59h18Z" fill="#f4c72f" stroke="#062f21" stroke-width="4"/>
+    <path d="M66 42H45M41 36H19" stroke="#062f21" stroke-width="4" stroke-linecap="round"/>
+  </g>
+
+  <text x="560" y="192" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="122" font-weight="700" fill="#062f21">A-1</text>
+  <text x="560" y="286" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="80" font-weight="700" fill="#062f21">Grocery &amp; Halal Meat</text>
+  <rect x="104" y="306" width="912" height="48" fill="#062f21"/>
+  <text x="560" y="341" text-anchor="middle" font-family="Georgia, 'Times New Roman', serif" font-size="28" font-weight="700" fill="#d5de3e">Indian, Pakistani, Bangladeshi, Middle Eastern, and Caribbean Grocery</text>
+</svg>

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 420" role="img" aria-label="Goat product placeholder">
+  <defs>
+    <linearGradient id="a" x1="0" x2="1" y1="0" y2="1">
+      <stop offset="0" stop-color="#d9b765"/>
+      <stop offset=".52" stop-color="#bdf4cf"/>
+      <stop offset="1" stop-color="#ffffff"/>
+    </linearGradient>
+  </defs>
+  <rect width="640" height="420" fill="#08231a"/>
+  <circle cx="520" cy="330" r="210" fill="#d9b765" opacity=".18"/>
+  <circle cx="85" cy="75" r="170" fill="#bdf4cf" opacity=".17"/>
+  <rect x="78" y="82" width="484" height="255" rx="42" fill="#ffffff" opacity=".09" stroke="#ffffff" stroke-opacity=".22"/>
+  <path d="M170 258c24-82 96-135 190-130 70 4 120 38 150 99-52 70-119 101-203 89-54-8-100-27-137-58Z" fill="url(#a)" opacity=".82"/>
+  <path d="M236 172c36 30 82 44 139 41" fill="none" stroke="#06140f" stroke-opacity=".28" stroke-width="13" stroke-linecap="round"/>
+  <text x="78" y="378" fill="#edfdf1" font-family="Inter, Arial, sans-serif" font-size="31" font-weight="800">Goat photo placeholder</text>
+</svg>
