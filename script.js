@@ -279,6 +279,15 @@ async function sendPickupRequest(event) {
   }
 
   const formData = new FormData(pickupForm);
+  const depositMethod = formData.get("deposit_method");
+  const depositConfirmed = formData.get("deposit_confirmed") === "on";
+
+  if (!depositMethod || !depositConfirmed) {
+    showToast("Please pay the deposit and confirm it before sending.");
+    document.querySelector(".deposit-confirm")?.scrollIntoView({ behavior: "smooth", block: "center" });
+    return;
+  }
+
   const payload = {
     _subject: "New A1 Grocery pickup order",
     store: "A1 Grocery & Halal Meat",
@@ -291,8 +300,10 @@ async function sendPickupRequest(event) {
     butcher_notes: formData.get("notes") || "",
     order_items: getOrderSummary(),
     subtotal: money.format(state.subtotal),
-    suggested_deposit_20_percent: money.format(state.deposit),
-    payment_note: "Customer may pay deposit or final balance with PayPal, Venmo, Cash App, or in-store cash.",
+    required_deposit_20_percent: money.format(state.deposit),
+    deposit_method: depositMethod,
+    deposit_confirmed_by_customer: depositConfirmed ? "Yes" : "No",
+    payment_note: "Order was submitted with customer deposit confirmation. Please verify payment before preparing.",
     page: window.location.href
   };
 
@@ -346,6 +357,11 @@ function adjustItem(productId, delta) {
 function setCart(open) {
   document.body.classList.toggle("cart-open", open);
   document.querySelector(".cart-drawer").setAttribute("aria-hidden", String(!open));
+}
+
+function setQuickMenu(open) {
+  document.body.classList.toggle("menu-open", open);
+  document.querySelector("[data-toggle-menu]")?.setAttribute("aria-expanded", String(open));
 }
 
 function setPaymentStatus(message, type = "") {
@@ -611,6 +627,75 @@ function initDates() {
   document.querySelector('input[name="time"]').value = "17:30";
 }
 
+function getBinghamtonTime() {
+  const parts = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    weekday: "short",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false
+  }).formatToParts(new Date());
+  const values = Object.fromEntries(parts.map((part) => [part.type, part.value]));
+
+  return {
+    day: ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].indexOf(values.weekday),
+    hour: Number(values.hour),
+    minute: Number(values.minute)
+  };
+}
+
+function formatMinutesUntil(totalMinutes) {
+  const hours = Math.floor(totalMinutes / 60);
+  const minutes = totalMinutes % 60;
+  if (hours <= 0) return `${minutes} min`;
+  if (minutes === 0) return `${hours} hr`;
+  return `${hours} hr ${minutes} min`;
+}
+
+function updateStoreStatus() {
+  const statusText = document.querySelector("#storeStatusText");
+  const statusDetail = document.querySelector("#storeStatusDetail");
+  const clock = document.querySelector("#storeClock");
+  const statusDot = document.querySelector("#storeStatusDot");
+  const hoursList = document.querySelector("#hoursList");
+  if (!statusText || !statusDetail || !clock || !statusDot) return;
+
+  const now = getBinghamtonTime();
+  const minutesNow = now.hour * 60 + now.minute;
+  const openMinutes = 11 * 60;
+  const meatCloseMinutes = 20 * 60;
+  const closeMinutes = 21 * 60;
+  const isOpen = minutesNow >= openMinutes && minutesNow < closeMinutes;
+  const meatOpen = minutesNow >= openMinutes && minutesNow < meatCloseMinutes;
+
+  clock.textContent = new Intl.DateTimeFormat("en-US", {
+    timeZone: "America/New_York",
+    hour: "numeric",
+    minute: "2-digit"
+  }).format(new Date());
+
+  statusDot.classList.remove("closed", "warning");
+
+  if (!isOpen) {
+    statusText.textContent = "Closed right now";
+    statusDetail.textContent = minutesNow < openMinutes
+      ? "Opens today at 11:00 AM. Order ahead and we can start when the counter opens."
+      : "Closed for today. We open again tomorrow at 11:00 AM.";
+    statusDot.classList.add("closed");
+  } else if (!meatOpen) {
+    statusText.textContent = "Store open · meat closed";
+    statusDetail.textContent = "Grocery pickup is open until 9:00 PM. Meat department closes at 8:00 PM.";
+    statusDot.classList.add("warning");
+  } else {
+    statusText.textContent = "Open now";
+    statusDetail.textContent = `Meat counter closes in ${formatMinutesUntil(meatCloseMinutes - minutesNow)}. Store closes in ${formatMinutesUntil(closeMinutes - minutesNow)}.`;
+  }
+
+  hoursList?.querySelectorAll("[data-day]").forEach((row) => {
+    row.classList.toggle("today", Number(row.dataset.day) === now.day);
+  });
+}
+
 function initReveals() {
   const observer = new IntersectionObserver((entries) => {
     entries.forEach((entry) => {
@@ -639,6 +724,18 @@ document.addEventListener("pointermove", (event) => {
 document.addEventListener("click", (event) => {
   addRipple(event);
   makeSparks(event);
+
+  const menuButton = event.target.closest("[data-toggle-menu]");
+  if (menuButton) {
+    setQuickMenu(!document.body.classList.contains("menu-open"));
+    return;
+  }
+
+  if (event.target.closest("[data-close-menu]")) {
+    setQuickMenu(false);
+  } else if (document.body.classList.contains("menu-open") && !event.target.closest(".quick-menu") && !event.target.closest(".site-header")) {
+    setQuickMenu(false);
+  }
 
   const modeButton = event.target.closest("[data-mode]");
   if (modeButton) {
@@ -682,6 +779,21 @@ document.addEventListener("click", (event) => {
   }
 });
 
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape") setQuickMenu(false);
+});
+
+let lastScrollY = window.scrollY;
+window.addEventListener("scroll", () => {
+  if (!document.body.classList.contains("menu-open")) return;
+
+  if (Math.abs(window.scrollY - lastScrollY) > 24) {
+    setQuickMenu(false);
+  }
+
+  lastScrollY = window.scrollY;
+}, { passive: true });
+
 searchInput.addEventListener("input", (event) => {
   state.query = event.target.value;
   renderProducts();
@@ -700,5 +812,7 @@ initPaymentStatus();
 attachTilt();
 attachMagnetic();
 initDates();
+updateStoreStatus();
+setInterval(updateStoreStatus, 60000);
 initReveals();
 typeLoop();

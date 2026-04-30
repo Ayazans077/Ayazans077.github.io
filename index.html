@@ -102,13 +102,20 @@
       <span class="cart-icon">🛒</span>
       <strong id="cartCount">0</strong>
     </button>
-    <a class="menu-toggle magnetic" href="#categories" aria-label="Open menu categories">
+    <button class="menu-toggle magnetic" type="button" data-toggle-menu aria-label="Open site menu" aria-expanded="false">
       <span></span>
       <span></span>
       <span></span>
-    </a>
+    </button>
     </div>
   </header>
+
+  <nav class="quick-menu" id="quickMenu" aria-label="Site menu">
+    <a href="#products" data-close-menu>The Board<span>Shop fresh halal cuts</span></a>
+    <a href="#pickup" data-close-menu>Order<span>Send pickup request</span></a>
+    <a href="#visit" data-close-menu>Visit<span>Address, hours, live status</span></a>
+    <a href="tel:+16077221055" data-close-menu>Call<span>(607) 722-1055</span></a>
+  </nav>
 
   <main id="top">
     <section class="hero reveal hero-stage" data-hero-stage>
@@ -262,18 +269,81 @@
           <a class="ripple" href="#" target="_blank" rel="noopener" data-payment-link="venmo" aria-label="Venmo backup payment">Venmo</a>
           <a class="ripple" href="#" target="_blank" rel="noopener" data-payment-link="cashapp" aria-label="Cash App backup payment">Cash App</a>
         </div>
+        <div class="deposit-confirm">
+          <div>
+            <p class="eyebrow">Deposit required</p>
+            <strong>Pay first, then submit your request.</strong>
+            <span>Orders are only reviewed after the deposit is sent.</span>
+          </div>
+          <label>Deposit method
+            <select name="deposit_method" form="pickupForm" required>
+              <option value="">Choose payment method</option>
+              <option>PayPal</option>
+              <option>Venmo</option>
+              <option>Cash App</option>
+            </select>
+          </label>
+          <label class="payment-check"><input name="deposit_confirmed" type="checkbox" form="pickupForm" required> I already sent the deposit for this order.</label>
+        </div>
       </aside>
     </section>
 
-    <section class="store-info reveal">
-      <div>
-        <p class="eyebrow">Store info</p>
-        <h2>146 Main St, Binghamton, NY 13905</h2>
+    <section class="store-info reveal" id="visit">
+      <div class="visit-copy">
+        <p class="eyebrow">Find us · 146 Main</p>
+        <h2>Walk in. Pick up. Head home.</h2>
+        <p>Order at least 30 minutes ahead. We cut it fresh, text or call when it&apos;s wrapped, and have it waiting at the counter.</p>
+        <div class="visit-actions">
+          <a class="primary-btn magnetic ripple" href="tel:+16077221055">Call the counter</a>
+          <a class="ghost-btn magnetic ripple" href="https://www.google.com/maps/search/?api=1&query=146%20Main%20St%20Binghamton%20NY%2013905" target="_blank" rel="noopener">Get directions</a>
+        </div>
       </div>
-      <div class="info-grid">
-        <div><span>Phone</span><strong>(607) 722-1055</strong></div>
-        <div><span>Hours</span><strong>11 AM - 9 PM</strong></div>
-        <div><span>Meat Department</span><strong>Closes at 8 PM</strong></div>
+
+      <div class="visit-board tilt-card" data-tilt>
+        <div class="live-status-card">
+          <div>
+            <span class="status-dot" id="storeStatusDot" aria-hidden="true"></span>
+            <p class="eyebrow">Live store status</p>
+            <h3 id="storeStatusText">Checking hours...</h3>
+          </div>
+          <div class="live-clock" id="storeClock">--:--</div>
+          <p id="storeStatusDetail">Open daily 11:00 AM - 9:00 PM. Meat department closes at 8:00 PM.</p>
+        </div>
+
+        <div class="visit-details">
+          <div class="visit-detail">
+            <span>Address</span>
+            <strong>146 Main Street</strong>
+            <small>Binghamton, NY 13905</small>
+          </div>
+          <div class="visit-detail">
+            <span>Phone</span>
+            <strong>(607) 722-1055</strong>
+            <small>Talk to the counter</small>
+          </div>
+        </div>
+
+        <div class="hours-card">
+          <div class="hours-head">
+            <strong>Open daily</strong>
+            <span>11:00 AM - 9:00 PM</span>
+          </div>
+          <div class="hours-list" id="hoursList" aria-label="Weekly store hours">
+            <div data-day="0"><span>Sunday</span><strong>11:00 AM - 9:00 PM</strong></div>
+            <div data-day="1"><span>Monday</span><strong>11:00 AM - 9:00 PM</strong></div>
+            <div data-day="2"><span>Tuesday</span><strong>11:00 AM - 9:00 PM</strong></div>
+            <div data-day="3"><span>Wednesday</span><strong>11:00 AM - 9:00 PM</strong></div>
+            <div data-day="4"><span>Thursday</span><strong>11:00 AM - 9:00 PM</strong></div>
+            <div data-day="5"><span>Friday</span><strong>11:00 AM - 9:00 PM</strong></div>
+            <div data-day="6"><span>Saturday</span><strong>11:00 AM - 9:00 PM</strong></div>
+          </div>
+        </div>
+
+        <div class="pickup-rules">
+          <div><span>30 min</span><strong>Order ahead</strong><small>Same-day pickup is usually available.</small></div>
+          <div><span>8 PM</span><strong>Meat closes</strong><small>Send meat orders before the counter closes.</small></div>
+          <div><span>Custom</span><strong>Requests welcome</strong><small>Cut style, grind, bone-in/out, cleaning, and notes.</small></div>
+        </div>
       </div>
     </section>
   </main>
