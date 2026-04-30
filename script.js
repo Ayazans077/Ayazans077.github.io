@@ -8,13 +8,13 @@ const products = [
   { id: "chicken-thighs", name: "Chicken Thighs", price: 4.99, category: "poultry", icon: "🍗", image: "images/products/chicken-thighs.jpg", description: "Halal chicken thighs, ready for grill, curry, or biryani." },
   { id: "ground-chicken", name: "Ground Chicken", price: 3.99, category: "poultry", icon: "🍗", image: "images/products/ground-chicken.jpg", description: "Fresh ground halal chicken for kebabs, samosas, and meals." },
 
-  { id: "baby-goat-leg", name: "Baby Goat Leg", price: 13.99, category: "goat", icon: "🐐", minLb: 2, image: "images/products/baby-goat-leg.jpg", description: "Premium baby goat leg, cut fresh for curry or roasting." },
-  { id: "goat-shoulder", name: "Goat Shoulder", price: 13.99, category: "goat", icon: "🐐", minLb: 2, image: "images/products/goat-shoulder.jpg", description: "Fresh halal goat shoulder with rich flavor and tender texture." },
+  { id: "baby-goat-leg", name: "Baby Goat Leg", price: 13.99, category: "goat", icon: "🐐", minLb: 4, image: "images/products/baby-goat-leg.jpg", description: "Premium baby goat leg, cut fresh for curry or roasting." },
+  { id: "goat-shoulder", name: "Goat Shoulder", price: 13.99, category: "goat", icon: "🐐", minLb: 4, image: "images/products/goat-shoulder.jpg", description: "Fresh halal goat shoulder with rich flavor and tender texture." },
   { id: "mix-goat", name: "Mix Goat", price: 12.99, category: "goat", icon: "🐐", minLb: 2, image: "images/products/mix-goat.jpg", description: "Mixed goat cuts prepared for curry, korma, and family meals." },
   { id: "goat-feet", name: "Goat Feet", price: 8.99, category: "goat", icon: "🐐", image: "images/products/goat-feet.jpg", description: "Cleaned goat feet for paya and traditional soups." },
 
-  { id: "lamb-leg", name: "Lamb Leg", price: 12.99, category: "lamb", icon: "🐑", minLb: 2, image: "images/products/lamb-leg.jpg", description: "Fresh halal lamb leg, cut to your preferred size." },
-  { id: "lamb-shoulder", name: "Lamb Shoulder", price: 12.99, category: "lamb", icon: "🐑", minLb: 2, image: "images/products/lamb-shoulder.jpg", description: "Halal lamb shoulder for roasting, curry, or slow cooking." },
+  { id: "lamb-leg", name: "Lamb Leg", price: 12.99, category: "lamb", icon: "🐑", minLb: 4, image: "images/products/lamb-leg.jpg", description: "Fresh halal lamb leg, cut to your preferred size." },
+  { id: "lamb-shoulder", name: "Lamb Shoulder", price: 12.99, category: "lamb", icon: "🐑", minLb: 4, image: "images/products/lamb-shoulder.jpg", description: "Halal lamb shoulder for roasting, curry, or slow cooking." },
   { id: "lamb-chops", name: "Lamb Chops", price: 12.99, category: "lamb", icon: "🐑", image: "images/products/lamb-chops.jpg", description: "Fresh halal lamb chops, premium-cut for grill or pan." },
 
   { id: "beef-with-bone", name: "Beef with Bone", price: 6.99, category: "beef", icon: "🐄", image: "images/products/beef-with-bone.jpg", description: "Bone-in halal beef for curry, stew, and stock-rich dishes." },
@@ -24,8 +24,8 @@ const products = [
   { id: "shank-nihari", name: "Shank (Nihari)", price: 8.99, category: "beef", icon: "🐄", minLb: 2, image: "images/products/shank-nihari.jpg", description: "Halal beef shank, ideal for nihari and slow braises." },
   { id: "t-bone-steak", name: "T-Bone Steak", price: 8.99, category: "beef", icon: "🐄", image: "images/products/t-bone-steak.jpg", description: "Fresh halal T-bone steak, cut for grill or pan." },
   { id: "ribeye", name: "Ribeye", price: 8.99, category: "beef", icon: "🐄", image: "images/products/ribeye.jpg", description: "Halal ribeye with rich marbling and steakhouse flavor." },
-  { id: "beef-ribs", name: "Beef Ribs", price: 6.99, category: "beef", icon: "🐄", minLb: 2, image: "images/products/beef-ribs.jpg", description: "Halal beef ribs for barbecue, oven, or slow cooking." },
-  { id: "oxtail", name: "Oxtail", price: 11.99, category: "beef", icon: "🐄", minLb: 2, image: "images/products/oxtail.jpg", description: "Fresh halal oxtail, rich and perfect for stews." },
+  { id: "beef-ribs", name: "Beef Ribs", price: 6.99, category: "beef", icon: "🐄", image: "images/products/beef-ribs.jpg", description: "Halal beef ribs for barbecue, oven, or slow cooking." },
+  { id: "oxtail", name: "Oxtail", price: 11.99, category: "beef", icon: "🐄", image: "images/products/oxtail.jpg", description: "Fresh halal oxtail, rich and perfect for stews." },
   { id: "cow-feet", name: "Cow Feet", price: 5.99, category: "beef", icon: "🐄", image: "images/products/cow-feet.jpg", description: "Cleaned cow feet for traditional soups and slow cooking." },
 
   { id: "hilsha", name: "Hilsha", price: 9.99, category: "fish", icon: "🐟", minLb: 2, wholeItem: true, image: "images/products/hilsha.jpg", description: "Whole Hilsha fish, cleaned and cut by request." },
