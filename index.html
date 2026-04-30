@@ -400,6 +400,18 @@
     </div>
   </aside>
 
+  <div class="detail-overlay" data-close-detail></div>
+  <aside class="product-detail" id="productDetail" aria-label="Product details" aria-hidden="true">
+    <div class="detail-head">
+      <div>
+        <p class="eyebrow">Fresh counter</p>
+        <h2>Item details</h2>
+      </div>
+      <button class="icon-btn ripple" type="button" data-close-detail aria-label="Close product details">×</button>
+    </div>
+    <div id="productDetailContent"></div>
+  </aside>
+
   <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
   <script src="https://js.stripe.com/v3/"></script>

@@ -87,7 +87,7 @@ function productTemplate(product) {
     : "Order the exact amount you need";
 
   return `
-    <article class="product-card tilt-card reveal visible" data-tilt data-id="${product.id}">
+    <article class="product-card tilt-card reveal visible" data-tilt data-id="${product.id}" data-product-card="${product.id}">
       <div class="product-media" style="--image: url('${product.image}')">
         <div class="tag-row">
           <span class="pill ${product.popular ? "popular" : ""}">${product.popular ? "Popular" : categoryLabel}</span>
@@ -99,6 +99,7 @@ function productTemplate(product) {
       </div>
       <p class="desc">${product.description}</p>
       <p class="minimum">${minimum}</p>
+      <button class="view-item-btn ripple" type="button" data-view-product="${product.id}">View item</button>
       <div class="control-shell" data-controls="${product.id}">
         <div class="mode-toggle" role="group" aria-label="Order mode">
           <button class="active" type="button" data-mode="lb">LB</button>
@@ -197,6 +198,85 @@ function addToCart(productId) {
 
   updateCart();
   pulseCart();
+  showToast(`${product.name} added for ${order.pounds.toFixed(2).replace(".00", "")} lb.`);
+}
+
+function productDetailTemplate(product) {
+  const categoryLabel = categoryLabels[product.category] || product.category;
+  const minimum = product.minLb
+    ? `Min ${product.minLb} lb · ${money.format(product.minLb * product.price)} min${product.wholeItem ? " · whole-item rule" : ""}`
+    : "Order the exact amount you need";
+
+  return `
+    <div class="detail-media" style="--image: url('${product.image}')">
+      <span class="pill ${product.popular ? "popular" : ""}">${product.popular ? "Popular" : categoryLabel}</span>
+    </div>
+    <div class="detail-body">
+      <div class="product-title">
+        <h3>${product.name}</h3>
+        <div class="price">${money.format(product.price)}<small>/lb</small></div>
+      </div>
+      <p class="desc">${product.description}</p>
+      <p class="minimum">${minimum}</p>
+      <div class="control-shell" data-detail-controls="${product.id}">
+        <div class="mode-toggle" role="group" aria-label="Order mode">
+          <button class="active" type="button" data-detail-mode="lb">LB</button>
+          <button type="button" data-detail-mode="dollar">$</button>
+        </div>
+        <div class="amount-row">
+          <label>
+            <input type="number" min="0" step="0.25" value="${product.minLb || ""}" placeholder="${product.minLb ? `${product.minLb} lb` : "eg. 2 lb"}" data-detail-amount>
+          </label>
+          <button class="add-btn magnetic ripple" type="button" data-detail-add="${product.id}">Add to order</button>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function setProductDetail(open, productId = "") {
+  const drawer = document.querySelector("#productDetail");
+  const content = document.querySelector("#productDetailContent");
+  if (!drawer || !content) return;
+
+  if (!open) {
+    document.body.classList.remove("detail-open");
+    drawer.setAttribute("aria-hidden", "true");
+    return;
+  }
+
+  const product = products.find((item) => item.id === productId);
+  if (!product) return;
+
+  content.innerHTML = productDetailTemplate(product);
+  document.body.classList.add("detail-open");
+  drawer.setAttribute("aria-hidden", "false");
+  attachMagnetic(content);
+}
+
+function getDetailControls(productId) {
+  const shell = document.querySelector(`[data-detail-controls="${productId}"]`);
+  const mode = shell.querySelector("[data-detail-mode].active").dataset.detailMode;
+  const amount = Number(shell.querySelector("[data-detail-amount]").value);
+  return { shell, mode, amount };
+}
+
+function addDetailToCart(productId) {
+  const product = products.find((item) => item.id === productId);
+  const { mode, amount } = getDetailControls(productId);
+  const order = normalizeOrder(product, mode, amount);
+  const current = state.cart.get(productId);
+
+  if (current) {
+    current.pounds += order.pounds;
+    current.total = current.pounds * product.price;
+  } else {
+    state.cart.set(productId, { ...product, pounds: order.pounds, total: order.total });
+  }
+
+  updateCart();
+  pulseCart();
+  setProductDetail(false);
   showToast(`${product.name} added for ${order.pounds.toFixed(2).replace(".00", "")} lb.`);
 }
 
@@ -751,6 +831,28 @@ document.addEventListener("click", (event) => {
   const addButton = event.target.closest("[data-add]");
   if (addButton) addToCart(addButton.dataset.add);
 
+  const viewProductButton = event.target.closest("[data-view-product]");
+  if (viewProductButton) setProductDetail(true, viewProductButton.dataset.viewProduct);
+
+  const productCard = event.target.closest("[data-product-card]");
+  if (productCard && !event.target.closest(".control-shell, [data-add], [data-mode], [data-view-product]")) {
+    setProductDetail(true, productCard.dataset.productCard);
+  }
+
+  const detailModeButton = event.target.closest("[data-detail-mode]");
+  if (detailModeButton) {
+    const shell = detailModeButton.closest("[data-detail-controls]");
+    shell.querySelectorAll("[data-detail-mode]").forEach((button) => button.classList.remove("active"));
+    detailModeButton.classList.add("active");
+    const input = shell.querySelector("[data-detail-amount]");
+    const product = products.find((item) => item.id === shell.dataset.detailControls);
+    input.placeholder = detailModeButton.dataset.detailMode === "dollar" ? "50" : product.minLb ? `${product.minLb} lb` : "eg. 2 lb";
+    input.value = detailModeButton.dataset.detailMode === "dollar" ? "" : product.minLb || "";
+  }
+
+  const detailAddButton = event.target.closest("[data-detail-add]");
+  if (detailAddButton) addDetailToCart(detailAddButton.dataset.detailAdd);
+
   const categoryButton = event.target.closest("[data-category]");
   if (categoryButton) {
     state.filter = categoryButton.dataset.category;
@@ -767,6 +869,7 @@ document.addEventListener("click", (event) => {
 
   if (event.target.closest("[data-open-cart]")) setCart(true);
   if (event.target.closest("[data-close-cart]")) setCart(false);
+  if (event.target.closest("[data-close-detail]")) setProductDetail(false);
 
   const adjustButton = event.target.closest("[data-adjust]");
   if (adjustButton) adjustItem(adjustButton.dataset.adjust, Number(adjustButton.dataset.delta));
@@ -780,7 +883,10 @@ document.addEventListener("click", (event) => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape") setQuickMenu(false);
+  if (event.key === "Escape") {
+    setQuickMenu(false);
+    setProductDetail(false);
+  }
 });
 
 let lastScrollY = window.scrollY;
