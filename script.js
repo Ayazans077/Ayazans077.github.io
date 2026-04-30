@@ -87,7 +87,7 @@ function productTemplate(product) {
     : "Order the exact amount you need";
 
   return `
-    <article class="product-card tilt-card reveal visible" data-tilt data-id="${product.id}" data-product-card="${product.id}">
+    <article class="product-card tilt-card ripple reveal visible" data-tilt data-id="${product.id}" data-product-card="${product.id}">
       <div class="product-media" style="--image: url('${product.image}')">
         <div class="tag-row">
           <span class="pill ${product.popular ? "popular" : ""}">${product.popular ? "Popular" : categoryLabel}</span>
@@ -132,6 +132,8 @@ function renderProducts() {
     : `<div class="empty-cart wide">No items match that search yet.</div>`;
 
   attachTilt(productGrid);
+  attachTouchFeedback(productGrid);
+  updateMobileParallax();
 }
 
 function syncCategoryButtons() {
@@ -252,6 +254,7 @@ function setProductDetail(open, productId = "") {
   document.body.classList.add("detail-open");
   drawer.setAttribute("aria-hidden", "false");
   attachMagnetic(content);
+  attachTouchFeedback(content);
 }
 
 function getDetailControls(productId) {
@@ -361,9 +364,11 @@ async function sendPickupRequest(event) {
   const formData = new FormData(pickupForm);
   const depositMethod = formData.get("deposit_method");
   const depositConfirmed = formData.get("deposit_confirmed") === "on";
+  const agreementsAccepted = ["agree_balance", "agree_weight", "agree_pickup"]
+    .every((name) => formData.get(name) === "on");
 
-  if (!depositMethod || !depositConfirmed) {
-    showToast("Please pay the deposit and confirm it before sending.");
+  if (!depositMethod || !depositConfirmed || !agreementsAccepted) {
+    showToast("Please pay the deposit and accept the pickup agreement.");
     document.querySelector(".deposit-confirm")?.scrollIntoView({ behavior: "smooth", block: "center" });
     return;
   }
@@ -383,6 +388,7 @@ async function sendPickupRequest(event) {
     required_deposit_20_percent: money.format(state.deposit),
     deposit_method: depositMethod,
     deposit_confirmed_by_customer: depositConfirmed ? "Yes" : "No",
+    pickup_agreement: agreementsAccepted ? "Accepted" : "Missing",
     payment_note: "Order was submitted with customer deposit confirmation. Please verify payment before preparing.",
     page: window.location.href
   };
@@ -614,6 +620,7 @@ function attachTilt(root = document) {
     if (card.dataset.tiltReady) return;
     card.dataset.tiltReady = "true";
     card.addEventListener("pointermove", (event) => {
+      if (event.pointerType !== "mouse") return;
       const rect = card.getBoundingClientRect();
       const x = (event.clientX - rect.left) / rect.width - 0.5;
       const y = (event.clientY - rect.top) / rect.height - 0.5;
@@ -640,9 +647,10 @@ function addRipple(event) {
 }
 
 function makeSparks(event) {
-  const trigger = event.target.closest(".add-btn, .primary-btn, .cart-toggle");
+  const trigger = event.target.closest(".add-btn, .primary-btn, .cart-toggle, .product-card, .view-item-btn");
   if (!trigger) return;
-  for (let index = 0; index < 9; index += 1) {
+  const sparkCount = trigger.classList.contains("product-card") ? 6 : 9;
+  for (let index = 0; index < sparkCount; index += 1) {
     const spark = document.createElement("span");
     spark.className = "spark";
     spark.style.left = `${event.clientX}px`;
@@ -665,6 +673,50 @@ function attachMagnetic() {
     item.addEventListener("pointerleave", () => {
       item.style.transform = "";
     });
+  });
+}
+
+function attachTouchFeedback(root = document) {
+  root.querySelectorAll(".product-card, .category-card, .view-item-btn, .add-btn").forEach((item) => {
+    if (item.dataset.touchReady) return;
+    item.dataset.touchReady = "true";
+
+    item.addEventListener("pointerdown", (event) => {
+      if (event.pointerType === "mouse") return;
+      const rect = item.getBoundingClientRect();
+      item.style.setProperty("--tap-x", `${event.clientX - rect.left}px`);
+      item.style.setProperty("--tap-y", `${event.clientY - rect.top}px`);
+      item.classList.add("touch-active");
+    }, { passive: true });
+
+    ["pointerup", "pointercancel", "pointerleave"].forEach((eventName) => {
+      item.addEventListener(eventName, () => {
+        item.classList.remove("touch-active");
+      }, { passive: true });
+    });
+  });
+}
+
+function updateMobileParallax() {
+  if (!window.matchMedia("(max-width: 720px)").matches) return;
+
+  const viewportCenter = window.innerHeight / 2;
+  document.querySelectorAll(".product-card").forEach((card) => {
+    const rect = card.getBoundingClientRect();
+    const cardCenter = rect.top + rect.height / 2;
+    const distance = (cardCenter - viewportCenter) / viewportCenter;
+    const clamped = Math.max(-1, Math.min(1, distance));
+    card.style.setProperty("--scroll-lift", `${clamped * -8}px`);
+    card.style.setProperty("--scroll-glow", `${1 - Math.abs(clamped)}`);
+  });
+}
+
+function scheduleMobileParallax() {
+  if (scheduleMobileParallax.queued) return;
+  scheduleMobileParallax.queued = true;
+  requestAnimationFrame(() => {
+    updateMobileParallax();
+    scheduleMobileParallax.queued = false;
   });
 }
 
@@ -906,6 +958,9 @@ window.addEventListener("scroll", () => {
   lastScrollY = window.scrollY;
 }, { passive: true });
 
+window.addEventListener("scroll", scheduleMobileParallax, { passive: true });
+window.addEventListener("resize", scheduleMobileParallax);
+
 searchInput.addEventListener("input", (event) => {
   state.query = event.target.value;
   renderProducts();
@@ -923,6 +978,8 @@ updateCart();
 initPaymentStatus();
 attachTilt();
 attachMagnetic();
+attachTouchFeedback();
+updateMobileParallax();
 initDates();
 updateStoreStatus();
 setInterval(updateStoreStatus, 60000);

@@ -192,23 +192,23 @@
         <h2>Choose your counter.</h2>
       </div>
       <div class="category-grid">
-        <button class="category-card active tilt-card ripple" type="button" data-category="all" data-tilt>
-          <span>✦</span><strong>All Items</strong><small>Full halal pickup menu</small>
+        <button class="category-card category-card-full active tilt-card ripple" type="button" data-category="all" data-tilt style="--category-image: url('images/categories/all-category.jpg')">
+          <span class="category-icon">✦</span><strong>All Items</strong><small>Full halal pickup menu</small>
         </button>
-        <button class="category-card tilt-card ripple" type="button" data-category="poultry" data-tilt>
-          <span>🐔</span><strong>Poultry</strong><small>Whole chicken, wings, keema</small>
+        <button class="category-card category-card-full tilt-card ripple" type="button" data-category="poultry" data-tilt style="--category-image: url('images/categories/poultry-category.jpg')">
+          <span class="category-icon">🐔</span><strong>Poultry</strong><small>Whole chicken, wings, keema</small>
         </button>
-        <button class="category-card tilt-card ripple" type="button" data-category="goat" data-tilt>
-          <span>🐐</span><strong>Goat</strong><small>Curry cut and bone-in pieces</small>
+        <button class="category-card category-card-full tilt-card ripple" type="button" data-category="goat" data-tilt style="--category-image: url('images/categories/goat-category.jpg')">
+          <span class="category-icon">🐐</span><strong>Goat</strong><small>Curry cut and bone-in pieces</small>
         </button>
-        <button class="category-card tilt-card ripple" type="button" data-category="lamb" data-tilt>
-          <span>🥩</span><strong>Lamb</strong><small>Shoulder and tender cuts</small>
+        <button class="category-card category-card-full tilt-card ripple" type="button" data-category="lamb" data-tilt style="--category-image: url('images/categories/lamb-category.jpg')">
+          <span class="category-icon">🥩</span><strong>Lamb</strong><small>Shoulder and tender cuts</small>
         </button>
-        <button class="category-card tilt-card ripple" type="button" data-category="beef" data-tilt>
-          <span>🥩</span><strong>Beef</strong><small>Keema, cubes, and boneless</small>
+        <button class="category-card tilt-card ripple" type="button" data-category="beef" data-tilt style="--category-image: url('images/products/ground-beef.jpg')">
+          <span class="category-icon">🥩</span><strong>Beef</strong><small>Keema, cubes, and boneless</small>
         </button>
-        <button class="category-card tilt-card ripple" type="button" data-category="fish" data-tilt>
-          <span>🐟</span><strong>Fish</strong><small>Fresh fish and fillets</small>
+        <button class="category-card tilt-card ripple" type="button" data-category="fish" data-tilt style="--category-image: url('images/products/snapper.jpg')">
+          <span class="category-icon">🐟</span><strong>Fish</strong><small>Fresh fish and fillets</small>
         </button>
       </div>
     </section>
@@ -284,6 +284,12 @@
             </select>
           </label>
           <label class="payment-check"><input name="deposit_confirmed" type="checkbox" form="pickupForm" required> I already sent the deposit for this order.</label>
+          <div class="pickup-agreement">
+            <strong>Pickup agreement</strong>
+            <label class="payment-check"><input name="agree_balance" type="checkbox" form="pickupForm" required> I will pay the remaining balance at pickup.</label>
+            <label class="payment-check"><input name="agree_weight" type="checkbox" form="pickupForm" required> I understand the final price may change slightly because fresh meat is weighed after cutting.</label>
+            <label class="payment-check"><input name="agree_pickup" type="checkbox" form="pickupForm" required> I will pick up my order at 146 Main Street after the store confirms it is ready.</label>
+          </div>
         </div>
       </aside>
     </section>
@@ -349,38 +355,48 @@
   </main>
 
   <footer class="site-footer">
-    <div>
-      <a class="brand" href="#top">
-        <img class="footer-logo" src="images/logo-wide.png" alt="A-1 Grocery & Halal Meat">
-      </a>
-      <p>Premium halal grocery and butcher pickup for Binghamton families.</p>
+    <div class="footer-main">
+      <div class="footer-brand-card">
+        <a class="brand" href="#top">
+          <img class="footer-logo" src="images/logo-wide.png" alt="A-1 Grocery & Halal Meat">
+        </a>
+        <p>A1 Grocery & Halal Meat offers high-quality halal meat, poultry, fish, and grocery staples prepared fresh for local pickup.</p>
+        <p class="footer-pay">Pay deposit with PayPal, Venmo, or Cash App. Pay the remaining balance at pickup.</p>
+      </div>
+
+      <div class="footer-location">
+        <h3>Store Location</h3>
+        <a href="https://www.google.com/maps/search/?api=1&query=146%20Main%20St%20Binghamton%20NY%2013905" target="_blank" rel="noopener">146 Main St, Binghamton, NY 13905</a>
+        <a href="tel:+16077221055">Phone: (607) 722-1055</a>
+        <strong>Hours</strong>
+        <span>Mon-Sun: 11:00 AM - 9:00 PM</span>
+        <span>Meat Dept: closes 8:00 PM</span>
+      </div>
+
+      <nav>
+        <h3>Our Products</h3>
+        <a href="#products" data-footer-category="poultry">Poultry</a>
+        <a href="#products" data-footer-category="goat">Goat Meat</a>
+        <a href="#products" data-footer-category="lamb">Lamb</a>
+        <a href="#products" data-footer-category="beef">Beef</a>
+        <a href="#products" data-footer-category="fish">Fish</a>
+      </nav>
+
+      <nav>
+        <h3>Support</h3>
+        <a href="#pickup">Pickup form</a>
+        <a href="#visit">Address & hours</a>
+        <a href="#products">Minimum order rules</a>
+        <a href="#top">Back to top</a>
+      </nav>
     </div>
-    <nav>
-      <h3>Location</h3>
-      <a href="#pickup">146 Main St</a>
+
+    <div class="footer-bottom">
+      <span>© 2026 A1 Grocery & Halal Meat</span>
+      <span>146 Main St, Binghamton, NY</span>
       <a href="tel:+16077221055">(607) 722-1055</a>
-      <a href="#products">Order for pickup</a>
-    </nav>
-    <nav>
-      <h3>Products</h3>
-      <a href="#products" data-footer-category="poultry">Poultry</a>
-      <a href="#products" data-footer-category="goat">Goat</a>
-      <a href="#products" data-footer-category="lamb">Lamb</a>
-      <a href="#products" data-footer-category="beef">Beef</a>
-      <a href="#products" data-footer-category="fish">Fish</a>
-    </nav>
-    <nav>
-      <h3>Support</h3>
-      <a href="#pickup">Pickup form</a>
-      <a href="#products">Minimums</a>
-      <a href="#top">Back to top</a>
-    </nav>
-    <nav>
-      <h3>Payments</h3>
-      <a href="#" target="_blank" rel="noopener" data-payment-link="paypal" data-payment-label>PayPal</a>
-      <a href="#" target="_blank" rel="noopener" data-payment-link="venmo" data-payment-label>Venmo</a>
-      <a href="#" target="_blank" rel="noopener" data-payment-link="cashapp" data-payment-label>Cash App</a>
-    </nav>
+      <span class="site-credit">Website by Mohammed Ayaz Ansari</span>
+    </div>
   </footer>
 
   <div class="cart-overlay" data-close-cart></div>
