@@ -45,6 +45,7 @@ const state = {
 
 const STRIPE_PUBLISHABLE_KEY = "pk_test_REPLACE_WITH_YOUR_STRIPE_PUBLISHABLE_KEY";
 const STRIPE_CHECKOUT_ENDPOINT = "/create-checkout-session";
+const FORMSPREE_ENDPOINT = "https://formspree.io/f/xyzpvyle";
 const PAYMENT_CONFIG = {
   PAYPAL_USERNAME: "AmmaarAnsari",
   VENMO_USERNAME: "A1Grocery",
@@ -77,6 +78,7 @@ const payDepositBtn = document.querySelector("#payDepositBtn");
 const paymentStatus = document.querySelector("#paymentStatus");
 const toast = document.querySelector("#toast");
 const typingText = document.querySelector("#typingText");
+const pickupForm = document.querySelector("#pickupForm");
 
 function productTemplate(product) {
   const categoryLabel = categoryLabels[product.category] || product.category;
@@ -242,6 +244,85 @@ function updateCart() {
     </div>
   `;
   }).join("") : `<div class="empty-cart">Your cart is ready for fresh halal cuts.</div>`;
+}
+
+function getOrderLines() {
+  return [...state.cart.values()].map((item) => {
+    const pounds = item.pounds.toFixed(2).replace(".00", "");
+    return `${item.name}: ${pounds} lb x ${money.format(item.price)}/lb = ${money.format(item.total)}`;
+  });
+}
+
+function getOrderSummary() {
+  const lines = getOrderLines();
+  return lines.length ? lines.join("\n") : "No items selected";
+}
+
+function setPickupLoading(isLoading) {
+  if (!pickupForm) return;
+
+  const submitButton = pickupForm.querySelector('button[type="submit"]');
+  if (!submitButton) return;
+
+  submitButton.disabled = isLoading;
+  submitButton.classList.toggle("loading", isLoading);
+  submitButton.textContent = isLoading ? "Sending Request..." : "Send Pickup Request";
+}
+
+async function sendPickupRequest(event) {
+  event.preventDefault();
+
+  if (!state.cart.size) {
+    showToast("Add at least one item before sending your pickup request.");
+    document.querySelector("#products")?.scrollIntoView({ behavior: "smooth", block: "start" });
+    return;
+  }
+
+  const formData = new FormData(pickupForm);
+  const payload = {
+    _subject: "New A1 Grocery pickup order",
+    store: "A1 Grocery & Halal Meat",
+    name: formData.get("name") || "",
+    phone: formData.get("phone") || "",
+    email: formData.get("email") || "",
+    pickup_date: formData.get("date") || "",
+    pickup_time: formData.get("time") || "",
+    cut_preference: formData.get("cut") || "",
+    butcher_notes: formData.get("notes") || "",
+    order_items: getOrderSummary(),
+    subtotal: money.format(state.subtotal),
+    suggested_deposit_20_percent: money.format(state.deposit),
+    payment_note: "Customer may pay deposit or final balance with PayPal, Venmo, Cash App, or in-store cash.",
+    page: window.location.href
+  };
+
+  setPickupLoading(true);
+  showToast("Sending pickup request...");
+
+  try {
+    const response = await fetch(FORMSPREE_ENDPOINT, {
+      method: "POST",
+      headers: {
+        "Accept": "application/json",
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify(payload)
+    });
+
+    if (!response.ok) {
+      throw new Error("Formspree request failed");
+    }
+
+    pickupForm.reset();
+    state.cart.clear();
+    updateCart();
+    setCart(false);
+    showToast("Pickup request sent. We will contact you soon.");
+  } catch (error) {
+    showToast("Could not send. Please call (607) 722-1055.");
+  } finally {
+    setPickupLoading(false);
+  }
 }
 
 function adjustItem(productId, delta) {
@@ -606,11 +687,7 @@ searchInput.addEventListener("input", (event) => {
   renderProducts();
 });
 
-document.querySelector("#pickupForm").addEventListener("submit", (event) => {
-  event.preventDefault();
-  showToast("Pickup request ready. Connect this form to your order inbox.");
-  setCart(false);
-});
+pickupForm?.addEventListener("submit", sendPickupRequest);
 
 payDepositBtn.addEventListener("click", payDepositWithStripe);
 
