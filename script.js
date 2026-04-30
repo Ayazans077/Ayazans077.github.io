@@ -86,10 +86,9 @@ function productTemplate(product) {
 
   return `
     <article class="product-card tilt-card reveal visible" data-tilt data-id="${product.id}">
-      <div class="product-media" data-icon="${product.icon}" style="--image: url('${product.image}')">
+      <div class="product-media" style="--image: url('${product.image}')">
         <div class="tag-row">
           <span class="pill ${product.popular ? "popular" : ""}">${product.popular ? "Popular" : categoryLabel}</span>
-          <span class="pill">${categoryLabel}</span>
         </div>
       </div>
       <div class="product-title">
