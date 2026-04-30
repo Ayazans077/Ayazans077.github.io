@@ -404,11 +404,17 @@ async function sendPickupRequest(event) {
       throw new Error("Formspree request failed");
     }
 
+    const thankYouUrl = new URL("thank-you.html", window.location.href);
+    thankYouUrl.searchParams.set("subtotal", money.format(state.subtotal));
+    thankYouUrl.searchParams.set("deposit", money.format(state.deposit));
+    thankYouUrl.searchParams.set("method", depositMethod);
+
     pickupForm.reset();
     state.cart.clear();
     updateCart();
     setCart(false);
     showToast("Pickup request sent. We will contact you soon.");
+    window.location.href = thankYouUrl.toString();
   } catch (error) {
     showToast("Could not send. Please call (607) 722-1055.");
   } finally {

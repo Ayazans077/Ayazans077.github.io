@@ -1773,6 +1773,127 @@ h1 span {
   object-fit: contain;
 }
 
+.thank-you-page {
+  min-height: 100vh;
+}
+
+.thank-you-shell {
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 2rem;
+}
+
+.thank-you-card {
+  position: relative;
+  width: min(56rem, 100%);
+  padding: clamp(1.2rem, 4vw, 2rem);
+  overflow: hidden;
+  border: 1px solid rgba(189, 244, 207, 0.2);
+  border-radius: 1.25rem;
+  background:
+    radial-gradient(circle at 95% 5%, rgba(189, 244, 207, 0.16), transparent 18rem),
+    linear-gradient(145deg, rgba(255, 255, 255, 0.1), rgba(255, 255, 255, 0.04));
+  box-shadow: var(--shadow);
+  backdrop-filter: blur(18px);
+}
+
+.thank-logo {
+  display: block;
+  width: min(17rem, 70vw);
+  margin-bottom: 1rem;
+  border: 1px solid rgba(189, 244, 207, 0.28);
+  border-radius: 0.35rem;
+  background: #fff;
+}
+
+.thank-you-card h1 {
+  max-width: 10ch;
+  margin: 0.15rem 0 0;
+  font-size: clamp(3rem, 9vw, 6.8rem);
+  line-height: 0.88;
+}
+
+.thank-lead {
+  max-width: 42rem;
+  margin: 1rem 0 0;
+  color: var(--muted);
+  font-size: 1.02rem;
+  line-height: 1.65;
+}
+
+.thank-status-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 0.7rem;
+  margin: 1.2rem 0;
+}
+
+.thank-status-grid div,
+.thank-next {
+  border: 1px solid rgba(189, 244, 207, 0.16);
+  border-radius: 0.9rem;
+  background: rgba(6, 20, 15, 0.42);
+}
+
+.thank-status-grid div {
+  padding: 0.85rem;
+}
+
+.thank-status-grid span,
+.thank-next span,
+.thank-note {
+  color: var(--muted);
+}
+
+.thank-status-grid span,
+.thank-status-grid strong {
+  display: block;
+}
+
+.thank-status-grid strong {
+  margin-top: 0.25rem;
+  color: var(--gold);
+}
+
+.thank-next {
+  padding: 1rem;
+}
+
+.thank-next h2 {
+  margin: 0 0 0.8rem;
+  font-size: 1.2rem;
+}
+
+.thank-next ol {
+  display: grid;
+  gap: 0.75rem;
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.thank-next li strong,
+.thank-next li span {
+  display: block;
+}
+
+.thank-next li span {
+  margin-top: 0.15rem;
+  line-height: 1.5;
+}
+
+.thank-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.7rem;
+  margin-top: 1rem;
+}
+
+.thank-note {
+  margin: 1rem 0 0;
+  line-height: 1.5;
+}
+
 .site-footer nav {
   display: grid;
   align-content: start;
@@ -2268,6 +2389,18 @@ h1 span {
   .site-footer,
   .payment-links {
     grid-template-columns: 1fr;
+  }
+
+  .thank-you-shell {
+    padding: 1rem;
+  }
+
+  .thank-status-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .thank-actions {
+    display: grid;
   }
 
   .section,
