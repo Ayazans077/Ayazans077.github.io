@@ -48,7 +48,7 @@ const STRIPE_CHECKOUT_ENDPOINT = "/create-checkout-session";
 const PAYMENT_CONFIG = {
   PAYPAL_USERNAME: "AmmaarAnsari",
   VENMO_USERNAME: "A1Grocery",
-  CASH_TAG: "AmmaarAnsari",
+  CASH_TAG: "ammaarans",
   PAYMENT_NOTE: "A1 Halal Deposit"
 };
 
@@ -115,6 +115,8 @@ function productTemplate(product) {
 }
 
 function renderProducts() {
+  if (!productGrid) return;
+
   const query = state.query.trim().toLowerCase();
   const visible = products.filter((product) => {
     const categoryLabel = categoryLabels[product.category] || product.category;
@@ -128,6 +130,27 @@ function renderProducts() {
     : `<div class="empty-cart wide">No items match that search yet.</div>`;
 
   attachTilt(productGrid);
+}
+
+function syncCategoryButtons() {
+  document.querySelectorAll("[data-category]").forEach((button) => {
+    button.classList.toggle("active", button.dataset.category === state.filter);
+  });
+}
+
+function ensureMenuRendered() {
+  if (!productGrid) return;
+
+  if (searchInput) {
+    state.query = searchInput.value || "";
+  }
+
+  if (!state.filter) {
+    state.filter = "all";
+  }
+
+  syncCategoryButtons();
+  renderProducts();
 }
 
 function getControls(productId) {
@@ -554,14 +577,14 @@ document.addEventListener("click", (event) => {
   const categoryButton = event.target.closest("[data-category]");
   if (categoryButton) {
     state.filter = categoryButton.dataset.category;
-    document.querySelectorAll("[data-category]").forEach((button) => button.classList.toggle("active", button === categoryButton));
+    syncCategoryButtons();
     renderProducts();
   }
 
   const footerCategory = event.target.closest("[data-footer-category]");
   if (footerCategory) {
     state.filter = footerCategory.dataset.footerCategory;
-    document.querySelectorAll("[data-category]").forEach((button) => button.classList.toggle("active", button.dataset.category === state.filter));
+    syncCategoryButtons();
     renderProducts();
   }
 
@@ -592,7 +615,10 @@ document.querySelector("#pickupForm").addEventListener("submit", (event) => {
 
 payDepositBtn.addEventListener("click", payDepositWithStripe);
 
-renderProducts();
+ensureMenuRendered();
+requestAnimationFrame(ensureMenuRendered);
+window.addEventListener("pageshow", ensureMenuRendered);
+document.addEventListener("DOMContentLoaded", ensureMenuRendered);
 updateCart();
 initPaymentStatus();
 attachTilt();
