@@ -1,1083 +1,306 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1" />
-<title>A1 Grocery & Halal Meat — Online Pickup</title>
-<link rel="canonical" href="https://a1halalmeat.com" />
-<link rel="icon" href="logo.png" type="image/png" />
-<meta name="description" content="Zabeha Halal poultry, meat, and fish. Order online for pickup. Fancy cart with live subtotal." />
-<meta property="og:title" content="A1 Grocery & Halal Meat — Online Pickup">
-<meta property="og:description" content="Fresh Zabeha Halal cuts ready when you arrive. Order online, pay at pickup.">
-<meta property="og:url" content="https://a1halalmeat.com">
-<meta property="og:type" content="website">
-<meta property="og:image" content="https://a1halalmeat.com/logo.png">
-
-<style>
-  :root{
-    --bg1:#052e2b; --bg2:#041f22; --panel:rgba(255,255,255,.06); --border:rgba(255,255,255,.15);
-    --text:#e8fbf2; --muted:#b4d7c8; --brand:#42f5b3; --brand-2:#86ffd8;
-    --accent:#10b981; --accent-ink:#052e2b; --shadow:0 12px 30px rgba(0,0,0,.35);
-  }
-  *{box-sizing:border-box}
-  html,body{height:100%}
-  body{
-    margin:0; color:var(--text); font:16px/1.55 system-ui, Segoe UI, Roboto, Arial, sans-serif;
-    background:radial-gradient(1200px 500px at 50% -5%, #0f7b6c44, transparent),
-               radial-gradient(800px 300px at 85% 20%, #1cc4a833, transparent),
-               linear-gradient(180deg, var(--bg1), var(--bg2));
-    overflow-x:hidden;
-  }
-  body.lock{overflow:hidden}
-
-  a{color:inherit;text-decoration:none}
-  .wrap{max-width:1120px;margin:0 auto;padding:0 16px}
-
-  /* moving background */
-  .orbs{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-  .orb{position:absolute;filter:blur(50px);opacity:.22;border-radius:999px;
-       background:radial-gradient(circle at 30% 30%, #7fffd4, transparent 60%);
-       animation:drift 18s ease-in-out infinite alternate;transform:translate3d(0,0,0) scale(1)}
-  .orb.o2{left:70%; top:10%; width:420px; height:420px; animation-duration:22s}
-  .orb.o1{left:10%; top:35%; width:520px; height:520px}
-  .orb.o3{left:55%; top:70%; width:360px; height:360px; animation-duration:26s}
-  @keyframes drift{0%{transform:translate3d(0,0,0) scale(1.02)}100%{transform:translate3d(20px,-25px,0) scale(1.06)}}
-
-  .topbar{
-    text-align:center;background:linear-gradient(90deg,#d9fbe6,#bff9e0);color:#083b2e;font-weight:900;
-    letter-spacing:.5px;padding:8px 12px;border-bottom:1px solid #ffffff33;position:relative;z-index:2;
-  }
-
-  .nav{position:sticky; top:0; z-index:5; backdrop-filter:saturate(120%) blur(10px);
-       background:linear-gradient(180deg, rgba(5,46,43,.85), rgba(5,46,43,.55)); border-bottom:1px solid var(--border)}
-  .nav-row{display:flex;align-items:center;gap:12px;padding:12px 0}
-  .brand-link{display:flex;align-items:center;gap:12px}
-  .brand-logo{height:64px;width:auto;border-radius:12px;box-shadow:var(--shadow)}
-  .brand h1{margin:0;font-size:20px;letter-spacing:.2px}
-  .brand small{display:block;color:#d7f7c999;font-size:12px;margin-top:2px}
-  .nav-actions{margin-left:auto;display:flex;gap:8px;align-items:center}
-  .input{background:var(--panel);border:1px solid var(--border);color:var(--text);border-radius:14px;padding:10px 12px;outline:none;width:260px;transition:transform .25s, box-shadow .25s}
-  .input:focus{transform:scale(1.02);box-shadow:0 10px 30px rgba(0,0,0,.25)}
-  .btn{border:0;cursor:pointer;border-radius:14px;padding:10px 14px;font-weight:700;transition:transform .2s}
-  .btn:active{transform:translateY(1px) scale(.98)}
-  .btn-primary{background:white;color:#0b2a25}
-  .btn-ghost{background:var(--panel);color:var(--text);border:1px solid var(--border)}
-  .pill{display:inline-block;background:#eef2ff;border:1px solid #c7d2fe;color:#3730a3;font-size:12px;padding:2px 8px;border-radius:999px}
-
-  .section{padding:28px 0;position:relative;z-index:1}
-  .hero{display:grid; gap:28px; align-items:center; animation:panzoom 16s ease-in-out infinite alternate}
-  @keyframes panzoom{0%{transform:scale(1) translateY(0)}100%{transform:scale(1.015) translateY(-2px)}}
-  @media (min-width:860px){ .hero{grid-template-columns:1.1fr .9fr} }
-  .card{position:relative;border:1px solid var(--border);border-radius:24px;padding:22px;background:linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));box-shadow:var(--shadow)}
-  .card:hover{transform:translateY(-3px)}
-
-  .faint{color:#e8fbf2b0;font-size:14px}
-  .grid{display:grid;gap:16px;grid-template-columns:repeat(1,minmax(0,1fr))}
-  @media (min-width:640px){ .grid{grid-template-columns:repeat(2, minmax(0,1fr));} }
-  @media (min-width:1024px){ .grid{grid-template-columns:repeat(3, minmax(0,1fr));} }
-
-  /* product card */
-  .pcard{border:1px solid var(--border);border-radius:22px;background:var(--panel);padding:16px;transition:.25s transform,.25s box-shadow;perspective:800px;overflow:hidden}
-  .pcard:hover{transform:translateY(-3px) scale(1.01);box-shadow:0 18px 36px rgba(0,0,0,.35)}
-  .pcard.tilt{transform-style:preserve-3d}
-  .pcard.tilt:hover .tilt-inner{transform:rotateX(var(--rx,0)) rotateY(var(--ry,0))}
-  .tilt-inner{transition:transform .15s}
-  .unit{position:absolute;right:12px;top:8px;background:#fff;color:#0b2a25;border-radius:999px;padding:6px 10px;font-size:12px;border:1px solid #00000010}
-  .product-photo{width:100%;height:180px;object-fit:cover;border-radius:14px;margin-bottom:8px;display:block}
-  .row{display:flex;align-items:center;justify-content:space-between;gap:12px}
-  .price{font-weight:900;font-size:20px}
-  .add{margin-top:10px;width:100%;padding:10px 12px;border-radius:12px;font-weight:800;border:0;cursor:pointer}
-  .add.enabled{background:var(--accent);color:var(--accent-ink)}
-  .add.disabled{background:rgba(255,255,255,.1);color:#ffffff66;cursor:not-allowed}
-
-  /* lb / $ controls + quick dollars */
-  .mode{display:flex;gap:8px;align-items:center;margin-top:8px;flex-wrap:wrap}
-  .seg{display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-  .seg button{background:transparent;color:var(--text);border:0;padding:6px 10px;cursor:pointer}
-  .seg button.active{background:white;color:#0b2a25;font-weight:800}
-  .num{display:flex;align-items:center;gap:6px;background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:6px 10px}
-  .num input{background:transparent;border:0;outline:none;color:var(--text);width:7ch}
-  .num .suf{opacity:.8;font-size:12px}
-
-  .quick-dollars{display:flex;gap:6px;flex-wrap:wrap}
-  .quick-dollars button{
-    border:1px solid var(--border);
-    background:var(--panel);
-    color:var(--text);
-    border-radius:999px;
-    padding:6px 10px;
-    cursor:pointer;
-    font-weight:700;
-    font-size:12px;
-  }
-
-  /* GLOBAL toggle next to chips */
-  .chip{padding:8px 14px;border-radius:999px;border:1px solid var(--border);background:var(--panel);cursor:pointer;transition:transform .2s}
-  .chip.active{background:white;color:#0b2a25;font-weight:700}
-  .chip:hover{transform:translateY(-1px)}
-  .chips{display:flex; flex-wrap:wrap; gap:8px; margin-top:16px}
-  .chip-label{padding:8px 10px;border:1px solid var(--border);border-radius:999px;background:var(--panel);display:inline-flex;align-items:center;gap:8px}
-  .seg-mini{display:inline-flex;border:1px solid var(--border);border-radius:999px;overflow:hidden}
-  .seg-mini button{background:transparent;color:var(--text);border:0;padding:6px 10px;cursor:pointer}
-  .seg-mini button.active{background:#fff;color:#0b2a25;font-weight:800}
-
-  h2,h3{margin:0}
-  .h1{font-size:clamp(28px, 4vw, 44px); line-height:1.1; font-weight:900}
-  .gradient-text{background:linear-gradient(90deg, #b7ffe9, #ddfff6); -webkit-background-clip:text; background-clip:text; color:transparent}
-  .typing{min-height:20px;margin-top:6px;color:#bff9e0;font-weight:700;letter-spacing:.4px}
-  .cursor{display:inline-block;width:10px;background:#bff9e0;margin-left:4px;animation:blink 1s steps(1,end) infinite}
-  @keyframes blink{50%{background:transparent}}
-
-  .reveal{opacity:0; transform:translateY(12px); transition:opacity .4s ease, transform .4s ease}
-  .reveal.in{opacity:1; transform:translateY(0)}
-  .phone{border:1px dashed #b7ffe9;padding:8px 10px;border-radius:12px;color:#b7ffe9;font-weight:700}
-
-  /* ===== Clean stacked labels ===== */
-  .field { position: relative; }
-  .field label{
-    position: static;
-    display: block;
-    margin: 0 0 6px;
-    padding: 0;
-    border: 0;
-    background: transparent;
-    color: var(--muted);
-    font-size: 13px;
-    letter-spacing: .2px;
-    font-weight: 600;
-  }
-  .field input, .field select, .field textarea{
-    width:100%; border:1px solid var(--border); background:rgba(255,255,255,.06);
-    color:var(--text); border-radius:14px; padding:12px 14px; outline:none;
-    transition:.2s border-color,.2s box-shadow,.2s transform;
-    box-shadow:inset 0 0 0 1px rgba(255,255,255,.02);
-  }
-  .field textarea{ min-height:110px; resize:vertical; }
-  .field input::placeholder, .field textarea::placeholder{ color:#c7e7d6; opacity:.6; }
-  .field input:focus, .field select:focus, .field textarea:focus{
-    border-color:#bff9e0; box-shadow:0 0 0 6px rgba(191,249,224,.12); transform:translateY(-1px);
-  }
-  .form-head{display:flex; align-items:center; gap:12px; font-weight:900; font-size:26px}
-  .form-head .bubble{
-    width:42px;height:42px;border-radius:12px;display:grid;place-items:center;
-    background:linear-gradient(135deg, #b7ffe9, #86ffd8); color:#083b2e; font-size:20px; font-weight:900;
-    box-shadow:0 10px 24px rgba(0,0,0,.25);
-  }
-  .form-sub{ color:var(--muted); margin:6px 0 18px; }
-  .form-grid{display:grid; gap:14px; grid-template-columns:1fr 1fr}
-  @media (max-width:860px){ .form-grid{ grid-template-columns:1fr; } }
-  .row-compact{ display:grid; gap:12px; grid-template-columns:1fr 1fr; }
-  @media (max-width:860px){ .row-compact{ grid-template-columns:1fr; } }
-  .card--pickup{
-    border-radius:28px; padding:28px;
-    background:
-      radial-gradient(800px 300px at 20% -10%, rgba(255,255,255,.08), transparent),
-      radial-gradient(700px 260px at 120% 120%, rgba(255,255,255,.06), transparent),
-      linear-gradient(180deg, rgba(255,255,255,.08), rgba(255,255,255,.04));
-    box-shadow: var(--shadow);
-  }
-
-  .help{ font-size:12px; color:var(--muted); margin-top:6px }
-
-  .check{
-    display:flex; align-items:center; gap:10px; font-size:14px;
-    background:rgba(255,255,255,.05); border:1px solid var(--border);
-    padding:10px 12px; border-radius:12px;
-  }
-  .check input[type=checkbox]{
-    appearance:none; width:20px; height:20px; border-radius:6px;
-    border:1.5px solid #cdeedd; background:rgba(255,255,255,.1);
-    position:relative; cursor:pointer; transition:.15s;
-  }
-  .check input[type=checkbox]:checked{ background:#10b981; border-color:#10b981; }
-  .check input[type=checkbox]:checked::after{
-    content:""; position:absolute; inset:0;
-    background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="%23052e2b" stroke-width="3" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>') center/16px 16px no-repeat;
-  }
-
-  .actions{ display:flex; gap:10px; align-items:center; flex-wrap:wrap; margin-top:6px; }
-  .btn-primary.big{ font-size:15px; padding:12px 16px; border-radius:14px; font-weight:900 }
-  .btn-ghost.round{ border-radius:14px }
-
-  /* Drawer / cart */
-  .fab{position:fixed;right:14px;bottom:14px;padding:12px 14px;border:0;border-radius:999px;background:#10b981;color:#052e2b;font-weight:900;box-shadow:var(--shadow);cursor:pointer;z-index:6}
-  .drawer{position:fixed;inset:0;pointer-events:none;z-index:7}
-  .drawer.open{pointer-events:auto}
-  .drawer .scrim{position:absolute;inset:0;background:rgba(0,0,0,.4);opacity:0;transition:.2s}
-  .drawer.open .scrim{opacity:1}
-  .drawer .panel{position:absolute;right:-420px;top:0;bottom:0;width:360px;background:#fff;border-left:1px solid #e5e7eb;display:grid;grid-template-rows:auto 1fr auto;transition:.25s;box-shadow:0 18px 36px rgba(0,0,0,.35)}
-  .drawer.open .panel{right:0}
-  .drawer header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;border-bottom:1px solid #e5e7eb;color:#0b2a25}
-  .drawer main{padding:16px;overflow:auto}
-  .line{display:flex;align-items:center;justify-content:space-between;border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;background:#f9fafb;color:#0b2a25}
-  .right{display:flex;align-items:center;gap:8px}
-  .remove{background:transparent;border:0;color:#ef4444;cursor:pointer}
-
-  /* ====== Mega Footer ====== */
-  .megafooter{
-    background:#f4fbf7; color:#0b2a25; border-top:1px solid #cfe9dd;
-    margin-top:40px;
-  }
-  .megafooter .inner{
-    max-width:1120px; margin:0 auto; padding:40px 16px; display:grid; gap:28px;
-    grid-template-columns:2fr 2fr 1.3fr 1.3fr;
-  }
-  .mf-brand{display:grid; gap:10px}
-  .mf-logo{height:54px; width:auto; border-radius:10px}
-  .mf-blurb{color:#1b4332}
-  .mf-title{font-weight:900; letter-spacing:.4px; color:#062d23; margin-bottom:10px}
-  .mf-list{display:grid; gap:10px}
-  .mf-list a{color:#0b2a25; text-decoration:none}
-  .mf-list a:hover{ text-decoration:underline }
-  .mf-muted{color:#35695a; font-size:14px}
-  .mf-bottom{
-    border-top:1px solid #cfe9dd; padding:12px 16px; font-size:14px; color:#205246;
-  }
-  @media (max-width:980px){
-    .megafooter .inner{ grid-template-columns:1fr 1fr; }
-  }
-  @media (max-width:640px){
-    .megafooter .inner{ grid-template-columns:1fr; }
-  }
-  /* ===== Category Cards ===== */
-.category-grid{
-  display:grid;
-  gap:16px;
-  grid-template-columns:repeat(3, minmax(0,1fr));
-}
-
-@media (max-width: 768px){
-  .category-grid{
-    grid-template-columns:1fr;
-  }
-}
-
-.category-card{
-  position:relative;
-  border-radius:18px;
-  overflow:hidden;
-  cursor:pointer;
-  border:1px solid var(--border);
-  background:var(--panel);
-  transition:transform .25s, box-shadow .25s;
-}
-
-.category-card:hover{
-  transform:translateY(-3px);
-  box-shadow:0 18px 36px rgba(0,0,0,.35);
-}
-
-.category-card img{
-  width:100%;
-  height:180px;
-  object-fit:cover;
-  display:block;
-}
-
-.category-card span{
-  position:absolute;
-  bottom:12px;
-  left:12px;
-  font-size:18px;
-  font-weight:900;
-  background:rgba(0,0,0,.55);
-  padding:6px 14px;
-  border-radius:999px;
-  color:#fff;
-}
-
-</style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A1 Grocery & Halal Meat | Halal Meat & Grocery Pickup in Binghamton, NY</title>
+  <meta name="description" content="Order halal chicken, goat, lamb, beef, and fish by pound or dollar amount for local pickup at A1 Grocery & Halal Meat in Binghamton, NY.">
+  <meta name="keywords" content="A1 Grocery, A1 Halal Meat, halal meat Binghamton, halal grocery Binghamton, zabeha halal, halal chicken, goat meat, lamb, beef, fish pickup, 146 Main St Binghamton">
+  <meta name="author" content="A1 Grocery & Halal Meat">
+  <meta name="theme-color" content="#06140f">
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="A1 Grocery & Halal Meat">
+  <meta property="og:description" content="Fresh Zabeha halal poultry, goat, lamb, beef, and fish for local pickup in Binghamton, NY.">
+  <meta property="og:image" content="images/a1-logo.svg">
+  <meta property="og:locale" content="en_US">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A1 Grocery & Halal Meat">
+  <meta name="twitter:description" content="Order fresh halal meat and grocery items for pickup in Binghamton, NY.">
+  <link rel="icon" href="images/a1-logo.svg" type="image/svg+xml">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=Playfair+Display:wght@700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "GroceryStore",
+      "name": "A1 Grocery & Halal Meat",
+      "description": "Halal grocery and meat store offering poultry, goat, lamb, beef, and fish for local pickup.",
+      "telephone": "+1-607-722-1055",
+      "address": {
+        "@type": "PostalAddress",
+        "streetAddress": "146 Main St",
+        "addressLocality": "Binghamton",
+        "addressRegion": "NY",
+        "postalCode": "13905",
+        "addressCountry": "US"
+      },
+      "openingHours": "Mo-Su 11:00-21:00",
+      "paymentAccepted": "Cash, PayPal, Venmo, Cash App",
+      "servesCuisine": "Halal"
+    }
+  </script>
 </head>
 <body>
+  <div class="cursor-glow" aria-hidden="true"></div>
+  <div class="spark-field" aria-hidden="true"></div>
+  <div class="ambient" aria-hidden="true">
+    <span class="orb orb-one"></span>
+    <span class="orb orb-two"></span>
+    <span class="orb orb-three"></span>
+  </div>
 
-  <div class="orbs"><div class="orb o1"></div><div class="orb o2"></div><div class="orb o3"></div></div>
+  <div class="top-bars">
+    <div class="top-marquee">
+      <div class="top-track">
+        <span class="top-strip">As-salamu alaykum</span>
+        <span class="top-dot" aria-hidden="true"></span>
+        <a class="top-strip" href="tel:+16077221055">Call (607) 722-1055</a>
+        <span class="top-dot" aria-hidden="true"></span>
+        <span class="top-strip top-strip-gold">Zabeha Halal</span>
+        <span class="top-dot" aria-hidden="true"></span>
+        <span class="top-strip">Family Owned Since 2010</span>
+        <span class="top-dot" aria-hidden="true"></span>
+      </div>
+      <div class="top-track" aria-hidden="true">
+        <span class="top-strip">As-salamu alaykum</span>
+        <span class="top-dot"></span>
+        <span class="top-strip">Call (607) 722-1055</span>
+        <span class="top-dot"></span>
+        <span class="top-strip top-strip-gold">Zabeha Halal</span>
+        <span class="top-dot"></span>
+        <span class="top-strip">Family Owned Since 2010</span>
+        <span class="top-dot"></span>
+      </div>
+    </div>
+  </div>
 
-  <div class="topbar">Asalamualaikum</div>
-  <div class="topbar" style="background:linear-gradient(90deg,#c6ffe1,#a8f7db)">Zabeha Halal</div>
+  <header class="site-header">
+    <a class="brand magnetic" href="#top" aria-label="A1 Grocery & Halal Meat home">
+      <span class="brand-thumb">
+        <img class="brand-logo" src="images/a1-logo.svg" alt="A-1 Grocery & Halal Meat">
+      </span>
+      <span class="brand-text">
+        <strong>A1 Grocery &amp; Halal Meat</strong>
+        <small>Fresh • Halal • Ready for Pickup</small>
+      </span>
+    </a>
 
-  <div class="nav">
-    <div class="wrap nav-row">
-      <a class="brand-link" href="https://a1halalmeat.com" aria-label="A1 Halal Meat — Home">
-        <img src="logo.png" alt="A1 Grocery & Halal Meat logo" class="brand-logo" />
-        <div class="brand">
-          <h1>A1 Grocery & Halal Meat</h1>
-          <small>Fresh • Halal • Ready for Pickup</small>
+    <label class="search-wrap" aria-label="Search products">
+      <span>Search</span>
+      <input id="searchInput" type="search" placeholder="Chicken, goat, fish...">
+    </label>
+
+    <div class="header-actions">
+    <a class="phone magnetic" href="tel:+16077221055" aria-label="Call A1 Grocery & Halal Meat">
+      <span>☎</span>
+    </a>
+    <button class="cart-toggle magnetic" type="button" data-open-cart>
+      <span class="cart-icon">🛒</span>
+      <strong id="cartCount">0</strong>
+    </button>
+    <a class="menu-toggle magnetic" href="#categories" aria-label="Open menu categories">
+      <span></span>
+      <span></span>
+      <span></span>
+    </a>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="hero reveal hero-stage" data-hero-stage>
+      <div class="hero-grid-lines" aria-hidden="true"></div>
+      <div class="hero-copy" data-depth="0.45">
+        <p class="eyebrow hero-eyebrow">Binghamton halal butcher pickup</p>
+        <h1><span>Fresh Halal Cuts,</span> ready when you arrive.</h1>
+        <p class="typing-line"><span id="typingText"></span><span class="typing-caret"></span></p>
+        <div class="hero-stats" aria-label="Store highlights">
+          <div><strong>30+</strong><span>Fresh cuts</span></div>
+          <div><strong>20%</strong><span>Deposit</span></div>
+          <div><strong>8 PM</strong><span>Meat closes</span></div>
         </div>
-      </a>
-
-      <div class="nav-actions">
-        <span class="phone">Phone: (607) 722-1055</span>
-        <input id="search" class="input" placeholder="Search items…" />
-        <button id="openCart" class="btn btn-primary">View Cart <span id="cartCount" class="pill" style="margin-left:8px">0</span></button>
-      </div>
-    </div>
-  </div>
-
-  <section class="section">
-    <div class="wrap hero reveal">
-      <div>
-        <div class="h1">Fresh Halal Cuts, <span class="gradient-text">ready when you arrive.</span></div>
-        <div id="typing" class="typing" aria-live="polite"></div>
-        <p class="faint" style="margin-top:10px;max-width:60ch">
-          Order online for pickup. We prepare your poultry, meat, and fish to your preference. Pay in-store. Same-day slots usually available.
-        </p>
-        <div class="chips" id="chips"></div>
-      </div>
-
-      <div class="card">
-        <div class="faint" style="text-transform:uppercase;letter-spacing:.12em">NEW</div>
-        <div style="font-weight:900;font-size:22px;margin-top:4px">Weekend Family Pack</div>
-        <p class="faint" style="margin-top:4px">Mix any poultry + meat + fish and save at pickup.</p>
-        <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px">
-          <div class="pcard"><div style="font-weight:700">Poultry</div><div class="faint">fresh daily</div></div>
-          <div class="pcard"><div style="font-weight:700">Meat</div><div class="faint">hand-cut</div></div>
-          <div class="pcard"><div style="font-weight:700">Fish</div><div class="faint">wild & farm</div></div>
+        <div class="hero-actions">
+          <a class="primary-btn magnetic ripple" href="#products">Shop Fresh Cuts</a>
+          <a class="ghost-btn magnetic ripple" href="#pickup">Schedule Pickup</a>
         </div>
       </div>
-    </div>
-  </section>
-<!-- ===== SHOP BY CATEGORY (NEW) ===== -->
-<section class="section">
-  <div class="wrap">
-    <h2 style="font-size:32px;font-weight:900;margin-bottom:20px;text-align:center">
-      Shop by Category
-    </h2>
-
-   <div class="category-grid">
-
-  <!-- Chicken -->
-  <div class="category-card" data-cat="Poultry">
-    <img src="images/categories/chicken.jpg" loading="lazy" alt="Chicken">
-    <span>Chicken</span>
-  </div>
-
-  <!-- Meat (Beef + Goat + Lamb combined) -->
-  <div class="category-card" data-cat="Meat">
-    <img src="images/categories/meat.jpg" loading="lazy" alt="Meat">
-    <span>Meat</span>
-  </div>
-
-  <!-- Fish -->
-  <div class="category-card" data-cat="Fish">
-    <img src="images/categories/fish.jpg" loading="lazy" alt="Fish">
-    <span>Fish</span>
-  </div>
-
-</div>
-
-    </div>
-  </div>
-</section>
-  <section class="section">
-    <div class="wrap">
-      <div id="products" class="grid"></div>
-    </div>
-  </section>
-
-  <section class="section" id="checkout">
-    <div class="wrap" style="display:grid;gap:18px;grid-template-columns:1fr;align-items:start">
-      <div class="card card--pickup reveal">
-        <div class="form-head"><div class="bubble">🛒</div><div>Pickup details</div></div>
-        <p class="form-sub">Enter your info. We’ll confirm by email/text.</p>
-
-        <form id="orderForm" action="https://formspree.io/f/xyzpvyle" method="POST" style="display:grid; gap:16px">
-          <textarea name="order_summary" id="orderSummary" class="hidden" style="display:none"></textarea>
-          <input type="hidden" name="order_total" id="orderTotal" />
-          <!-- deposit meta sent with the form -->
-          <input type="hidden" name="deposit_amount" id="depositAmountHidden" value="0.00" />
-          <input type="hidden" name="deposit_status" id="depositStatusHidden" value="unconfirmed" />
-          <input type="hidden" name="deposit_method" id="depositMethodHidden" value="clover" />
-
-          <div class="form-grid">
-            <div class="field">
-              <label for="name">Full name</label>
-              <input id="name" name="name" required placeholder="Your full name" />
-            </div>
-
-            <div class="field">
-              <label for="phone">Phone</label>
-              <input id="phone" name="phone" required placeholder="(###) ###-####" />
-            </div>
-
-            <div class="field">
-              <label for="email">Email</label>
-              <input id="email" name="email" type="email" required placeholder="you@example.com" />
-            </div>
-
-            <div class="row-compact">
-              <div class="field">
-                <label for="pickup_date">Pickup date</label>
-                <input id="pickup_date" name="pickup_date" type="date" required />
-              </div>
-              <div class="field">
-                <label for="pickup_time">Pickup time</label>
-                <select id="pickup_time" name="pickup_time" required>
-                  <option value="" selected disabled>Select a time</option>
-                  <option>11:00 AM</option><option>12:00 PM</option><option>1:00 PM</option>
-                  <option>2:00 PM</option><option>3:00 PM</option><option>4:00 PM</option>
-                  <option>5:00 PM</option><option>6:00 PM</option><option>7:00 PM</option>
-                  <option>8:00 PM</option>
-                </select>
-              </div>
-            </div>
-
-            <div class="field">
-              <label for="cut_preference">Cut preference (optional)</label>
-              <select id="cut_preference" name="cut_preference">
-                <option>Standard</option><option>Small pieces</option><option>Medium pieces</option>
-                <option>Large pieces</option><option>Whole (no cut)</option>
-              </select>
-            </div>
-
-            <div class="field" style="grid-column:1/-1">
-              <label for="notes">Notes for the butcher (optional)</label>
-              <textarea id="notes" name="notes" placeholder="Ex: thin slices, remove skin, extra fat trimmed."></textarea>
-              <div class="help">We’ll do our best to match your request.</div>
-            </div>
+      <div class="hero-visual tilt-card" data-tilt data-depth="-0.35">
+        <div class="holo-ring ring-one" aria-hidden="true"></div>
+        <div class="holo-ring ring-two" aria-hidden="true"></div>
+        <div class="hero-orbit hero-orbit-one" aria-hidden="true">Zabeha</div>
+        <div class="hero-orbit hero-orbit-two" aria-hidden="true">Pickup</div>
+        <div class="hero-orbit hero-orbit-three" aria-hidden="true">Fresh</div>
+        <div class="hero-glass">
+          <span class="halal-badge">100% Zabeha Halal</span>
+          <div class="cut-stack">
+            <span>Chicken counter</span>
+            <span>Goat, lamb, beef</span>
+            <span>Local pickup</span>
           </div>
-
-          <!-- ===== DEPOSIT SECTION ===== -->
-          <div class="pcard" style="border-color:#ffffff22;background:linear-gradient(135deg,#b6ffe21a,#8fffe41a)">
-            <div style="display:grid;gap:12px">
-              <div style="font-weight:900;font-size:18px">Down payment required</div>
-
-              <div class="field" style="max-width:260px">
-                <label for="deposit_amount">Deposit (20% of subtotal, rounded up)</label>
-                <input id="deposit_amount" value="0.00" readonly />
-              </div>
-
-              <!-- Clover primary button -->
-              <a id="cloverBtn" href="#" target="_blank" rel="noopener"
-                 class="btn btn-primary big"
-                 style="background:#00a65a;color:#fff;display:inline-block;text-align:center;">
-                Pay Deposit with Clover
-              </a>
-              <div class="faint" style="font-size:12px">
-                If Clover asks for the amount, enter <strong id="cloverAmtInline">$0.00</strong>.
-              </div>
-
-              <!-- Other payment options (optional backups) -->
-              <div class="chips" id="payBackups" style="margin-top:6px;flex-wrap:wrap">
-                <span class="chip-label" style="margin-right:6px">Other options</span>
-                <a id="ppLink" class="chip" target="_blank" rel="noopener">PayPal</a>
-                <a id="venmoLink" class="chip" target="_blank" rel="noopener">Venmo</a>
-                <a id="cashAppLink" class="chip" target="_blank" rel="noopener">Cash App</a>
-                <a id="zelleLink" class="chip" target="_blank" rel="noopener">Zelle</a>
-              </div>
-
-              <label class="check">
-                <input type="checkbox" id="deposit_paid_check" />
-                <span>I have completed the deposit payment.</span>
-              </label>
-              <div id="depositWarn" class="faint" style="color:#ffd9d9; display:none">Please pay the deposit and tick the box to continue.</div>
-            </div>
+          <div class="hero-meter">
+            <small>Meat department</small>
+            <strong>Closes 8 PM</strong>
           </div>
-          <!-- ===== END DEPOSIT ===== -->
+        </div>
+      </div>
+      <div class="hero-scroll-cue" aria-hidden="true"><span></span></div>
+    </section>
 
-          <label class="check">
-            <input type="checkbox" required />
-            <span>I’ll pay the remaining balance at pickup (prices per pound where listed).</span>
+    <section class="section reveal" id="categories">
+      <div class="section-heading">
+        <p class="eyebrow">Shop by category</p>
+        <h2>Choose your counter.</h2>
+      </div>
+      <div class="category-grid">
+        <button class="category-card active tilt-card ripple" type="button" data-category="all" data-tilt>
+          <span>✦</span><strong>All Items</strong><small>Full halal pickup menu</small>
+        </button>
+        <button class="category-card tilt-card ripple" type="button" data-category="poultry" data-tilt>
+          <span>🐔</span><strong>Poultry</strong><small>Whole chicken, wings, keema</small>
+        </button>
+        <button class="category-card tilt-card ripple" type="button" data-category="goat" data-tilt>
+          <span>🐐</span><strong>Goat</strong><small>Curry cut and bone-in pieces</small>
+        </button>
+        <button class="category-card tilt-card ripple" type="button" data-category="lamb" data-tilt>
+          <span>🥩</span><strong>Lamb</strong><small>Shoulder and tender cuts</small>
+        </button>
+        <button class="category-card tilt-card ripple" type="button" data-category="beef" data-tilt>
+          <span>🥩</span><strong>Beef</strong><small>Keema, cubes, and boneless</small>
+        </button>
+        <button class="category-card tilt-card ripple" type="button" data-category="fish" data-tilt>
+          <span>🐟</span><strong>Fish</strong><small>Fresh fish and fillets</small>
+        </button>
+      </div>
+    </section>
+
+    <section class="section reveal" id="products">
+      <div class="section-heading split">
+        <div>
+          <p class="eyebrow">Fresh counter</p>
+          <h2>Order by pounds or dollars.</h2>
+        </div>
+        <p class="section-note">Whole items follow minimum pound rules. Final weight may vary slightly at pickup.</p>
+      </div>
+      <div class="product-grid" id="productGrid"></div>
+    </section>
+
+    <section class="checkout-section reveal" id="pickup">
+      <div class="checkout-panel">
+        <div class="section-heading">
+          <p class="eyebrow">Pickup checkout</p>
+          <h2>Tell the butcher how to prep it.</h2>
+        </div>
+        <form class="pickup-form" id="pickupForm">
+          <label>Name<input name="name" autocomplete="name" required placeholder="Your name"></label>
+          <label>Phone<input name="phone" type="tel" autocomplete="tel" required placeholder="(607) 000-0000"></label>
+          <label>Email<input name="email" type="email" autocomplete="email" placeholder="you@example.com"></label>
+          <label>Pickup date<input name="date" type="date" required></label>
+          <label>Pickup time<input name="time" type="time" min="11:00" max="20:00" required></label>
+          <label>Cut preference
+            <select name="cut">
+              <option>Regular curry cut</option>
+              <option>Small pieces</option>
+              <option>Large pieces</option>
+              <option>Boneless where possible</option>
+              <option>Whole / no cut</option>
+            </select>
           </label>
-          <label class="check">
-            <input type="checkbox" required />
-            <span>Final price may be slightly higher or lower than the online total due to exact weight and trimming.</span>
-          </label>
-
-          <div class="actions">
-            <button id="placeOrderBtn" class="btn btn-primary big" style="background:#8eb4a7;color:var(--accent-ink)" disabled>Place Pickup Order</button>
-            <button type="button" id="reviewCart" class="btn btn-ghost round">Review Cart</button>
-          </div>
+          <label class="wide">Butcher notes<textarea name="notes" rows="4" placeholder="Skin on/off, fat trim, separate bags, fish cleaning, spice-ready cuts..."></textarea></label>
+          <button class="primary-btn magnetic ripple wide" type="submit">Send Pickup Request</button>
         </form>
       </div>
 
-      <div class="card reveal">
-        <h3 style="font-size:20px;font-weight:900">Order summary</h3>
-        <div id="summary" style="margin-top:12px;display:grid;gap:12px;max-height:360px;overflow:auto"></div>
-        <div class="row" style="margin-top:12px;font-size:18px">
-          <div class="muted">Subtotal</div>
-          <div id="summaryTotal" style="font-weight:900">$0.00</div>
+      <aside class="summary-panel tilt-card" data-tilt>
+        <p class="eyebrow">Deposit</p>
+        <h3>Reserve your order.</h3>
+        <div class="deposit-card">
+          <div class="summary-line"><span>Subtotal</span><strong id="summarySubtotal">$0.00</strong></div>
+          <div class="summary-line deposit-total"><span>Suggested deposit 20%</span><strong id="summaryDeposit">$0.00</strong></div>
         </div>
-
-        <div class="pcard" style="margin-top:18px;background:linear-gradient(135deg, #b6ffe21a, #8fffe41a);border-color:#ffffff22">
-          <div style="font-weight:700">Store Hours</div>
-          <div class="faint">Mon–Sun <strong>11:00 AM – 9:00 PM</strong></div>
-          <div class="faint"><strong>Meat Department closes at 8:00 PM</strong></div>
-          <div class="faint">146 Main St, Binghamton, NY • <span class="faint">Phone: (607) 722-1055</span></div>
-          <div class="muted" style="margin-top:6px">Final price may vary slightly at pickup based on exact weight.</div>
+        <button class="stripe-btn magnetic ripple" type="button" id="payDepositBtn" disabled>
+          <span class="stripe-btn-text">Pay Deposit</span>
+          <span class="stripe-spinner" aria-hidden="true"></span>
+        </button>
+        <p class="payment-status" id="paymentStatus" role="status" aria-live="polite">Add items to your cart to calculate the deposit.</p>
+        <p class="stripe-note">Secure card checkout will be available after Stripe is connected. You can use PayPal, Venmo, or Cash App below for now.</p>
+        <div class="payment-divider"><span>Optional alternatives</span></div>
+        <div class="payment-links">
+          <a class="ripple" href="#" target="_blank" rel="noopener" data-payment-link="paypal" aria-label="PayPal backup payment">PayPal</a>
+          <a class="ripple" href="#" target="_blank" rel="noopener" data-payment-link="venmo" aria-label="Venmo backup payment">Venmo</a>
+          <a class="ripple" href="#" target="_blank" rel="noopener" data-payment-link="cashapp" aria-label="Cash App backup payment">Cash App</a>
         </div>
+      </aside>
+    </section>
+
+    <section class="store-info reveal">
+      <div>
+        <p class="eyebrow">Store info</p>
+        <h2>146 Main St, Binghamton, NY 13905</h2>
       </div>
-    </div>
-  </section>
-
-  <button class="fab" id="fab">Cart • <span id="fabTotal">$0.00</span></button>
-
-  <div class="drawer" id="drawer" aria-hidden="true">
-    <div class="scrim" id="scrim"></div>
-    <aside class="panel" role="dialog" aria-label="Cart">
-      <header>
-        <strong>Your Cart</strong>
-        <button id="closeDrawer" class="btn btn-ghost">Close</button>
-      </header>
-      <main id="cartLines"></main>
-      <div style="padding:16px;border-top:1px solid #e5e7eb;display:grid;gap:10px">
-        <div class="row" style="font-size:15px"><span>Subtotal</span><strong id="drawerTotal">$0.00</strong></div>
-        <div style="font-size:12px;color:#6b7280">Prices shown are per pound where noted. Pay in-store at pickup.</div>
-        <button id="goCheckout" class="btn" style="background:#10b981;color:#052e2b;font-weight:900">Checkout</button>
+      <div class="info-grid">
+        <div><span>Phone</span><strong>(607) 722-1055</strong></div>
+        <div><span>Hours</span><strong>11 AM - 9 PM</strong></div>
+        <div><span>Meat Department</span><strong>Closes at 8 PM</strong></div>
       </div>
-    </aside>
-  </div>
+    </section>
+  </main>
 
-<script>
-  /* ---------- CONFIG: fill these ---------- */
-  const CONFIG = {
-    CLOVER_LINK: 'https://your-clover-payment-link', // paste your Clover Payment Link
-    DEPOSIT_PERCENT: 0.20,
-    MIN_DEPOSIT: 1,
-    PAYPAL_USERNAME: 'AmmaarAnsari',
-    VENMO_USERNAME: 'A1Grocery',
-    CASH_TAG: 'AmmaarAnsari',
-    ZELLE_PHONE: '+16077520285'
-  };
-
-  // ---------- DATA ----------
-const CATALOG = [
-
-  // ================= POULTRY =================
- {cat:'Poultry', sku:'whole-chicken', name:'Whole Chicken (sold by each)', price:2.95, unit:'/lb', minLb:4,   avgLb:'4–5 lb',   img:'images/products/whole-chicken.jpg', icon:'🐔', color:'#fef3c7'},
-{cat:'Poultry', sku:'hard-chicken',  name:'Hard Chicken', price:3.49, unit:'/lb', minLb:3,   avgLb:'3–4 lb',   img:'images/products/hard-chicken.jpg',  icon:'🐔', color:'#fde68a'},
-{cat:'Poultry', sku:'small-chicken', name:'Small Chicken', price:3.29, unit:'/lb', minLb:2.5, avgLb:'2.5–3 lb', img:'images/products/small-chicken.jpg', icon:'🐔', color:'#fcd34d'},
-  {cat:'Poultry', sku:'chicken-legs', name:'Chicken Legs', price:2.10, unit:'/lb', img:'images/products/chicken-legs.jpg', icon:'🍗', color:'#f59e0b'},
-  {cat:'Poultry', sku:'chicken-wings', name:'Chicken Wings', price:4.79, unit:'/lb', img:'images/products/chicken-wings.jpg', icon:'🍗', color:'#d97706'},
-  {cat:'Poultry', sku:'chicken-breast', name:'Chicken Breast', price:4.99, unit:'/lb', img:'images/products/chicken-breast.jpg', icon:'🍗', color:'#b45309'},
-  {cat:'Poultry', sku:'chicken-thighs', name:'Chicken Thighs', price:4.99, unit:'/lb', img:'images/products/chicken-thighs.jpg', icon:'🍗', color:'#92400e'},
-  {cat:'Poultry', sku:'ground-chicken', name:'Ground Chicken', price:3.99, unit:'/lb', img:'images/products/ground-chicken.jpg', icon:'🍗', color:'#78350f'},
-
-
-  // ================= GOAT =================
-  {cat:'Meat', sku:'baby-goat-leg', name:'Baby Goat Leg (Whole)', price:13.99, unit:'/lb', minLb:4, avgLb:'4–6 lb', note:'Whole piece', img:'images/products/baby-goat-leg.jpg', icon:'🥩', color:'#fecaca'},
-  {cat:'Meat', sku:'goat-shoulder', name:'Goat Shoulder (Whole)', price:13.99, unit:'/lb', minLb:4, avgLb:'4–6 lb', note:'Whole piece', img:'images/products/goat-shoulder.jpg', icon:'🥩', color:'#fca5a5'},
-  {cat:'Meat', sku:'goat-chest', name:'Goat Chest', price:11.99, unit:'/lb', img:'images/products/goat-chest.jpg', icon:'🥩', color:'#f87171'},
-  {cat:'Meat', sku:'mix-goat', name:'Mix Goat', price:11.99, unit:'/lb', img:'images/products/mix-goat.jpg', icon:'🥩', color:'#f87171'},
-  {cat:'Meat', sku:'goat-feet', name:'Goat Feet', price:6.99, unit:'/lb', img:'images/products/goat-feet.jpg', icon:'🥩', color:'#ef4444'},
-
-
-  // ================= LAMB =================
-  {cat:'Meat', sku:'lamb-leg', name:'Lamb Leg (Whole)', price:10.99, unit:'/lb', minLb:4, avgLb:'4–7 lb', note:'Whole piece', img:'images/products/lamb-leg.jpg', icon:'🐑', color:'#dc2626'},
-  {cat:'Meat', sku:'lamb-shoulder', name:'Lamb Shoulder (Whole)', price:10.99, unit:'/lb', minLb:4, avgLb:'4–6 lb', note:'Whole piece', img:'images/products/lamb-shoulder.jpg', icon:'🐑', color:'#b91c1c'},
-  {cat:'Meat', sku:'lamb-chop', name:'Lamb Chops', price:12.99, unit:'/lb', img:'images/products/lamb-chop.jpg', icon:'🐑', color:'#991b1b'},
-
-
-  // ================= BEEF =================
-  {cat:'Meat', sku:'beef-bone', name:'Beef with Bone', price:5.99, unit:'/lb', img:'images/products/beef-bone.jpg', icon:'🐄', color:'#7f1d1d'},
-  {cat:'Meat', sku:'beef-boneless', name:'Beef Boneless', price:7.99, unit:'/lb', img:'images/products/beef-boneless.jpg', icon:'🐄', color:'#fee2e2'},
-  {cat:'Meat', sku:'beef-liver', name:'Beef Liver', price:3.99, unit:'/lb', img:'images/products/beef-liver.jpg', icon:'🐄', color:'#fecaca'},
-  {cat:'Meat', sku:'ground-beef', name:'Ground Beef', price:6.99, unit:'/lb', img:'images/products/ground-beef.jpg', icon:'🍖', color:'#fca5a5'},
-  {cat:'Meat', sku:'shank-nihari', name:'Shank (Nihari)', price:5.99, unit:'/lb', img:'images/products/shank-nihari.jpg', icon:'🍖', color:'#f87171'},
-  {cat:'Meat', sku:'steak-tbone', name:'Steak (T-Bone)', price:8.99, unit:'/lb', img:'images/products/steak-tbone.jpg', icon:'🥩', color:'#ef4444'},
-  {cat:'Meat', sku:'ribeye', name:'Ribeye', price:8.99, unit:'/lb', img:'images/products/ribeye.jpg', icon:'🥩', color:'#dc2626'},
-  {cat:'Meat', sku:'beef-ribs', name:'Beef Ribs', price:5.99, unit:'/lb', img:'images/products/beef-ribs.jpg', icon:'🍖', color:'#b91c1c'},
-  {cat:'Meat', sku:'oxtail', name:'Ox-Tail', price:11.99, unit:'/lb', img:'images/products/oxtail.jpg', icon:'🐄', color:'#991b1b'},
-  {cat:'Meat', sku:'cow-feet', name:'Cow Feet', price:5.99, unit:'/lb', img:'images/products/cow-feet.jpg', icon:'🐄', color:'#7f1d1d'},
-
-
-  // ================= FISH =================
-  {cat:'Fish', sku:'hilsha', name:'Hilsha', price:9.99, unit:'/lb', img:'images/products/hilsha.jpg', icon:'🐟', color:'#dbeafe'},
-  {cat:'Fish', sku:'rohu', name:'Rohu', price:3.99, unit:'/lb', img:'images/products/rohu.jpg', icon:'🐟', color:'#bfdbfe'},
-  {cat:'Fish', sku:'snapper', name:'Snapper', price:9.99, unit:'/lb', img:'images/products/snapper.jpg', icon:'🐟', color:'#93c5fd'},
-  {cat:'Fish', sku:'pompano', name:'Pompano', price:6.99, unit:'/lb', img:'images/products/pompano.jpg', icon:'🐟', color:'#60a5fa'},
-  {cat:'Fish', sku:'kingfish', name:'Kingfish', price:8.99, unit:'/lb', img:'images/products/kingfish.jpg', icon:'🐟', color:'#3b82f6'},
-
-];
-
-  const el = (sel)=>document.querySelector(sel);
-  const fmt = (n)=> `$${n.toFixed(2)}`;
-  const fmtLb = (n)=> {
-    if (!isFinite(n)) return '0 lb';
-    const s = Number(n).toFixed(2).replace(/\.00$/,'').replace(/(\.\d)0$/,'$1');
-    return s+' lb';
-  };
-  const ICON = { Poultry:'🍗', Meat:'🥩', Fish:'🐟' };
-
-  const savedMode = localStorage.getItem('a1-mode');
-  const state = { cart: {}, filter: 'All', mode: (savedMode === 'usd' ? 'usd' : 'lb') };
-
-  try{
-    const saved = JSON.parse(localStorage.getItem('a1-cart')||'{}');
-    if(saved && typeof saved==='object') state.cart = saved;
-  }catch{}
-
-  const categories = ['All','Poultry','Meat','Fish'];
-
-  function renderChips(){
-    const box = el('#chips'); box.innerHTML = '';
-    categories.forEach(c=>{
-      const b=document.createElement('button');
-      b.className='chip' + (state.filter===c?' active':'');
-      const emoji = ICON[c] ? ICON[c] + ' ' : '';
-      b.textContent = emoji + c;
-      b.onclick=()=>{ state.filter=c; renderProducts(); };
-      box.appendChild(b);
-    });
-    const spacer = document.createElement('div'); spacer.style.width='8px'; box.appendChild(spacer);
-
-    const holder = document.createElement('div'); holder.className='chip-label';
-    const label = document.createElement('span'); label.style.opacity='.85'; label.textContent='Order by';
-    const seg = document.createElement('div'); seg.className='seg-mini';
-    const blb  = document.createElement('button'); blb.type='button'; blb.textContent='Lb';
-    const busd = document.createElement('button'); busd.type='button'; busd.textContent='$';
-    seg.append(blb,busd); holder.append(label,seg); box.appendChild(holder);
-
-    function paint(){
-      if(state.mode==='usd'){ busd.classList.add('active'); blb.classList.remove('active'); }
-      else{ blb.classList.add('active'); busd.classList.remove('active'); }
-    }
-    blb.onclick = ()=>{ state.mode='lb';  localStorage.setItem('a1-mode','lb');  paint(); renderProducts(); };
-    busd.onclick= ()=>{ state.mode='usd'; localStorage.setItem('a1-mode','usd'); paint(); renderProducts(); };
-    paint();
-  }
-
-  function renderProducts(){
-    const grid = el('#products'); grid.innerHTML = '';
-    const q = document.getElementById('search')?.value?.toLowerCase() || '';
-    const list = CATALOG.filter(i=>{
-      const okCat = state.filter==='All' || i.cat===state.filter;
-      const okQ = i.name.toLowerCase().includes(q);
-      return okCat && okQ;
-    });
-
-    list.forEach(item=>{
-      const card = document.createElement('div');
-      card.className='pcard tilt reveal'; card.style.position='relative';
-
-      const inner = document.createElement('div'); inner.className='tilt-inner'; card.appendChild(inner);
-
-      const unit = document.createElement('div'); unit.className='unit'; unit.textContent = item.unit; inner.appendChild(unit);
-
-      if (item.img){
-        const img = document.createElement('img');
-        img.className='product-photo'; img.alt = item.name; img.src = item.img; img.loading='lazy';
-        img.onerror = ()=> img.remove();
-        inner.appendChild(img);
-      } else {
-        const icoWrap = document.createElement('div');
-        icoWrap.style.height='120px';
-        icoWrap.style.borderRadius='12px';
-        icoWrap.style.display='grid';
-        icoWrap.style.placeItems='center';
-        icoWrap.style.margin='4px 0 8px';
-        icoWrap.style.background = item.color || '#0b2a25';
-        icoWrap.textContent = item.icon || '';
-        icoWrap.style.fontSize='42px';
-        inner.appendChild(icoWrap);
-      }
-
-      const nameRow = document.createElement('div');
-      nameRow.style.display='flex'; nameRow.style.alignItems='center'; nameRow.style.gap='8px';
-      const emoji = document.createElement('div'); emoji.textContent = ICON[item.cat] || ''; emoji.style.fontSize='18px';
-      const name = document.createElement('div'); name.style.fontWeight='700'; name.style.fontSize='18px'; name.textContent=item.name;
-      nameRow.append(emoji, name);
-      inner.appendChild(nameRow);
-
-      const cat = document.createElement('div'); cat.className='faint'; cat.textContent=item.cat; inner.appendChild(cat);
-if (item.minLb) {
-  const wholeTag = document.createElement('div');
-  wholeTag.style.marginTop = '6px';
-  wholeTag.style.fontSize = '12px';
-  wholeTag.style.fontWeight = '700';
-  wholeTag.style.color = '#b7ffe9';
-  wholeTag.textContent = `Whole item • Avg ${item.avgLb} • Min ${item.minLb} lb`;
-  inner.appendChild(wholeTag);
-}
-
-      const rowTop = document.createElement('div'); rowTop.className='row'; rowTop.style.marginTop='8px';
-      const price = document.createElement('div'); price.className='price'; price.textContent = fmt(item.price);
-      rowTop.appendChild(price);
-      inner.appendChild(rowTop);
-
-      const mode = document.createElement('div'); mode.className='mode';
-const seg = document.createElement('div'); seg.className='seg';
-
-const bLb = document.createElement('button');
-bLb.type = 'button';
-bLb.textContent = 'By lb';
-
-const bDol = document.createElement('button');
-bDol.type = 'button';
-bDol.textContent = 'By $';
-
-// Disable dollar mode for whole items
-if (item.minLb) {
-  bDol.disabled = true;
-  bDol.style.opacity = '0.4';
-  bDol.style.cursor = 'not-allowed';
-}
-
-seg.append(bLb, bDol);
-
-      const numLb = document.createElement('div'); numLb.className='num';
-      const inLb  = document.createElement('input'); inLb.type='number'; inLb.min='0'; inLb.step='0.25'; inLb.placeholder='0.00';
-      const sufLb = document.createElement('span'); sufLb.className='suf'; sufLb.textContent='lb';
-      numLb.append(inLb,sufLb);
-
-      const numDol= document.createElement('div'); numDol.className='num';
-      const inDol = document.createElement('input'); inDol.type='number'; inDol.min='0'; inDol.step='1'; inDol.placeholder='0';
-      const sufDol= document.createElement('span'); sufDol.className='suf'; sufDol.textContent='$';
-      numDol.append(inDol,sufDol);
-
-      const quick = document.createElement('div'); quick.className='quick-dollars';
-      [10,20,50].forEach(amt=>{
-        const b = document.createElement('button'); b.type='button'; b.textContent = `$${amt}`;
-        b.onclick = ()=>{ bDol.click(); inDol.value = String(amt); syncOpposite(); toggleAdd(); };
-        quick.appendChild(b);
-      });
-
-      mode.append(seg,numLb,numDol,quick);
-      inner.appendChild(mode);
-
-      const addBtn = document.createElement('button'); addBtn.className='add disabled'; addBtn.textContent='Add to Cart'; addBtn.disabled=true;
-      inner.appendChild(addBtn);
-
-      let useDollar = (state.mode === 'usd');
-      function paintMode(){
-        if(useDollar){
-          bDol.classList.add('active'); bLb.classList.remove('active');
-          numDol.style.display='flex'; numLb.style.display='none';
-        }else{
-          bLb.classList.add('active'); bDol.classList.remove('active');
-          numLb.style.display='flex'; numDol.style.display='none';
-        }
-      }
-
-      function poundsFromInputs(){
-  let lbs = 0;
-
-  if(useDollar){
-    const dollars = parseFloat(inDol.value || '0');
-    lbs = (isNaN(dollars) || dollars <= 0) ? 0 : (dollars / item.price);
-  } else {
-    lbs = parseFloat(inLb.value || '0');
-    lbs = (isNaN(lbs) || lbs <= 0) ? 0 : lbs;
-  }
-
-  // 🔒 Enforce minimum for whole items
-  if (item.minLb && lbs > 0 && lbs < item.minLb) {
-    return 0;
-  }
-
-  return lbs;
-}
-      function toggleAdd(){
-        const lbs = poundsFromInputs();
-        if(lbs>0){ addBtn.className='add enabled'; addBtn.disabled=false; addBtn.textContent='Add '+fmtLb(lbs); }
-        else{ addBtn.className='add disabled'; addBtn.disabled=true; addBtn.textContent='Add to Cart'; }
-      }
-      function syncOpposite(){
-        if(useDollar){
-          const dollars=parseFloat(inDol.value||'0');
-          const lbs = (isNaN(dollars)||dollars<=0)? '' : (dollars/item.price).toFixed(2);
-          inLb.value = lbs;
-        }else{
-          const lbs = parseFloat(inLb.value||'0');
-          const dollars = (isNaN(lbs)||lbs<=0)? '' : (lbs*item.price).toFixed(2);
-          inDol.value = dollars;
-        }
-      }
-
-      bLb.onclick=()=>{ useDollar=false; paintMode(); syncOpposite(); toggleAdd(); };
-      bDol.onclick=()=>{ useDollar=true;  paintMode(); syncOpposite(); toggleAdd(); };
-      inLb.addEventListener('input', ()=>{ syncOpposite(); toggleAdd(); });
-      inDol.addEventListener('input', ()=>{ syncOpposite(); toggleAdd(); });
-
-      paintMode();
-      addBtn.onclick=()=>{
-        const lbs = poundsFromInputs();
-        if(lbs<=0) return;
-        const prev = Number(state.cart[item.sku]||0);
-        state.cart[item.sku] = Math.round((prev + lbs) * 100)/100;
-        inLb.value=''; inDol.value=''; toggleAdd();
-        saveCart(); updateUI();
-      };
-
-      grid.appendChild(card);
-    });
-
-    initReveal();
-    initTilt();
-  }
-
-  function saveCart(){ localStorage.setItem('a1-cart', JSON.stringify(state.cart)); }
-  function cartEntries(){ return Object.entries(state.cart).map(([sku,qtyLb])=>{ const it=CATALOG.find(x=>x.sku===sku); return { ...it, qty: qtyLb }; }).filter(Boolean); }
-  function cartTotal(){ return cartEntries().reduce((s,it)=> s + it.price*it.qty, 0); }
-
-  function openDrawer(){ el('#drawer').classList.add('open'); document.body.classList.add('lock'); }
-  function closeDrawer(){ el('#drawer').classList.remove('open'); document.body.classList.remove('lock'); }
-
-  function renderDrawer(){
-    const lines = el('#cartLines'); lines.innerHTML='';
-    const items = cartEntries();
-    if(items.length===0){
-      const p=document.createElement('div'); p.style.color='#6b7280'; p.style.fontSize='14px'; p.textContent='Your cart is empty.'; lines.appendChild(p);
-    }
-    items.forEach(it=>{
-      const row = document.createElement('div'); row.className='line';
-
-      const info=document.createElement('div');
-      info.innerHTML=`<div style="font-weight:600">${it.name}</div>
-                      <div style="font-size:12px;color:#6b7280">Price ${fmt(it.price)} /lb</div>`;
-      row.appendChild(info);
-
-      const right=document.createElement('div'); right.className='right';
-
-      const minus=document.createElement('button'); minus.className='btn btn-ghost'; minus.textContent='−';
-      const num=document.createElement('div'); num.textContent=fmtLb(it.qty);
-      const plus=document.createElement('button'); plus.className='btn btn-ghost'; plus.textContent='+';
-
-      minus.onclick=()=>{
-        const n=Math.max(0, Number((it.qty - 0.5).toFixed(2)));
-        if(n===0) delete state.cart[it.sku]; else state.cart[it.sku]=n;
-        saveCart(); updateUI(); renderDrawer();
-      };
-      plus.onclick=()=>{
-        state.cart[it.sku]=Number((it.qty + 0.5).toFixed(2));
-        saveCart(); updateUI(); renderDrawer();
-      };
-
-      const price=document.createElement('div'); price.style.width='90px'; price.style.textAlign='right'; price.style.fontWeight='700';
-      price.textContent=fmt(it.qty*it.price);
-
-      const rm=document.createElement('button'); rm.className='remove'; rm.textContent='Remove';
-      rm.onclick=()=>{ delete state.cart[it.sku]; saveCart(); updateUI(); renderDrawer(); };
-
-      right.append(minus,num,plus,price,rm);
-      row.appendChild(right);
-
-      lines.appendChild(row);
-    });
-
-    el('#drawerTotal').textContent = fmt(cartTotal());
-  }
-
-  function renderSummary(){
-    const box = el('#summary'); box.innerHTML='';
-    const items = cartEntries();
-    if(items.length===0){ const p=document.createElement('div'); p.className='muted'; p.textContent='No items yet. Add from the menu.'; box.appendChild(p); }
-    items.forEach(it=>{
-      const row=document.createElement('div'); row.className='line'; row.style.borderColor='#ffffff22'; row.style.background='transparent'; row.style.color='var(--text)'; row.style.borderRadius='14px';
-      const body=document.createElement('div'); body.innerHTML=`<div style="font-weight:600">${it.name}</div><div class="muted" style="font-size:12px">${fmt(it.price)} /lb</div>`;
-      const qty=document.createElement('div'); qty.textContent='× '+fmtLb(it.qty);
-      const total=document.createElement('div'); total.style.fontWeight='700'; total.textContent=fmt(it.qty*it.price);
-      row.append(body); const right=document.createElement('div'); right.style.marginLeft='auto'; right.style.display='flex'; right.style.gap='10px'; right.append(qty,total); row.appendChild(right); box.appendChild(row);
-    });
-    el('#summaryTotal').textContent = fmt(cartTotal());
-  }
-
-  function updateBadges(){
-    document.getElementById('cartCount').textContent = String(Object.keys(state.cart).length);
-    document.getElementById('fabTotal').textContent = fmt(cartTotal());
-  }
-
-  // ---- Deposit helpers ----
-  function computeDeposit(){
-    const sub = cartTotal();
-    if(sub <= 0) return 0;
-    const raw = sub * (CONFIG.DEPOSIT_PERCENT || 0.20);
-    return Math.max(CONFIG.MIN_DEPOSIT || 1, Math.ceil(raw));
-  }
-
-  function updateDepositAmount(){
-    const amt = computeDeposit();
-    const amtStr = Number(amt).toFixed(2);
-    const needs = amt > 0;
-
-    const depInput = document.getElementById('deposit_amount');
-    const depHidden = document.getElementById('depositAmountHidden');
-    const cloverAmtInline = document.getElementById('cloverAmtInline');
-    const cloverBtn = document.getElementById('cloverBtn');
-    const payBackups = document.getElementById('payBackups');
-
-    if(depInput) depInput.value = amtStr;
-    if(depHidden) depHidden.value = amtStr;
-    if(cloverAmtInline) cloverAmtInline.textContent = `$${amtStr}`;
-
-    if(cloverBtn){
-      cloverBtn.href = CONFIG.CLOVER_LINK || '#';
-      cloverBtn.textContent = needs ? `Pay ${fmt(Number(amt))} with Clover` : 'Pay Deposit with Clover';
-      cloverBtn.style.display = needs ? 'inline-block' : 'none';
-    }
-
-    if(payBackups) payBackups.style.display = needs ? 'flex' : 'none';
-    const paypal = document.getElementById('ppLink');
-    const venmo  = document.getElementById('venmoLink');
-    const cash   = document.getElementById('cashAppLink');
-    const zelle  = document.getElementById('zelleLink');
-    if(paypal) paypal.href = `https://paypal.me/${CONFIG.PAYPAL_USERNAME}/${amtStr}`;
-    if(venmo)  venmo.href  = `https://venmo.com/?txn=pay&audience=private&recipients=${CONFIG.VENMO_USERNAME}&amount=${amtStr}&note=${encodeURIComponent('A1 Halal Deposit')}`;
-    if(cash)   cash.href   = `https://cash.app/$${CONFIG.CASH_TAG}/${amtStr}`;
-    if(zelle)  zelle.href  = `mailto:?subject=${encodeURIComponent('Zelle Deposit')}&body=${encodeURIComponent('Send Zelle deposit of $'+amtStr+' to '+CONFIG.ZELLE_PHONE)}`;
-
-    updatePlaceOrderState();
-  }
-
-  function updatePlaceOrderState(){
-    const needs = Number(document.getElementById('deposit_amount')?.value || '0') > 0;
-    const checked = document.getElementById('deposit_paid_check')?.checked;
-    const btn = document.getElementById('placeOrderBtn');
-    const warn = document.getElementById('depositWarn');
-    if(!btn || !warn) return;
-
-    if(needs){
-      btn.disabled = !checked;
-      btn.style.background = checked ? 'var(--accent)' : '#8eb4a7';
-      warn.style.display = checked ? 'none' : 'block';
-      document.getElementById('depositStatusHidden').value = checked ? 'paid' : 'unconfirmed';
-    }else{
-      btn.disabled = false;
-      btn.style.background = 'var(--accent)';
-      warn.style.display = 'none';
-      document.getElementById('depositStatusHidden').value = 'not-required';
-    }
-  }
-
-  function updateUI(){ renderChips(); renderProducts(); renderSummary(); updateBadges(); updateDepositAmount(); }
-
-  const LINES = ["Zabeha Halal • Cut to order","Fresh • Halal • Ready for Pickup","Hand-cut meat, prepared your way","Same-day pickup slots available"];
-  function typeLoop(node, lines){ let i=0, j=0, erasing=false; (function tick(){ const line = lines[i];
-    if(!erasing){ j++; node.innerHTML = line.slice(0,j) + '<span class="cursor">&nbsp;</span>'; if(j>=line.length){ erasing=true; setTimeout(tick,1400); return; }
-    }else{ j--; node.innerHTML = line.slice(0,j) + '<span class="cursor">&nbsp;</span>'; if(j<=0){ erasing=false; i=(i+1)%lines.length; } }
-    setTimeout(tick, erasing?35:45);
-  })(); }
-
-  function initReveal(){
-    const obs = new IntersectionObserver((entries)=>{ entries.forEach(e=>{ if(e.isIntersecting){ e.target.classList.add('in'); obs.unobserve(e.target); } }); }, {threshold:0.1});
-    document.querySelectorAll('.reveal').forEach(n=>obs.observe(n));
-  }
-  function initTilt(){
-    document.querySelectorAll('.pcard.tilt').forEach(card=>{
-      const inner = card.querySelector('.tilt-inner');
-      card.addEventListener('mousemove', (e)=>{
-        const r = card.getBoundingClientRect();
-        const x = e.clientX - r.left, y = e.clientY - r.top;
-        const ry = ((x/r.width)-0.5)*10;
-        const rx = -((y/r.height)-0.5)*8;
-        inner.style.setProperty('--ry', ry+'deg');
-        inner.style.setProperty('--rx', rx+'deg');
-      });
-      card.addEventListener('mouseleave', ()=>{ inner.style.setProperty('--ry','0deg'); inner.style.setProperty('--rx','0deg'); });
-    });
-  }
-
-  // events
-  document.getElementById('openCart').onclick = ()=>{ renderDrawer(); openDrawer(); };
-  document.getElementById('reviewCart').onclick = ()=>{ renderDrawer(); openDrawer(); };
-  document.getElementById('fab').onclick = ()=>{ renderDrawer(); openDrawer(); };
-  document.getElementById('closeDrawer').onclick = closeDrawer;
-  document.getElementById('scrim').onclick = closeDrawer;
-  document.getElementById('goCheckout').onclick = ()=>{ closeDrawer(); document.getElementById('checkout').scrollIntoView({behavior:'smooth'}); };
-  document.getElementById('search').addEventListener('input', renderProducts);
-  document.getElementById('deposit_paid_check').addEventListener('change', updatePlaceOrderState);
-
-  document.getElementById('orderForm').addEventListener('submit', (e)=>{
-    if(Object.keys(state.cart).length===0){ e.preventDefault(); alert('Your cart is empty. Add items before submitting.'); return; }
-
-    const amt = Number(document.getElementById('deposit_amount').value||'0');
-    if(amt>0 && !document.getElementById('deposit_paid_check').checked){
-      e.preventDefault(); alert(`Please pay the ${fmt(amt)} deposit (Clover) and check the box to continue.`); return;
-    }
-
-    document.getElementById('orderSummary').value = cartEntries()
-      .map(it=> `${it.name} — ${fmtLb(it.qty)} × ${fmt(it.price)} = ${fmt(it.qty*it.price)}`)
-      .concat('',`Subtotal: ${fmt(cartTotal())}`, `Deposit: ${fmt(amt)} (${document.getElementById('depositStatusHidden').value})`)
-      .join('\n');
-
-    document.getElementById('orderTotal').value = cartTotal().toFixed(2);
-  });
-
-// init
-// ===== CATEGORY CARD CLICK HANDLER =====
-document.querySelectorAll('.category-card').forEach(card => {
-  card.addEventListener('click', (e) => {
-    // Only scroll if user actually clicked
-    if (!e.isTrusted) return;
-
-    const cat = card.dataset.cat;
-    state.filter = cat;
-    updateUI();
-
-    setTimeout(() => {
-      document
-        .getElementById('products')
-        .scrollIntoView({ behavior: 'smooth' });
-    }, 50);
-  });
-});
-
-// run once on page load
-updateUI();
-typeLoop(document.getElementById('typing'), LINES);
-
-// Set min & default pickup date to today
-(function(){
-  const pd = document.getElementById('pickup_date');
-  if(pd){
-    const iso = new Date().toISOString().split('T')[0];
-    pd.min = iso;
-    if(!pd.value) pd.value = iso;
-  }
-})();
-
-</script>
-
-<!-- ===== Mega Footer (like your example) ===== -->
-<footer class="megafooter">
-  <div class="inner">
-    <div class="mf-brand">
-      <img src="logo.png" alt="A1 Grocery & Halal Meat" class="mf-logo" />
-      <p class="mf-blurb">
-        A1 Grocery & Halal Meat offers high-quality, 100% halal-certified meat and fish.
-        Fresh cuts, prepared to your preference, ready for pickup.
-      </p>
-      <p class="mf-muted">Follow & pay: Venmo @A1Grocery • Cash App $AmmaarAns • PayPal @AmmaarAnsari • Zelle +1 (607) 752-0285</p>
-    </div>
-
+  <footer class="site-footer">
     <div>
-      <div class="mf-title">Store Location</div>
-      <div class="mf-list mf-muted">
-        <div>146 Main St, Binghamton, NY 13905</div>
-        <div>Phone: (607) 722-1055</div>
-        <div style="margin-top:8px"><strong>Hours</strong></div>
-        <div>Mon–Sun: 11:00 AM – 9:00 PM</div>
-        <div>Meat Dept: closes 8:00 PM</div>
-      </div>
+      <a class="brand" href="#top">
+        <img class="footer-logo" src="images/a1-logo.svg" alt="A-1 Grocery & Halal Meat">
+      </a>
+      <p>Premium halal grocery and butcher pickup for Binghamton families.</p>
     </div>
+    <nav>
+      <h3>Location</h3>
+      <a href="#pickup">146 Main St</a>
+      <a href="tel:+16077221055">(607) 722-1055</a>
+      <a href="#products">Order for pickup</a>
+    </nav>
+    <nav>
+      <h3>Products</h3>
+      <a href="#products" data-footer-category="poultry">Poultry</a>
+      <a href="#products" data-footer-category="goat">Goat</a>
+      <a href="#products" data-footer-category="lamb">Lamb</a>
+      <a href="#products" data-footer-category="beef">Beef</a>
+      <a href="#products" data-footer-category="fish">Fish</a>
+    </nav>
+    <nav>
+      <h3>Support</h3>
+      <a href="#pickup">Pickup form</a>
+      <a href="#products">Minimums</a>
+      <a href="#top">Back to top</a>
+    </nav>
+    <nav>
+      <h3>Payments</h3>
+      <a href="#" target="_blank" rel="noopener" data-payment-link="paypal" data-payment-label>PayPal</a>
+      <a href="#" target="_blank" rel="noopener" data-payment-link="venmo" data-payment-label>Venmo</a>
+      <a href="#" target="_blank" rel="noopener" data-payment-link="cashapp" data-payment-label>Cash App</a>
+    </nav>
+  </footer>
 
-    <div>
-      <div class="mf-title">Our Products</div>
-      <div class="mf-list">
-        <a href="#products">Poultry</a>
-        <a href="#products">Meat</a>
-        <a href="#products">Fish</a>
+  <div class="cart-overlay" data-close-cart></div>
+  <aside class="cart-drawer" aria-label="Shopping cart" aria-hidden="true">
+    <div class="cart-head">
+      <div>
+        <p class="eyebrow">Pickup cart</p>
+        <h2>Your halal order</h2>
       </div>
+      <button class="icon-btn ripple" type="button" data-close-cart aria-label="Close cart">×</button>
     </div>
-
-    <div>
-      <div class="mf-title">Support</div>
-      <div class="mf-list">
-        <a href="#about">About Us</a>
-        <a href="#contact">Contact Us</a>
-        <a href="#privacy">Privacy Policy</a>
-        <a href="#terms">Terms & Conditions</a>
-        <a href="#faq">FAQ</a>
-        <a href="#returns">Returns & Refunds</a>
-        <a href="#shipping">Shipping Policy</a>
-      </div>
+    <div class="cart-items" id="cartItems"></div>
+    <div class="cart-foot">
+      <div class="summary-line"><span>Subtotal</span><strong id="cartSubtotal">$0.00</strong></div>
+      <div class="summary-line"><span>Deposit 20%</span><strong id="cartDeposit">$0.00</strong></div>
+      <a class="primary-btn magnetic ripple" href="#pickup" data-close-cart>Checkout pickup</a>
     </div>
-  </div>
+  </aside>
 
-  <div class="mf-bottom">
-    © <span id="yr"></span> A1 Grocery & Halal Meat • 146 Main St, Binghamton, NY • (607) 722-1055
-  </div>
-</footer>
-<script>document.getElementById('yr').textContent = new Date().getFullYear();</script>
+  <div class="toast" id="toast" role="status" aria-live="polite"></div>
 
+  <script src="https://js.stripe.com/v3/"></script>
+  <script src="script.js"></script>
 </body>
 </html>
