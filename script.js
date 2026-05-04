@@ -142,6 +142,13 @@ function syncCategoryButtons() {
   });
 }
 
+function scrollToProductMenu() {
+  document.querySelector("#products")?.scrollIntoView({
+    behavior: "smooth",
+    block: "start",
+  });
+}
+
 function ensureMenuRendered() {
   if (!productGrid) return;
 
@@ -916,6 +923,7 @@ document.addEventListener("click", (event) => {
     state.filter = categoryButton.dataset.category;
     syncCategoryButtons();
     renderProducts();
+    scrollToProductMenu();
   }
 
   const footerCategory = event.target.closest("[data-footer-category]");
@@ -923,6 +931,7 @@ document.addEventListener("click", (event) => {
     state.filter = footerCategory.dataset.footerCategory;
     syncCategoryButtons();
     renderProducts();
+    scrollToProductMenu();
   }
 
   if (event.target.closest("[data-open-cart]")) setCart(true);
