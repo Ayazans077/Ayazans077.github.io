@@ -1532,6 +1532,14 @@ h1 span {
   max-width: 30rem;
 }
 
+.deposit-confirm:not(.deposit-simple),
+.stripe-btn,
+.stripe-note,
+.payment-divider,
+.summary-panel > .payment-links {
+  display: none;
+}
+
 .wide {
   grid-column: 1 / -1;
 }
