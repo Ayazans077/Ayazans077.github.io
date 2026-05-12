@@ -24,9 +24,9 @@
   <main class="thank-you-shell">
     <section class="thank-you-card">
       <img class="thank-logo" src="images/logo-wide.png" alt="A-1 Grocery & Halal Meat">
-      <p class="eyebrow">Pickup request received</p>
-      <h1>We got your order.</h1>
-      <p class="thank-lead">Your request was sent to the counter. We&apos;ll verify the deposit, start prepping the order, and text or call when it&apos;s wrapped.</p>
+      <p class="eyebrow">Order details sent</p>
+      <h1>Almost done.</h1>
+      <p class="thank-lead">Your pickup details were sent, but your order is not reserved yet. Please send the deposit now so we can review and prepare it.</p>
 
       <div class="thank-status-grid">
         <div>
@@ -34,8 +34,8 @@
           <strong id="readyTime">About 30 minutes</strong>
         </div>
         <div>
-          <span>Deposit method</span>
-          <strong id="depositMethod">Received</strong>
+          <span>Order status</span>
+          <strong>Waiting for deposit</strong>
         </div>
         <div>
           <span>Subtotal</span>
@@ -47,11 +47,23 @@
         </div>
       </div>
 
+      <div class="thank-payment">
+        <p class="eyebrow">Deposit required</p>
+        <h2>Deposit is still required.</h2>
+        <p>Please pay the deposit below. We do not start or reserve the order until the deposit is sent.</p>
+        <div class="payment-links thank-payment-links">
+          <a class="ripple" href="#" target="_blank" rel="noopener" id="thankPaypal">PayPal</a>
+          <a class="ripple" href="#" target="_blank" rel="noopener" id="thankVenmo">Venmo</a>
+          <a class="ripple" href="https://cash.app/$ammaarans" target="_blank" rel="noopener">Cash App</a>
+        </div>
+      </div>
+
       <div class="thank-next">
         <h2>What happens next</h2>
         <ol>
-          <li><strong>We verify your deposit.</strong><span>If something looks off, we&apos;ll call before preparing.</span></li>
-          <li><strong>The butcher cuts it fresh.</strong><span>Cut style, notes, and cleaning requests are checked before wrapping.</span></li>
+          <li><strong>Send the deposit above.</strong><span>Your pickup request is in our email, but it is not reserved until payment is sent.</span></li>
+          <li><strong>We review and confirm.</strong><span>After deposit is received, we check your cut style, notes, and pickup time.</span></li>
+          <li><strong>The butcher cuts it fresh.</strong><span>We text or call when it is ready for pickup.</span></li>
           <li><strong>You pick up at 146 Main Street.</strong><span>Pay the remaining balance at the counter when you arrive.</span></li>
         </ol>
       </div>
@@ -70,13 +82,15 @@
     const params = new URLSearchParams(window.location.search);
     const subtotal = params.get("subtotal") || "$0.00";
     const deposit = params.get("deposit") || "$0.00";
-    const method = params.get("method") || "Deposit sent";
     const ready = new Date(Date.now() + 30 * 60 * 1000);
+    const depositAmount = Math.max(3, Number(deposit.replace(/[^0-9.]/g, "")) || 3).toFixed(2);
+    const note = encodeURIComponent("A1 Halal Deposit");
 
     document.querySelector("#thankSubtotal").textContent = subtotal;
     document.querySelector("#thankDeposit").textContent = deposit;
-    document.querySelector("#depositMethod").textContent = method;
     document.querySelector("#readyTime").textContent = ready.toLocaleTimeString([], { hour: "numeric", minute: "2-digit" });
+    document.querySelector("#thankPaypal").href = `https://www.paypal.com/paypalme/AmmaarAnsari/${depositAmount}`;
+    document.querySelector("#thankVenmo").href = `https://account.venmo.com/payment-link?audience=private&amount=${depositAmount}&note=${note}&recipients=%2CA1Grocery&txn=pay`;
   </script>
 </body>
 </html>

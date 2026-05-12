@@ -246,7 +246,7 @@
             </select>
           </label>
           <label class="wide">Butcher notes<textarea name="notes" rows="4" placeholder="Skin on/off, fat trim, separate bags, fish cleaning, spice-ready cuts..."></textarea></label>
-          <button class="primary-btn magnetic ripple wide" type="submit">Send Pickup Request</button>
+          <button class="primary-btn magnetic ripple wide" type="submit">Submit Order & Continue to Deposit</button>
         </form>
       </div>
 
@@ -257,39 +257,11 @@
           <div class="summary-line"><span>Subtotal</span><strong id="summarySubtotal">$0.00</strong></div>
           <div class="summary-line deposit-total"><span>Suggested deposit 20%</span><strong id="summaryDeposit">$0.00</strong></div>
         </div>
-        <button class="stripe-btn magnetic ripple" type="button" id="payDepositBtn" disabled>
-          <span class="stripe-btn-text">Pay Deposit</span>
-          <span class="stripe-spinner" aria-hidden="true"></span>
-        </button>
-        <p class="payment-status" id="paymentStatus" role="status" aria-live="polite">Add items to your cart to calculate the deposit.</p>
-        <p class="stripe-note">Secure card checkout will be available after Stripe is connected. You can use PayPal, Venmo, or Cash App below for now.</p>
-        <div class="payment-divider"><span>Optional alternatives</span></div>
-        <div class="payment-links">
-          <a class="ripple" href="#" target="_blank" rel="noopener" data-payment-link="paypal" aria-label="PayPal backup payment">PayPal</a>
-          <a class="ripple" href="#" target="_blank" rel="noopener" data-payment-link="venmo" aria-label="Venmo backup payment">Venmo</a>
-          <a class="ripple" href="#" target="_blank" rel="noopener" data-payment-link="cashapp" aria-label="Cash App backup payment">Cash App</a>
-        </div>
-        <div class="deposit-confirm">
-          <div>
-            <p class="eyebrow">Deposit required</p>
-            <strong>Pay first, then submit your request.</strong>
-            <span>Orders are only reviewed after the deposit is sent.</span>
-          </div>
-          <label>Deposit method
-            <select name="deposit_method" form="pickupForm" required>
-              <option value="">Choose payment method</option>
-              <option>PayPal</option>
-              <option>Venmo</option>
-              <option>Cash App</option>
-            </select>
-          </label>
-          <label class="payment-check"><input name="deposit_confirmed" type="checkbox" form="pickupForm" required> I already sent the deposit for this order.</label>
-          <div class="pickup-agreement">
-            <strong>Pickup agreement</strong>
-            <label class="payment-check"><input name="agree_balance" type="checkbox" form="pickupForm" required> I will pay the remaining balance at pickup.</label>
-            <label class="payment-check"><input name="agree_weight" type="checkbox" form="pickupForm" required> I understand the final price may change slightly because fresh meat is weighed after cutting.</label>
-            <label class="payment-check"><input name="agree_pickup" type="checkbox" form="pickupForm" required> I will pick up my order at 146 Main Street after the store confirms it is ready.</label>
-          </div>
+        <p class="payment-status" id="paymentStatus" role="status" aria-live="polite">Submit your pickup request first. Deposit links appear right after the order is sent.</p>
+        <div class="deposit-confirm deposit-simple">
+          <p class="eyebrow">Simple checkout</p>
+          <strong>Step 1: Send your pickup request.</strong>
+          <span>Step 2: The next page gives you PayPal, Venmo, and Cash App deposit links. That way your order reaches our email before anyone leaves to pay.</span>
         </div>
       </aside>
     </section>

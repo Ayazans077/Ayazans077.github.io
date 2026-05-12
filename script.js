@@ -303,11 +303,14 @@ function updateCart() {
   cartDeposit.textContent = money.format(deposit);
   summarySubtotal.textContent = money.format(subtotal);
   summaryDeposit.textContent = money.format(deposit);
-  payDepositBtn.disabled = subtotal <= 0;
   updateAlternativePaymentLinks();
 
-  if (subtotal > 0 && !payDepositBtn.classList.contains("loading")) {
-    setPaymentStatus(`Ready to collect a ${money.format(deposit)} deposit through Stripe.`, "success");
+  if (payDepositBtn) {
+    payDepositBtn.disabled = subtotal <= 0;
+  }
+
+  if (subtotal > 0) {
+    setPaymentStatus(`Deposit after submitting: ${money.format(deposit)}.`, "success");
   } else if (subtotal <= 0) {
     setPaymentStatus("Add items to your cart to calculate the deposit.");
   }
@@ -356,7 +359,7 @@ function setPickupLoading(isLoading) {
 
   submitButton.disabled = isLoading;
   submitButton.classList.toggle("loading", isLoading);
-  submitButton.textContent = isLoading ? "Sending Request..." : "Send Pickup Request";
+  submitButton.textContent = isLoading ? "Submitting Order..." : "Submit Order & Continue to Deposit";
 }
 
 async function sendPickupRequest(event) {
@@ -369,16 +372,6 @@ async function sendPickupRequest(event) {
   }
 
   const formData = new FormData(pickupForm);
-  const depositMethod = formData.get("deposit_method");
-  const depositConfirmed = formData.get("deposit_confirmed") === "on";
-  const agreementsAccepted = ["agree_balance", "agree_weight", "agree_pickup"]
-    .every((name) => formData.get(name) === "on");
-
-  if (!depositMethod || !depositConfirmed || !agreementsAccepted) {
-    showToast("Please pay the deposit and accept the pickup agreement.");
-    document.querySelector(".deposit-confirm")?.scrollIntoView({ behavior: "smooth", block: "center" });
-    return;
-  }
 
   const payload = {
     _subject: "New A1 Grocery pickup order",
@@ -393,10 +386,8 @@ async function sendPickupRequest(event) {
     order_items: getOrderSummary(),
     subtotal: money.format(state.subtotal),
     required_deposit_20_percent: money.format(state.deposit),
-    deposit_method: depositMethod,
-    deposit_confirmed_by_customer: depositConfirmed ? "Yes" : "No",
-    pickup_agreement: agreementsAccepted ? "Accepted" : "Missing",
-    payment_note: "Order was submitted with customer deposit confirmation. Please verify payment before preparing.",
+    deposit_status: "Customer is shown deposit links after this order is submitted.",
+    pickup_note: "Final price may change slightly after exact fresh weight and trimming.",
     page: window.location.href
   };
 
@@ -420,7 +411,6 @@ async function sendPickupRequest(event) {
     const thankYouUrl = new URL("thank-you.html", window.location.href);
     thankYouUrl.searchParams.set("subtotal", money.format(state.subtotal));
     thankYouUrl.searchParams.set("deposit", money.format(state.deposit));
-    thankYouUrl.searchParams.set("method", depositMethod);
 
     pickupForm.reset();
     state.cart.clear();
@@ -464,12 +454,14 @@ function setQuickMenu(open) {
 }
 
 function setPaymentStatus(message, type = "") {
+  if (!paymentStatus) return;
   paymentStatus.textContent = message;
   paymentStatus.classList.toggle("success", type === "success");
   paymentStatus.classList.toggle("error", type === "error");
 }
 
 function setDepositLoading(isLoading) {
+  if (!payDepositBtn) return;
   payDepositBtn.classList.toggle("loading", isLoading);
   payDepositBtn.disabled = isLoading || state.subtotal <= 0;
   payDepositBtn.querySelector(".stripe-btn-text").textContent = isLoading ? "Opening Stripe..." : "Pay Deposit";
@@ -977,7 +969,7 @@ searchInput.addEventListener("input", (event) => {
 
 pickupForm?.addEventListener("submit", sendPickupRequest);
 
-payDepositBtn.addEventListener("click", payDepositWithStripe);
+payDepositBtn?.addEventListener("click", payDepositWithStripe);
 
 ensureMenuRendered();
 requestAnimationFrame(ensureMenuRendered);
